@@ -1,0 +1,101 @@
+# Chronoshift [![Dependency Status](https://david-dm.org/implyio/chronoshift.svg?theme=shields.io)](https://david-dm.org/implyio/chronoshift) [![devDependency Status](https://david-dm.org/implyio/chronoshift/dev-status.svg?theme=shields.io)](https://david-dm.org/implyio/chronoshift#info=devDependencies) [![Build Status](https://travis-ci.org/implyio/chronoshift.svg?branch=master)](https://travis-ci.org/implyio/chronoshift)
+
+Chronoshift is a library to manipulate time with timezones
+
+## Installation
+
+In node simply run: ```npm install chronoshift```
+
+In the browser you should use the browserified package/chronoshift.js
+
+## Initialization
+
+Chronoshift uses [WallTime.js](https://github.com/sproutsocial/walltime-js) under the hood and it needs to be initialized with timezone data before it can be used.
+
+```javascript
+// Example timezone data can be found in lib/walltime/walltime-data.js
+// it should be imported with require or AJAX
+var tzData = require("./lib/walltime/walltime-data.js");
+
+// Chronoshift's WallTime instance can be accessed like so:
+chronoshift.WallTime.init(tzData.rules, tzData.zones);
+```
+
+## Usage
+
+Chronoshift can be used in two ways:
+
+### 1. By using the provided floor, ceil, and move methods
+
+Use ```chronoshift[period][fn](date, timezone, moveAmount)``` where
+
+- ```period``` is one of ```['year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond']```
+- ```fn``` is one of ```['floor, ceil, move']```
+
+```javascript
+var tz = Timezone.fromJS("America/Los_Angeles");
+
+var hourStart = chronoshift.hour.floor(new Date("2012-11-04T00:30:00-07:00"), tz));
+
+hourStart.getTime() === new Date("2012-11-04T00:00:00-07:00").getTime()
+```
+
+
+### 2. By using the Duration class
+
+Construct a new duration with a [ISO Duration string](http://en.wikipedia.org/wiki/ISO_8601#Durations). Then you can call ```floor```, ```ceil``` and ```move``` on it.
+
+Note that ```floor``` and ```ceil``` only work for 'simple' durations like "P1x" and "PT1x".
+
+```javascript
+var Duration = chronoshift.Duration;
+var tz = Timezone.fromJS("America/Los_Angeles");
+
+p1w = Duration.formJS('P1W');
+
+var weekStart;
+
+weekStart = p1w.floor(new Date("2013-09-29T01:02:03.456-07:00"), tz)
+weekStart.getTime() === new Date("2013-09-29T00:00:00.000-07:00").getTime()
+
+weekStart = p1w.floor(new Date("2013-10-03T01:02:03.456-07:00"), tz)
+weekStart.getTime() === new Date("2013-09-29T00:00:00.000-07:00").getTime()
+```
+
+A duration can also be constructed from two dates and a timezone:
+
+```javascript
+new Duration(
+  new Date("2012-10-29T00:00:00-07:00")
+  new Date("2012-11-05T00:00:00-08:00")
+  tz
+).toString() // => 'P7D'
+
+new Duration(
+  new Date("2012-01-01T00:00:00-08:00")
+  new Date("2013-03-04T04:05:06-08:00")
+  tz
+).toString() // => 'P1Y2M3DT4H5M6S'
+```
+
+Useful!
+
+## Development
+
+Clone the repository :
+
+```
+$ git clone https://github.com/implyio/chronoshift.git
+```
+
+Install the dependencies :
+
+```
+$ npm install
+```
+
+Watch :
+
+```
+$ gulp watch
+```

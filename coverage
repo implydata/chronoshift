@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mocha --require blanket -R html-cov > coverage.html

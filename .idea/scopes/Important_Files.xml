@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Important Files" pattern="file:src//*||file:test//*.ts" />
+</component>

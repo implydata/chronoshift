@@ -1,0 +1,5 @@
+#!/bin/bash -e
+./compile
+./run-tests
+npm publish
+exit 0

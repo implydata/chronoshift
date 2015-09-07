@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# All files
+echo "Compile TypeScript"
+./compile-tsc
+
+# Package
+echo "Package with browserify"
+rm -rf package/*
+mkdir -p package
+
+node_modules/.bin/browserify \
+  build/chronoshift.js \
+  -o package/chronoshift.js \
+  --standalone chronoshift
+
+# Lint
+echo "Lint with tslint"
+./lint

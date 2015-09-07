@@ -1,0 +1,51 @@
+{
+  "name": "chronoshift",
+  "version": "0.3.1",
+  "description": "A tiny library for shifting time with timezones",
+  "keywords": [
+    "date",
+    "timezone",
+    "duration",
+    "time",
+    "range"
+  ],
+  "author": {
+    "name": "Vadim Ogievetsky",
+    "url": "http://vadim.ogievetsky.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/implyio/chronoshift.git"
+  },
+  "main": "build/chronoshift.js",
+  "typescript": {
+    "definition": "build/chronoshift.d.ts"
+  },
+  "scripts": {
+    "test": "./run-tests",
+    "prepublish": "./compile"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "chronoshift/build/"
+    }
+  },
+  "dependencies": {
+    "immutable-class": "^0.3.2"
+  },
+  "devDependencies": {
+    "blanket": "^1.1.6",
+    "browserify": "~8.1.1",
+    "chai": "~2.3.0",
+    "event-stream": "^3.2.1",
+    "gulp": "^3.8.10",
+    "gulp-mocha": "^2.0.0",
+    "gulp-typescript": "^2.4.1",
+    "mocha": "~2.1.x",
+    "pegjs": "~0.8.0",
+    "run-sequence": "^1.0.2",
+    "tslint": "2.2.0-beta",
+    "typescript": "^1.5.3"
+  }
+}
