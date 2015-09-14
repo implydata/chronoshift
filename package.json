@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "http://github.com/implyio/chronoshift.git"
+    "url": "http://github.com/implydata/chronoshift.git"
   },
   "main": "build/chronoshift.js",
   "typescript": {
