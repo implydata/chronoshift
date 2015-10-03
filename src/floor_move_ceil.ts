@@ -24,7 +24,9 @@ module Chronoshift {
       floor,
       move,
       ceil: (dt: Date, tz: Timezone) => {
-        return move(floor(dt, tz), tz, 1);
+        var floored = floor(dt, tz);
+        if (floored.valueOf() === dt.valueOf()) return dt; // Just like ceil(3) is 3 and not 4
+        return move(floored, tz, 1);
       }
     };
   }

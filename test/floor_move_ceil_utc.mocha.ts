@@ -80,6 +80,16 @@ describe("floor, move, ceil (UTC)", () => {
     pairwise(dates, (d1, d2) => expect(chronoshift.day.move(d1, tz, 1)).to.deep.equal(d2));
   });
 
+  it("ceils day", () => {
+    var d1 = new Date("2014-12-11T22:11:57.469Z");
+    var d2 = new Date("2014-12-12T00:00:00.000Z");
+    expect(chronoshift.day.ceil(d1, tz)).to.eql(d2);
+
+    d1 = new Date("2014-12-08T00:00:00.000Z");
+    d2 = new Date("2014-12-08T00:00:00.000Z");
+    expect(chronoshift.day.ceil(d1, tz)).to.eql(d2);
+  });
+
   it("moves week", () => {
     var dates: Date[] = [
       new Date("2012-10-29T00:00:00"),
