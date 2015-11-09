@@ -32,6 +32,14 @@ describe("floor, move, ceil (UTC)", () => {
     pairwise(dates, (d1, d2) => expect(chronoshift.second.move(d1, tz, 3)).to.deep.equal(d2));
   });
 
+  it("rounds minutes", () => {
+    expect(chronoshift.minute.round(new Date("2012-11-04T00:29:00"), 15, tz))
+      .to.deep.equal(new Date("2012-11-04T00:15:00"));
+
+    expect(chronoshift.minute.round(new Date("2012-11-04T00:29:00"), 4, tz))
+      .to.deep.equal(new Date("2012-11-04T00:28:00"));
+  });
+
   it("moves minutes", () => {
     var dates: Date[] = [
       new Date("2012-11-04T00:00:00"),

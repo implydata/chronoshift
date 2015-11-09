@@ -2,6 +2,10 @@ module Chronoshift {
   var spansWithWeek = ["year", "month", "week", "day", "hour", "minute", "second"];
   var spansWithoutWeek = ["year", "month", "day", "hour", "minute", "second"];
 
+  var spanMultiplicity = {
+
+  };
+
   export interface DurationValue {
     year?: number;
     month?: number;
@@ -204,8 +208,19 @@ module Chronoshift {
     }
 
     public isSimple(): boolean {
-      return Boolean(this.singleSpan) &&
-        this.spans[this.singleSpan] === 1;
+      var { singleSpan } = this;
+      if (!singleSpan) return false;
+      return this.spans[singleSpan] === 1;
+    }
+
+    public isFloorable(): boolean {
+      var { singleSpan } = this;
+      if (!singleSpan) return false;
+      var span = this.spans[singleSpan];
+      if (span === 1) return true;
+      var { siblings } = movers[singleSpan];
+      if (!siblings) return false;
+      return siblings % span === 0;
     }
 
     /**
@@ -214,8 +229,17 @@ module Chronoshift {
      * @param timezone The timezone within which to floor
      */
     public floor(date: Date, timezone: Timezone): Date {
-      if (!this.isSimple()) throw new Error("Can not floor on a complex duration");
-      return movers[this.singleSpan].floor(date, timezone);
+      var { singleSpan } = this;
+      if (!singleSpan) throw new Error("Can not floor on a complex duration");
+      var span = this.spans[singleSpan];
+      var mover = movers[singleSpan];
+      var dt = mover.floor(date, timezone);
+      if (span !== 1) {
+        if (!mover.siblings) throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
+        if (mover.siblings % span !== 0) throw new Error(`Can not floor on a ${singleSpan} duration that is not a multiple of ${span}`);
+        dt = mover.round(dt, span, timezone);
+      }
+      return dt;
     }
 
     /**

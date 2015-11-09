@@ -110,11 +110,11 @@ describe("Duration", () => {
 
   describe("#floor", () => {
     it("throws error if complex duration", () => {
-      expect(() => Duration.fromJS("PT2H").floor(new Date(), tz)).to.throw(Error, "Can not floor on a complex duration");
-
       expect(() => Duration.fromJS("P1Y2D").floor(new Date(), tz)).to.throw(Error, "Can not floor on a complex duration");
 
       expect(() => Duration.fromJS("P3DT15H").floor(new Date(), tz)).to.throw(Error, "Can not floor on a complex duration");
+
+      expect(() => Duration.fromJS("PT5H").floor(new Date(), tz)).to.throw(Error, "Can not floor on a hour duration that is not a multiple of 5");
     });
 
     it("works for year", () => {
@@ -122,7 +122,17 @@ describe("Duration", () => {
       expect(p1y.floor(new Date("2013-09-29T01:02:03.456-07:00"), tz)).to.deep.equal(new Date("2013-01-01T00:00:00.000-08:00"));
     });
 
-    it("works for week", () => {
+    it("works for T2M", () => {
+      var p2h = Duration.fromJS("PT2M");
+      expect(p2h.floor(new Date("2013-09-29T03:03:03.456-07:00"), tz)).to.deep.equal(new Date("2013-09-29T03:02:00.000-07:00"));
+    });
+
+    it("works for 2H", () => {
+      var p2h = Duration.fromJS("PT2H");
+      expect(p2h.floor(new Date("2013-09-29T03:02:03.456-07:00"), tz)).to.deep.equal(new Date("2013-09-29T02:00:00.000-07:00"));
+    });
+
+    it("works for 1W", () => {
       var p1w = Duration.fromJS("P1W");
 
       expect(p1w.floor(new Date("2013-09-29T01:02:03.456-07:00"), tz))
@@ -130,6 +140,18 @@ describe("Duration", () => {
 
       expect(p1w.floor(new Date("2013-10-03T01:02:03.456-07:00"), tz))
         .to.deep.equal(new Date("2013-09-30T00:00:00.000-07:00"));
+    });
+
+    it("works for 3M", () => {
+      var p3m = Duration.fromJS("P3M");
+      expect(p3m.floor(new Date("2013-09-29T03:02:03.456-07:00"), tz)).to.deep.equal(new Date("2013-07-01T00:00:00.000-07:00"));
+
+      expect(p3m.floor(new Date("2013-02-29T03:02:03.456-07:00"), tz)).to.deep.equal(new Date("2013-01-01T00:00:00.000-08:00"));
+    });
+
+    it("works for 4Y", () => {
+      var p4y = Duration.fromJS("P4Y");
+      expect(p4y.floor(new Date("2013-09-29T03:02:03.456-07:00"), tz)).to.deep.equal(new Date("2012-01-01T00:00:00.000-08:00"));
     });
   });
 
