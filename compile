@@ -15,5 +15,5 @@ node_modules/.bin/browserify \
   --standalone chronoshift
 
 # Lint
-echo "Lint with tslint"
-./lint
+#echo "Lint with tslint"
+#./lint

@@ -3,7 +3,7 @@ module Chronoshift {
     (dt: Date, tz: Timezone): Date;
   }
 
-  export interface MoveFn {
+  export interface ShiftFn {
     (dt: Date, tz: Timezone, step: number): Date;
   }
 
@@ -11,30 +11,34 @@ module Chronoshift {
     (dt: Date, roundTo: number, tz: Timezone): Date;
   }
 
-  export interface TimeMover {
+  export interface TimeShifter {
     canonicalLength: number;
     siblings?: number;
     floor: AlignFn;
     round?: RoundFn;
-    move: MoveFn;
+    shift: ShiftFn;
     ceil?: AlignFn;
+
+    // legacy
+    move?: ShiftFn;
   }
 
   function adjustDay(day: number): number {
     return (day + 6) % 7;
   }
 
-  function timeMoverFiller(tm: TimeMover): TimeMover {
-    var { floor, move } = tm;
+  function timeShifterFiller(tm: TimeShifter): TimeShifter {
+    var { floor, shift } = tm;
     tm.ceil = (dt: Date, tz: Timezone) => {
       var floored = floor(dt, tz);
       if (floored.valueOf() === dt.valueOf()) return dt; // Just like ceil(3) is 3 and not 4
-      return move(floored, tz, 1);
+      return shift(floored, tz, 1);
     };
+    tm.move = tm.shift; // back compat.
     return tm;
   }
 
-  export var second = timeMoverFiller({
+  export var second = timeShifterFiller({
     canonicalLength: 1000,
     siblings: 60,
     floor: (dt, tz) => {
@@ -49,14 +53,14 @@ module Chronoshift {
       if (cur !== adj) dt.setUTCSeconds(adj);
       return dt;
     },
-    move: (dt, tz, step) => {
+    shift: (dt, tz, step) => {
       dt = new Date(dt.valueOf());
       dt.setUTCSeconds(dt.getUTCSeconds() + step);
       return dt;
     }
   });
 
-  export var minute = timeMoverFiller({
+  export var minute = timeShifterFiller({
     canonicalLength: 60000,
     siblings: 60,
     floor: (dt, tz) => {
@@ -71,7 +75,7 @@ module Chronoshift {
       if (cur !== adj) dt.setUTCMinutes(adj);
       return dt;
     },
-    move: (dt, tz, step) => {
+    shift: (dt, tz, step) => {
       dt = new Date(dt.valueOf());
       dt.setUTCMinutes(dt.getUTCMinutes() + step);
       return dt;
@@ -93,7 +97,7 @@ module Chronoshift {
     return dt;
   }
 
-  export var hour = timeMoverFiller({
+  export var hour = timeShifterFiller({
     canonicalLength: 3600000,
     siblings: 24,
     floor: (dt, tz) => {
@@ -118,10 +122,10 @@ module Chronoshift {
       }
       return dt;
     },
-    move: hourMove
+    shift: hourMove
   });
 
-  export var day = timeMoverFiller({
+  export var day = timeShifterFiller({
     canonicalLength: 24 * 3600000,
     floor: (dt, tz) => {
       if (tz.isUTC()) {
@@ -133,7 +137,7 @@ module Chronoshift {
       }
       return dt;
     },
-    move: (dt, tz, step) => {
+    shift: (dt, tz, step) => {
       if (tz.isUTC()) {
         dt = new Date(dt.valueOf());
         dt.setUTCDate(dt.getUTCDate() + step);
@@ -149,7 +153,7 @@ module Chronoshift {
     }
   });
 
-  export var week = timeMoverFiller({
+  export var week = timeShifterFiller({
     canonicalLength: 7 * 24 * 3600000,
     floor: (dt, tz) => {
       if (tz.isUTC()) {
@@ -166,7 +170,7 @@ module Chronoshift {
       }
       return dt;
     },
-    move: (dt, tz, step) => {
+    shift: (dt, tz, step) => {
       if (tz.isUTC()) {
         dt = new Date(dt.valueOf());
         dt.setUTCDate(dt.getUTCDate() + step * 7);
@@ -182,7 +186,7 @@ module Chronoshift {
     }
   });
 
-  function monthMove(dt: Date, tz: Timezone, step: number) {
+  function monthShift(dt: Date, tz: Timezone, step: number) {
     if (tz.isUTC()) {
       dt = new Date(dt.valueOf());
       dt.setUTCMonth(dt.getUTCMonth() + step);
@@ -197,7 +201,7 @@ module Chronoshift {
     return dt;
   }
 
-  export var month = timeMoverFiller({
+  export var month = timeShifterFiller({
     canonicalLength: 30 * 24 * 3600000,
     siblings: 12,
     floor: (dt, tz) => {
@@ -219,14 +223,14 @@ module Chronoshift {
       } else {
         var cur = dt.getMonth();
         var adj = Math.floor(cur / roundTo) * roundTo;
-        if (cur !== adj) return monthMove(dt, tz, adj - cur);
+        if (cur !== adj) return monthShift(dt, tz, adj - cur);
       }
       return dt;
     },
-    move: monthMove
+    shift: monthShift
   });
 
-  function yearMove(dt: Date, tz: Timezone, step: number) {
+  function yearShift(dt: Date, tz: Timezone, step: number) {
     if (tz.isUTC()) {
       dt = new Date(dt.valueOf());
       dt.setUTCFullYear(dt.getUTCFullYear() + step);
@@ -241,7 +245,7 @@ module Chronoshift {
     return dt;
   }
 
-  export var year = timeMoverFiller({
+  export var year = timeShifterFiller({
     canonicalLength: 365 * 24 * 3600000,
     siblings: 1000,
     floor: (dt, tz) => {
@@ -263,14 +267,14 @@ module Chronoshift {
       } else {
         var cur = dt.getFullYear();
         var adj = Math.floor(cur / roundTo) * roundTo;
-        if (cur !== adj) return yearMove(dt, tz, adj - cur);
+        if (cur !== adj) return yearShift(dt, tz, adj - cur);
       }
       return dt;
     },
-    move: yearMove
+    shift: yearShift
   });
 
-  export var movers: Lookup<TimeMover> = {
+  export var shifters: Lookup<TimeShifter> = {
     second: second,
     minute: minute,
     hour: hour,
@@ -279,4 +283,7 @@ module Chronoshift {
     month: month,
     year: year
   };
+
+  // Backwards compatibility
+  export var movers = shifters;
 }

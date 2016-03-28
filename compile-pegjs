@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Date math parser
-node_modules/.bin/pegjs \
-  --export-var "module.exports" \
-  lib/date-math/parser.pegjs \
-  lib/date-math/parser.js

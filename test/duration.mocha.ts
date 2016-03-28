@@ -1,10 +1,10 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
+/// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../build/chronoshift.d.ts" />
 
-declare function require(file: string): any;
+import { expect } from "chai";
 
-import chai = require("chai");
-import expect = chai.expect;
+declare function require(file: string): any;
 
 import ImmutableClassTesterModule = require("../node_modules/immutable-class/build/tester");
 import testImmutableClass = ImmutableClassTesterModule.testImmutableClass;
@@ -41,9 +41,9 @@ describe("Duration", () => {
 
       expect(() => Duration.fromJS("P0YT0H")).to.throw(Error, "Duration can not be empty");
 
-      expect(() => Duration.fromJS("P0W").move(new Date(), tz)).to.throw(Error, "Duration can not be empty");
+      expect(() => Duration.fromJS("P0W").shift(new Date(), tz)).to.throw(Error, "Duration can not be empty");
 
-      expect(() => Duration.fromJS("P0Y0MT0H0M0S").move(new Date(), tz)).to.throw(Error, "Duration can not be empty");
+      expect(() => Duration.fromJS("P0Y0MT0H0M0S").shift(new Date(), tz)).to.throw(Error, "Duration can not be empty");
     });
 
     it("throws error if fromJS is not given a string", () => {
@@ -155,22 +155,22 @@ describe("Duration", () => {
     });
   });
 
-  describe("#move", () => {
+  describe("#shift", () => {
     it("works for weeks", () => {
       var p1w, p2w;
       p1w = Duration.fromJS("P1W");
-      expect(p1w.move(new Date("2012-10-29T00:00:00-07:00"), tz)).to.deep.equal(new Date("2012-11-05T00:00:00-08:00"));
+      expect(p1w.shift(new Date("2012-10-29T00:00:00-07:00"), tz)).to.deep.equal(new Date("2012-11-05T00:00:00-08:00"));
 
       p1w = Duration.fromJS("P1W");
-      expect(p1w.move(new Date("2012-10-29T00:00:00-07:00"), tz, 2)).to.deep.equal(new Date("2012-11-12T00:00:00-08:00"));
+      expect(p1w.shift(new Date("2012-10-29T00:00:00-07:00"), tz, 2)).to.deep.equal(new Date("2012-11-12T00:00:00-08:00"));
 
       p2w = Duration.fromJS("P2W");
-      expect(p2w.move(new Date("2012-10-29T05:16:17-07:00"), tz)).to.deep.equal(new Date("2012-11-12T05:16:17-08:00"));
+      expect(p2w.shift(new Date("2012-10-29T05:16:17-07:00"), tz)).to.deep.equal(new Date("2012-11-12T05:16:17-08:00"));
     });
 
     it("works for general complex case", () => {
       var pComplex = Duration.fromJS("P1Y2M3DT4H5M6S");
-      expect(pComplex.move(new Date("2012-01-01T00:00:00-08:00"), tz)).to.deep.equal(new Date("2013-03-04T04:05:06-08:00"));
+      expect(pComplex.shift(new Date("2012-01-01T00:00:00-08:00"), tz)).to.deep.equal(new Date("2013-03-04T04:05:06-08:00"));
     });
   });
 

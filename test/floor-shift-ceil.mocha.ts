@@ -1,11 +1,10 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
+/// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../build/chronoshift.d.ts" />
-"use strict";
+
+import { expect } from "chai";
 
 declare function require(file: string): any;
-
-import chai = require("chai");
-import expect = chai.expect;
 
 import ImmutableClassTesterModule = require("../node_modules/immutable-class/build/tester");
 
@@ -17,16 +16,16 @@ if (!chronoshift.WallTime.rules) {
   chronoshift.WallTime.init(tzData.rules, tzData.zones);
 }
 
-function pairwise<T>(array: T[], callback:(t1:T, t2:T) => void) {
+function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
   for (var i = 0; i < array.length - 1; i++) {
     callback(array[i], array[i + 1])
   }
 }
 
-describe("floor, move, ceil", () => {
+describe("floor/shift/ceil", () => {
   var tz = new Timezone("America/Los_Angeles");
 
-  it("moves seconds", () => {
+  it("shifts seconds", () => {
     var dates: Date[] = [
       new Date("2012-11-04T00:00:00-07:00"),
       new Date("2012-11-04T00:00:03-07:00"),
@@ -34,10 +33,10 @@ describe("floor, move, ceil", () => {
       new Date("2012-11-04T00:00:09-07:00"),
       new Date("2012-11-04T00:00:12-07:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.second.move(d1, tz, 3)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(chronoshift.second.shift(d1, tz, 3)).to.deep.equal(d2));
   });
 
-  it("moves minutes", () => {
+  it("shifts minutes", () => {
     var dates: Date[] = [
       new Date("2012-11-04T00:00:00-07:00"),
       new Date("2012-11-04T00:03:00-07:00"),
@@ -45,7 +44,7 @@ describe("floor, move, ceil", () => {
       new Date("2012-11-04T00:09:00-07:00"),
       new Date("2012-11-04T00:12:00-07:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.minute.move(d1, tz, 3)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(chronoshift.minute.shift(d1, tz, 3)).to.deep.equal(d2));
   });
 
   it("floors hour correctly", () => {
@@ -65,34 +64,34 @@ describe("floor, move, ceil", () => {
       .to.deep.equal(new Date("2012-11-04T03:00:00-08:00"), 'E');
   });
 
-  it("moves hour over DST", () => {
+  it("shifts hour over DST", () => {
     var dates: Date[] = [
       new Date("2012-11-04T00:00:00-07:00"),
       new Date("2012-11-04T01:00:00-08:00"),
       new Date("2012-11-04T02:00:00-08:00"),
       new Date("2012-11-04T03:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.hour.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(chronoshift.hour.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 
-  it("moves day over DST", () => {
+  it("shifts day over DST", () => {
     var dates: Date[] = [
       new Date("2012-11-03T00:00:00-07:00"),
       new Date("2012-11-04T00:00:00-07:00"),
       new Date("2012-11-05T00:00:00-08:00"),
       new Date("2012-11-06T00:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.day.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(chronoshift.day.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 
-  it("moves week over DST", () => {
+  it("shifts week over DST", () => {
     var dates: Date[] = [
       new Date("2012-10-29T00:00:00-07:00"),
       new Date("2012-11-05T00:00:00-08:00"),
       new Date("2012-11-12T00:00:00-08:00"),
       new Date("2012-11-19T00:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.week.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(chronoshift.week.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 
   it("floors week correctly", () => {
@@ -115,23 +114,23 @@ describe("floor, move, ceil", () => {
     expect(chronoshift.week.ceil(d1, tz)).to.eql(d2);
   });
 
-  it("moves month over DST", () => {
+  it("shifts month over DST", () => {
     var dates: Date[] = [
       new Date("2012-11-01T00:00:00-07:00"),
       new Date("2012-12-01T00:00:00-08:00"),
       new Date("2013-01-01T00:00:00-08:00"),
       new Date("2013-02-01T00:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.month.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(chronoshift.month.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 
-  it("moves year", () => {
+  it("shifts year", () => {
     var dates: Date[] = [
       new Date("2010-01-01T00:00:00-08:00"),
       new Date("2011-01-01T00:00:00-08:00"),
       new Date("2012-01-01T00:00:00-08:00"),
       new Date("2013-01-01T00:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.year.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(chronoshift.year.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 });

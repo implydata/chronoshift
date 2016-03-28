@@ -2,10 +2,6 @@ module Chronoshift {
   var spansWithWeek = ["year", "month", "week", "day", "hour", "minute", "second"];
   var spansWithoutWeek = ["year", "month", "day", "hour", "minute", "second"];
 
-  var spanMultiplicity = {
-
-  };
-
   export interface DurationValue {
     year?: number;
     month?: number;
@@ -55,13 +51,13 @@ module Chronoshift {
 
       // Shortcut
       var length = end.valueOf() - iterator.valueOf();
-      var canonicalLength: number = movers[span].canonicalLength;
+      var canonicalLength: number = shifters[span].canonicalLength;
       if (length < canonicalLength / 4) continue;
       var numberToFit = Math.min(0, Math.floor(length / canonicalLength) - 1);
       var iteratorMove: Date;
       if (numberToFit > 0) {
         // try to skip by numberToFit
-        iteratorMove = movers[span].move(iterator, timezone, numberToFit);
+        iteratorMove = shifters[span].shift(iterator, timezone, numberToFit);
         if (iteratorMove <= end) {
           spanCount += numberToFit;
           iterator = iteratorMove;
@@ -69,7 +65,7 @@ module Chronoshift {
       }
 
       while (true) {
-        iteratorMove = movers[span].move(iterator, timezone, 1);
+        iteratorMove = shifters[span].shift(iterator, timezone, 1);
         if (iteratorMove <= end) {
           iterator = iteratorMove;
           spanCount++;
@@ -114,7 +110,7 @@ module Chronoshift {
 
       for (var i = 0; i < spansWithWeek.length; i++) {
         var span = spansWithWeek[i];
-        var spanLength = movers[span].canonicalLength;
+        var spanLength = shifters[span].canonicalLength;
         var count = Math.floor(length / spanLength);
 
         length -= spanLength * count;
@@ -218,7 +214,7 @@ module Chronoshift {
       if (!singleSpan) return false;
       var span = this.spans[singleSpan];
       if (span === 1) return true;
-      var { siblings } = movers[singleSpan];
+      var { siblings } = shifters[singleSpan];
       if (!siblings) return false;
       return siblings % span === 0;
     }
@@ -232,7 +228,7 @@ module Chronoshift {
       var { singleSpan } = this;
       if (!singleSpan) throw new Error("Can not floor on a complex duration");
       var span = this.spans[singleSpan];
-      var mover = movers[singleSpan];
+      var mover = shifters[singleSpan];
       var dt = mover.floor(date, timezone);
       if (span !== 1) {
         if (!mover.siblings) throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
@@ -249,13 +245,18 @@ module Chronoshift {
      * @param timezone The timezone within which to make the move
      * @param step The number of times to step by the duration
      */
-    public move(date: Date, timezone: Timezone, step: number = 1) {
+    public shift(date: Date, timezone: Timezone, step: number = 1) {
       var spans = this.spans;
       for (let span of spansWithWeek) {
         var value = spans[span];
-        if (value) date = movers[span].move(date, timezone, step * value);
+        if (value) date = shifters[span].shift(date, timezone, step * value);
       }
       return date;
+    }
+
+    public move(date: Date, timezone: Timezone, step: number = 1) {
+      console.warn("The method 'move()' is deprecated. Please use 'shift()' instead.");
+      return this.shift(date, timezone, step);
     }
 
     public getCanonicalLength(): number {
@@ -263,15 +264,9 @@ module Chronoshift {
       var length = 0;
       for (let span of spansWithWeek) {
         var value = spans[span];
-        if (value) length += value * movers[span].canonicalLength;
+        if (value) length += value * shifters[span].canonicalLength;
       }
       return length;
-    }
-
-    public canonicalLength(): number {
-      // This method is deprecated
-      console.warn("The method 'canonicalLength()' is deprecated. Please use 'getCanonicalLength()' instead.");
-      return this.getCanonicalLength();
     }
 
     public getDescription(): string {

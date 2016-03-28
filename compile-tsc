@@ -4,12 +4,16 @@ rm -rf build/*
 mkdir -p build
 
 # All files
-node_modules/.bin/tsc --noImplicitAny --noEmitOnError --declaration --m commonjs -out build/chronoshift.js \
+node_modules/.bin/tsc \
+  --noImplicitAny --noEmitOnError --declaration --removeComments --noFallthroughCasesInSwitch --noImplicitReturns \
+  --m system -out build/chronoshift.js \
+  \
   src/init.ts \
   \
   src/timezone.ts \
-  src/floor_move_ceil.ts \
+  src/floor-shift-ceil.ts \
   src/duration.ts \
+  src/date-parser.ts \
   \
   src/exports.ts \
   && \

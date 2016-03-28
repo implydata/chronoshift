@@ -2,22 +2,12 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
-        <item url="file://$PROJECT_DIR$/test/floor_move_ceil_utc.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/time_range.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/floor_move_ceil.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/date_expression.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/date_math.mocha.js" />
+        <item url="file://$PROJECT_DIR$/test/floor-move-ceil.mocha.js" />
         <item url="file://$PROJECT_DIR$/test/duration.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/timezone.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/date_expression.mocha.js" />
+        <item url="file://$PROJECT_DIR$/test/floor-move-ceil-utc.mocha.js" />
+        <item url="file://$PROJECT_DIR$/test/date-parser.js" />
         <item url="file://$PROJECT_DIR$/test/overall.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/time_range.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/floor_move_ceil_utc.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/overall.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/date_math.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/floor_move_ceil.mocha.js" />
         <item url="file://$PROJECT_DIR$/test/timezone.mocha.js" />
-        <item url="file://$PROJECT_DIR$/test/duration.mocha.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
@@ -41,17 +31,19 @@
       <root url="file://$PROJECT_DIR$/test/floor_move_ceil.mocha.js" />
       <root url="file://$PROJECT_DIR$/test/date_expression.mocha.js" />
       <root url="file://$PROJECT_DIR$/test/date_math.mocha.js" />
-      <root url="file://$PROJECT_DIR$/test/duration.mocha.js" />
-      <root url="file://$PROJECT_DIR$/test/timezone.mocha.js" />
       <root url="file://$PROJECT_DIR$/test/date_expression.mocha.js" />
-      <root url="file://$PROJECT_DIR$/test/overall.mocha.js" />
       <root url="file://$PROJECT_DIR$/test/time_range.mocha.js" />
       <root url="file://$PROJECT_DIR$/test/floor_move_ceil_utc.mocha.js" />
       <root url="file://$PROJECT_DIR$/test/date_math.mocha.js" />
-      <root url="file://$PROJECT_DIR$/test/overall.mocha.js" />
       <root url="file://$PROJECT_DIR$/test/floor_move_ceil.mocha.js" />
-      <root url="file://$PROJECT_DIR$/test/timezone.mocha.js" />
+      <root url="file://$PROJECT_DIR$/test/floor_move_ceil.mocha.js" />
+      <root url="file://$PROJECT_DIR$/test/floor_move_ceil_utc.mocha.js" />
+      <root url="file://$PROJECT_DIR$/test/floor-shift-ceil.mocha.js" />
       <root url="file://$PROJECT_DIR$/test/duration.mocha.js" />
+      <root url="file://$PROJECT_DIR$/test/floor-shift-ceil-utc.mocha.js" />
+      <root url="file://$PROJECT_DIR$/test/date-parser.mocha.js" />
+      <root url="file://$PROJECT_DIR$/test/overall.mocha.js" />
+      <root url="file://$PROJECT_DIR$/test/timezone.mocha.js" />
     </CLASSES>
     <SOURCES />
   </library>

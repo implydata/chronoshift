@@ -1,11 +1,10 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
+/// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../build/chronoshift.d.ts" />
-"use strict";
+
+import { expect } from "chai";
 
 declare function require(file: string): any;
-
-import chai = require("chai");
-import expect = chai.expect;
 
 import ImmutableClassTesterModule = require("../node_modules/immutable-class/build/tester");
 import testImmutableClass = ImmutableClassTesterModule.testImmutableClass;

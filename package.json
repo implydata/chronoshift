@@ -1,13 +1,15 @@
 {
   "name": "chronoshift",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "description": "A tiny library for shifting time with timezones",
   "keywords": [
     "date",
     "timezone",
     "duration",
     "time",
-    "range"
+    "range",
+    "IS08601",
+    "8601"
   ],
   "author": {
     "name": "Vadim Ogievetsky",
@@ -32,20 +34,20 @@
     }
   },
   "dependencies": {
-    "immutable-class": "^0.3.2"
+    "immutable-class": "0.4.3"
   },
   "devDependencies": {
-    "blanket": "^1.1.6",
-    "browserify": "~8.1.1",
-    "chai": "~2.3.0",
-    "event-stream": "^3.2.1",
-    "gulp": "^3.8.10",
-    "gulp-mocha": "^2.0.0",
-    "gulp-typescript": "^2.4.1",
-    "mocha": "~2.1.x",
-    "pegjs": "~0.8.0",
-    "run-sequence": "^1.0.2",
-    "tslint": "2.2.0-beta",
-    "typescript": "^1.5.3"
+    "blanket": "1.2.3",
+    "browserify": "13.0.0",
+    "chai": "3.5.0",
+    "event-stream": "3.3.2",
+    "gulp": "3.9.1",
+    "gulp-mocha": "2.2.0",
+    "gulp-typescript": "2.12.1",
+    "mocha": "2.4.5",
+    "pegjs": "0.9.0",
+    "run-sequence": "1.1.5",
+    "tslint": "3.6.0",
+    "typescript": "1.8.9"
   }
 }
