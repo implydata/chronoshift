@@ -157,4 +157,76 @@ module Chronoshift {
 
   }
 
+  export interface IntervalParse {
+    computedStart: Date;
+    computedEnd: Date;
+    start?: Date;
+    end?: Date;
+    duration?: Duration;
+  }
+
+  export function parseInterval(str: string, timezone = Timezone.UTC, now = new Date()): IntervalParse {
+    var parts = str.split('/');
+    if (parts.length > 2) throw new Error(`Can not parse string ${str}`);
+
+    var start: Date = null;
+    var end: Date = null;
+    var duration: Duration = null;
+
+    var p0: string = parts[0];
+    if (parts.length === 1) {
+      duration = Duration.fromJS(p0);
+    } else {
+      var p1 = parts[1];
+      if (p0[0] === 'P') {
+        duration = Duration.fromJS(p0);
+        end = parseISODate(p1, timezone);
+        if (!end) throw new Error(`can not parse '${p1}' as ISO date`);
+      } else if (p1[0] === 'P') {
+        start = parseISODate(p0, timezone);
+        if (!start) throw new Error(`can not parse '${p0}' as ISO date`);
+        duration = Duration.fromJS(p1);
+      } else {
+        start = parseISODate(p0, timezone);
+        if (!start) throw new Error(`can not parse '${p0}' as ISO date`);
+        end = parseISODate(p1, timezone);
+        if (!end) throw new Error(`can not parse '${p1}' as ISO date`);
+
+        if (end < start) {
+          throw new Error(`start must be <= end in '${str}'`);
+        }
+      }
+    }
+
+    /*
+    Has to be one of:
+     <start>/<end>
+     <start>/<duration>
+     <duration>/<end>
+     <duration>
+     */
+
+    var computedStart: Date = null;
+    var computedEnd: Date = null;
+    if (start) {
+      computedStart = start;
+      if (duration) {
+        computedEnd = duration.shift(computedStart, timezone, 1);
+      } else {
+        computedEnd = end;
+      }
+    } else {
+      computedEnd = end || now;
+      computedStart = duration.shift(computedEnd, timezone, -1);
+    }
+
+    return {
+      computedStart,
+      computedEnd,
+      start,
+      end,
+      duration
+    };
+  }
+
 }
