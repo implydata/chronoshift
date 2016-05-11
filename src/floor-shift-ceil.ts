@@ -27,6 +27,10 @@ module Chronoshift {
     return (day + 6) % 7;
   }
 
+  function floorTo(n: number, roundTo: number): number {
+    return Math.floor(n / roundTo) * roundTo;
+  }
+
   function timeShifterFiller(tm: TimeShifter): TimeShifter {
     var { floor, shift } = tm;
     tm.ceil = (dt: Date, tz: Timezone) => {
@@ -49,7 +53,7 @@ module Chronoshift {
     },
     round: (dt, roundTo, tz) => {
       var cur = dt.getUTCSeconds();
-      var adj = Math.floor(cur / roundTo) * roundTo;
+      var adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCSeconds(adj);
       return dt;
     },
@@ -71,7 +75,7 @@ module Chronoshift {
     },
     round: (dt, roundTo, tz) => {
       var cur = dt.getUTCMinutes();
-      var adj = Math.floor(cur / roundTo) * roundTo;
+      var adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCMinutes(adj);
       return dt;
     },
@@ -113,11 +117,12 @@ module Chronoshift {
     round: (dt, roundTo, tz) => {
       if (tz.isUTC()) {
         var cur = dt.getUTCHours();
-        var adj = Math.floor(cur / roundTo) * roundTo;
+        var adj = floorTo(cur, roundTo);
         if (cur !== adj) dt.setUTCHours(adj);
       } else {
-        var cur = dt.getHours();
-        var adj = Math.floor(cur / roundTo) * roundTo;
+        let wt = WallTime.UTCToWallTime(dt, tz.toString());
+        var cur = wt.getHours();
+        var adj = floorTo(cur, roundTo);
         if (cur !== adj) return hourMove(dt, tz, adj - cur);
       }
       return dt;
@@ -218,11 +223,11 @@ module Chronoshift {
     round: (dt, roundTo, tz) => {
       if (tz.isUTC()) {
         var cur = dt.getUTCMonth();
-        var adj = Math.floor(cur / roundTo) * roundTo;
+        var adj = floorTo(cur, roundTo);
         if (cur !== adj) dt.setUTCMonth(adj);
       } else {
         var cur = dt.getMonth();
-        var adj = Math.floor(cur / roundTo) * roundTo;
+        var adj = floorTo(cur, roundTo);
         if (cur !== adj) return monthShift(dt, tz, adj - cur);
       }
       return dt;
@@ -262,11 +267,11 @@ module Chronoshift {
     round: (dt, roundTo, tz) => {
       if (tz.isUTC()) {
         var cur = dt.getUTCFullYear();
-        var adj = Math.floor(cur / roundTo) * roundTo;
+        var adj = floorTo(cur, roundTo);
         if (cur !== adj) dt.setUTCFullYear(adj);
       } else {
         var cur = dt.getFullYear();
-        var adj = Math.floor(cur / roundTo) * roundTo;
+        var adj = floorTo(cur, roundTo);
         if (cur !== adj) return yearShift(dt, tz, adj - cur);
       }
       return dt;

@@ -177,13 +177,9 @@ module Chronoshift {
     }
 
     public subtract(duration: Duration): Duration {
-      if (this.getCanonicalLength() - duration.getCanonicalLength() < 0) {
-        throw new Error("A duration can not be negative.");
-      }
-
-      return Duration.fromCanonicalLength(
-        this.getCanonicalLength() - duration.getCanonicalLength()
-      );
+      var newCanonicalDuration = this.getCanonicalLength() - duration.getCanonicalLength();
+      if (newCanonicalDuration < 0) throw new Error("A duration can not be negative.");
+      return Duration.fromCanonicalLength(newCanonicalDuration);
     }
 
     public valueOf() {
@@ -245,7 +241,7 @@ module Chronoshift {
      * @param timezone The timezone within which to make the move
      * @param step The number of times to step by the duration
      */
-    public shift(date: Date, timezone: Timezone, step: number = 1) {
+    public shift(date: Date, timezone: Timezone, step: number = 1): Date {
       var spans = this.spans;
       for (let span of spansWithWeek) {
         var value = spans[span];
@@ -254,9 +250,40 @@ module Chronoshift {
       return date;
     }
 
-    public move(date: Date, timezone: Timezone, step: number = 1) {
-      console.warn("The method 'move()' is deprecated. Please use 'shift()' instead.");
-      return this.shift(date, timezone, step);
+    /**
+     * Materializes all the values of this duration form start to end
+     * @param start The date to start on
+     * @param end The date to start on
+     * @param timezone The timezone within which to materialize
+     * @param step The number of times to step by the duration
+     */
+    public materialize(start: Date, end: Date, timezone: Timezone, step: number = 1): Date[] {
+      var values: Date[] = [];
+      var iter = this.floor(start, timezone);
+      while (iter <= end) {
+        values.push(iter);
+        iter = this.shift(iter, timezone, step);
+      }
+      return values;
+    }
+
+    /**
+     * Checks to see if date is aligned to this duration within the timezone (floors to itself)
+     * @param date The date to check
+     * @param timezone The timezone within which to make the check
+     */
+    public isAligned(date: Date, timezone: Timezone): boolean {
+      return this.floor(date, timezone).valueOf() === date.valueOf();
+    }
+
+    /**
+     * Check to see if this duration can be divided by the given duration
+     * @param smaller The smaller duration to divide by
+     */
+    public dividesBy(smaller: Duration): boolean {
+      var myCanonicalLength = this.getCanonicalLength();
+      var smallerCanonicalLength = smaller.getCanonicalLength();
+      return myCanonicalLength % smallerCanonicalLength === 0 && this.isFloorable() && smaller.isFloorable();
     }
 
     public getCanonicalLength(): number {
