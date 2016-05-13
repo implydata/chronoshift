@@ -131,7 +131,7 @@ describe("Duration", () => {
 
       expect(() => Duration.fromJS("P3DT15H").floor(new Date(), TZ_LA)).to.throw(Error, "Can not floor on a complex duration");
 
-      expect(() => Duration.fromJS("PT5H").floor(new Date(), TZ_LA)).to.throw(Error, "Can not floor on a hour duration that is not a multiple of 5");
+      expect(() => Duration.fromJS("PT5H").floor(new Date(), TZ_LA)).to.throw(Error, "Can not floor on a hour duration that does not divide into 24");
     });
 
     it("works for year", () => {
@@ -337,6 +337,9 @@ describe("Duration", () => {
 
       durationStr = "P3DT15H";
       expect(Duration.fromJS(durationStr).getDescription()).to.equal('3 days, 15 hours');
+
+      durationStr = "P3DT15H";
+      expect(Duration.fromJS(durationStr).getDescription(true)).to.equal('3 Days, 15 Hours');
     });
   });
 });

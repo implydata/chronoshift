@@ -15,6 +15,10 @@ module Chronoshift {
     [span: string]: number;
   }
 
+  function capitalizeFirst(str: string): string {
+    if (!str.length) return str;
+    return str[0].toUpperCase() + str.substr(1);
+  }
 
   var periodWeekRegExp = /^P(\d+)W$/;
   var periodRegExp = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/;
@@ -228,7 +232,7 @@ module Chronoshift {
       var dt = mover.floor(date, timezone);
       if (span !== 1) {
         if (!mover.siblings) throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
-        if (mover.siblings % span !== 0) throw new Error(`Can not floor on a ${singleSpan} duration that is not a multiple of ${span}`);
+        if (mover.siblings % span !== 0) throw new Error(`Can not floor on a ${singleSpan} duration that does not divide into ${mover.siblings}`);
         dt = mover.round(dt, span, timezone);
       }
       return dt;
@@ -296,16 +300,17 @@ module Chronoshift {
       return length;
     }
 
-    public getDescription(): string {
+    public getDescription(capitalize?: boolean): string {
       var spans = this.spans;
       var description: string[] = [];
       for (let span of spansWithWeek) {
         var value = spans[span];
+        var spanTitle = capitalize ? capitalizeFirst(span) : span;
         if (value) {
           if (value === 1) {
-            description.push(span);
+            description.push(spanTitle);
           } else {
-            description.push(String(value) + ' ' + span + 's');
+            description.push(String(value) + ' ' + spanTitle + 's');
           }
         }
       }
