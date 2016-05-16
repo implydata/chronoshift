@@ -46,6 +46,8 @@
     "gulp-typescript": "2.12.1",
     "mocha": "2.4.5",
     "pegjs": "0.9.0",
+    "rollup": "0.26.3",
+    "rollup-plugin-typescript": "0.7.5",
     "run-sequence": "1.1.5",
     "tslint": "3.6.0",
     "typescript": "1.8.9"

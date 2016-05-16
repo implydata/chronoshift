@@ -16,6 +16,5 @@ node_modules/.bin/tsc \
   src/duration.ts \
   src/date-parser.ts \
   \
-  src/exports.ts \
   && \
   node extra/extra.js;

@@ -10,6 +10,10 @@ import ImmutableClassTesterModule = require("../node_modules/immutable-class/bui
 
 var chronoshift = <typeof Chronoshift>require("../build/chronoshift");
 var Timezone = chronoshift.Timezone;
+if (!chronoshift.WallTime.rules) {
+  var tzData:any = require("../lib/walltime/walltime-data.js");
+  chronoshift.WallTime.init(tzData.rules, tzData.zones);
+}
 
 describe("Overall", () => {
   it("can find Timezone", () => {

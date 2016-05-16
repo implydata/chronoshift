@@ -2,7 +2,7 @@
 
 # All files
 echo "Compile TypeScript"
-./compile-tsc
+rollup -c
 
 # Package
 echo "Package with browserify"
