@@ -101,8 +101,8 @@ module Chronoshift {
    */
   var check: Class<DurationValue, string>;
   export class Duration implements Instance<DurationValue, string> {
-    private singleSpan: string;
-    private spans: DurationValue;
+    public singleSpan: string;
+    public spans: DurationValue;
 
     static fromJS(durationStr: string): Duration {
       if (typeof durationStr !== 'string') throw new TypeError("Duration JS must be a string");
@@ -316,6 +316,16 @@ module Chronoshift {
       }
       return description.join(', ');
     }
+
+    public getSingleSpan(): string {
+      return this.singleSpan || null;
+    }
+
+    public getSingleSpanValue(): number {
+      if (!this.singleSpan) return null;
+      return this.spans[this.singleSpan];
+    }
+
   }
   check = Duration;
 }

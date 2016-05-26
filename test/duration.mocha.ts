@@ -342,4 +342,51 @@ describe("Duration", () => {
       expect(Duration.fromJS(durationStr).getDescription(true)).to.equal('3 Days, 15 Hours');
     });
   });
+
+  describe("#getSingleSpan()", () => {
+    it("gives back the correct span", () => {
+      var durationStr;
+      durationStr = "P1D";
+      expect(Duration.fromJS(durationStr).getSingleSpan()).to.equal('day');
+
+      durationStr = "P3Y";
+      expect(Duration.fromJS(durationStr).getSingleSpan()).to.equal('year');
+
+      durationStr = "P2W";
+      expect(Duration.fromJS(durationStr).getSingleSpan()).to.equal('week');
+
+      durationStr = "PT5H";
+      expect(Duration.fromJS(durationStr).getSingleSpan()).to.equal('hour');
+
+      durationStr = "P3DT15H";
+      expect(Duration.fromJS(durationStr).getSingleSpan()).to.equal(null);
+
+      durationStr = "P3DT15H";
+      expect(Duration.fromJS(durationStr).getSingleSpan()).to.equal(null);
+    });
+  });
+
+  describe("#getSingleSpanValue()", () => {
+    it("gives back the correct span value", () => {
+      var durationStr;
+      durationStr = "P1D";
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).to.equal(1);
+
+      durationStr = "P3Y";
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).to.equal(3);
+
+      durationStr = "P2W";
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).to.equal(2);
+
+      durationStr = "PT5H";
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).to.equal(5);
+
+      durationStr = "P3DT15H";
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).to.equal(null);
+
+      durationStr = "P3DT15H";
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).to.equal(null);
+    });
+  });
+
 });

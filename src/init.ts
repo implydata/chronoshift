@@ -1,6 +1,3 @@
-/// <reference path="../typings/immutable-class.d.ts" />
-"use strict";
-
 declare function require(file: string): any;
 declare var module: { exports: any; };
 
