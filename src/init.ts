@@ -1,6 +1,7 @@
 /// <reference path="../typings/immutable-class.d.ts" />
 "use strict";
 import * as floorShiftCeil from './floor-shift-ceil';
+import * as dateParser from './date-parser';
 
 declare function require(file: string): any;
 declare var module: { exports: any; };
@@ -35,3 +36,4 @@ export function isDate(d: any) {
 }
 
 export var { second, minute, hour, day, week, month, year } = floorShiftCeil;
+export var { parseSQLDate, parseISODate, parseInterval } = dateParser;

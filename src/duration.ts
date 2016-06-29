@@ -1,6 +1,9 @@
-module Chronoshift {
-  var spansWithWeek = ["year", "month", "week", "day", "hour", "minute", "second"];
-  var spansWithoutWeek = ["year", "month", "day", "hour", "minute", "second"];
+import { Class, Instance, isInstanceOf } from "./init";
+import { second, shifters } from "./floor-shift-ceil";
+import { Timezone } from "./timezone"
+
+var spansWithWeek = ["year", "month", "week", "day", "hour", "minute", "second"];
+var spansWithoutWeek = ["year", "month", "day", "hour", "minute", "second"];
 
   export interface DurationValue {
     year?: number;
@@ -327,5 +330,5 @@ module Chronoshift {
     }
 
   }
-  check = Duration;
-}
+
+check = Duration;
