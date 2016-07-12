@@ -1,1 +1,27 @@
-.idea
+# === WebStorm ===
+/.idea/
+
+# === Build ===
+
+/compile-tsc
+/compile
+/script/
+/prepublish
+/dts-bundle.js
+/lint
+/extra
+
+# === Source ===
+
+/src/
+
+# === Test ===
+
+/test/
+/run-tests
+/travis-test
+/.travis.yml
+
+# === Misc ===
+
+/private/
