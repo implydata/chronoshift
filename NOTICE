@@ -1,13 +1,15 @@
-Copyright 2016 Imply Data Inc.
+Chronoshift
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+-------------------------------------------------------------------------------
 
-      http://www.apache.org/licenses/LICENSE-2.0
+Portions of this software were originally based on chronology, copyright (c) 2015, Metamarkets Group Inc.
+  * LICENSE:
+    * https://github.com/facetjs/chronology/blob/master/LICENSE (Apache License 2.0)
+  * HOMEPAGE:
+    * https://github.com/facetjs/chronology
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+This software includes chronology, walltime-js (c) 2013 Sprout Social, Inc.
+  * LICENSE:
+    * https://github.com/sproutsocial/walltime-js/blob/master/LICENSE (MIT)
+  * HOMEPAGE:
+    * https://github.com/sproutsocial/walltime-js
