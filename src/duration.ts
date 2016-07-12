@@ -29,7 +29,7 @@ module Chronoshift {
     second?: number;
 
     // Indexable
-    [span: string]: number;
+    [span: string]: number | undefined;
   }
 
   function capitalizeFirst(str: string): string {
@@ -42,15 +42,15 @@ module Chronoshift {
 //                   P   (year ) (month   ) (day     )    T(hour    ) (minute  ) (second  )
   function getSpansFromString(durationStr: string): DurationValue {
     var spans: DurationValue = {};
-    var matches: any[];
+    var matches: RegExpExecArray | null;
     if (matches = periodWeekRegExp.exec(durationStr)) {
       spans.week = Number(matches[1]);
       if (!spans.week) throw new Error("Duration can not be empty");
     } else if (matches = periodRegExp.exec(durationStr)) {
-      matches = matches.map(Number);
+      var nums = matches.map(Number);
       for (var i = 0; i < spansWithoutWeek.length; i++) {
         var span = spansWithoutWeek[i];
-        var value = matches[i + 1];
+        var value = nums[i + 1];
         if (value) spans[span] = value;
       }
     } else {
@@ -244,13 +244,13 @@ module Chronoshift {
     public floor(date: Date, timezone: Timezone): Date {
       var { singleSpan } = this;
       if (!singleSpan) throw new Error("Can not floor on a complex duration");
-      var span = this.spans[singleSpan];
-      var mover = shifters[singleSpan];
+      var span = this.spans[singleSpan]!;
+      var mover = shifters[singleSpan]!;
       var dt = mover.floor(date, timezone);
       if (span !== 1) {
         if (!mover.siblings) throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
         if (mover.siblings % span !== 0) throw new Error(`Can not floor on a ${singleSpan} duration that does not divide into ${mover.siblings}`);
-        dt = mover.round(dt, span, timezone);
+        dt = (mover as any).round(dt, span, timezone); // the 'as any' is a TS2.0 bug, it should not be needed
       }
       return dt;
     }
@@ -334,13 +334,13 @@ module Chronoshift {
       return description.join(', ');
     }
 
-    public getSingleSpan(): string {
+    public getSingleSpan(): string | null {
       return this.singleSpan || null;
     }
 
-    public getSingleSpanValue(): number {
+    public getSingleSpanValue(): number | null {
       if (!this.singleSpan) return null;
-      return this.spans[this.singleSpan];
+      return this.spans[this.singleSpan] || null;
     }
 
   }

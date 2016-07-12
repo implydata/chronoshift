@@ -64,7 +64,7 @@ module Chronoshift {
 
   export function parseSQLDate(type: string, v: string): Date {
     if (type === 't') throw new Error('time literals are not supported');
-    var m: string[];
+    var m: RegExpMatchArray | null;
     var d: number;
     if (type === 'ts') {
       if (m = v.match(/^(\d{2}(?:\d{2})?)(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/)) {
@@ -88,8 +88,9 @@ module Chronoshift {
 
   // Taken from: https://github.com/csnover/js-iso8601/blob/lax/iso8601.js
   const numericKeys = [1, 4, 5, 6, 10, 11];
-  export function parseISODate(date: string, timezone = Timezone.UTC): Date {
-    var struct: any[], minutesOffset = 0;
+  export function parseISODate(date: string, timezone = Timezone.UTC): Date | null {
+    var struct: any;
+    var minutesOffset = 0;
 
     /*
     (
@@ -176,18 +177,18 @@ module Chronoshift {
   export interface IntervalParse {
     computedStart: Date;
     computedEnd: Date;
-    start?: Date;
-    end?: Date;
-    duration?: Duration;
+    start?: Date | null;
+    end?: Date | null;
+    duration?: Duration | null;
   }
 
   export function parseInterval(str: string, timezone = Timezone.UTC, now = new Date()): IntervalParse {
     var parts = str.split('/');
     if (parts.length > 2) throw new Error(`Can not parse string ${str}`);
 
-    var start: Date = null;
-    var end: Date = null;
-    var duration: Duration = null;
+    var start: Date | null = null;
+    var end: Date | null = null;
+    var duration: Duration | null = null;
 
     var p0: string = parts[0];
     if (parts.length === 1) {
@@ -222,18 +223,18 @@ module Chronoshift {
      <duration>
      */
 
-    var computedStart: Date = null;
-    var computedEnd: Date = null;
+    var computedStart: Date;
+    var computedEnd: Date;
     if (start) {
       computedStart = start;
       if (duration) {
         computedEnd = duration.shift(computedStart, timezone, 1);
       } else {
-        computedEnd = end;
+        computedEnd = end!;
       }
     } else {
       computedEnd = end || now;
-      computedStart = duration.shift(computedEnd, timezone, -1);
+      computedStart = duration!.shift(computedEnd, timezone, -1);
     }
 
     return {
