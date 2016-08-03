@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-declare function require(file: string): any;
 declare var module: { exports: any; };
 
 module Chronoshift {
