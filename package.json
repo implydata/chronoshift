@@ -34,7 +34,7 @@
     }
   },
   "dependencies": {
-    "@types/requirejs": "2.1.26",
+    "@types/node": "6.0.31",
     "immutable-class": "0.4.6"
   },
   "devDependencies": {

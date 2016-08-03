@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-declare var module: { exports: any; };
-
 module Chronoshift {
   export interface WallTime {
     rules: any;

@@ -14,6 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+declare var chronoshift: typeof Chronoshift;
+declare module "chronoshift" {
+  export = Chronoshift;
+}
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   module.exports = Chronoshift;
