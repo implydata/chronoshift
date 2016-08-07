@@ -10,6 +10,7 @@
 /dts-bundle.js
 /lint
 /extra
+/tslint.json
 
 # === Source ===
 
@@ -21,6 +22,8 @@
 /run-tests
 /travis-test
 /.travis.yml
+/coverage
+/checksc
 
 # === Misc ===
 

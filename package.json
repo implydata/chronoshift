@@ -34,9 +34,12 @@
     }
   },
   "dependencies": {
+    "@types/node": "6.0.31",
     "immutable-class": "0.4.6"
   },
   "devDependencies": {
+    "@types/mocha": "2.2.29",
+    "@types/chai": "3.4.30",
     "blanket": "1.2.3",
     "browserify": "13.0.1",
     "chai": "3.5.0",

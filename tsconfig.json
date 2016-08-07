@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "declaration": true,
+    "removeComments": true,
+    "module": "system",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "outFile": "./build/chronoshift.js",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/*.ts",
+    "typings/*"
+  ],
+  "exclude": [
+    "build/*"
+  ]
+}

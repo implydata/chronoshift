@@ -4,18 +4,4 @@ rm -rf build/*
 mkdir -p build
 
 # All files
-node_modules/.bin/tsc \
-  --noImplicitAny --noEmitOnError --declaration --removeComments --noFallthroughCasesInSwitch --noImplicitReturns --strictNullChecks \
-  --m system -out build/chronoshift.js \
-  typings/immutable-class.d.ts \
-  \
-  src/init.ts \
-  \
-  src/timezone.ts \
-  src/floor-shift-ceil.ts \
-  src/duration.ts \
-  src/date-parser.ts \
-  \
-  src/exports.ts \
-  && \
-  node extra/extra.js;
+node_modules/.bin/tsc
