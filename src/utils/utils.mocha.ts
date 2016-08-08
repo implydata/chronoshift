@@ -17,7 +17,7 @@
 
 import { expect } from "chai";
 
-import { isDate } from './util';
+import { isDate } from './utils';
 
 describe("util", () => {
   describe("isDate", () => {
