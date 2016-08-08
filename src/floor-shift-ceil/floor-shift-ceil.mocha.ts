@@ -20,7 +20,7 @@ import { expect } from "chai";
 import { Timezone } from '../timezone/timezone';
 import { shifters } from './floor-shift-ceil'
 
-declare function require(file: string): any;
+
 import { WallTime } from 'walltime-repack';
 if (!WallTime.rules) {
   var tzData:any = require("../../lib/walltime/walltime-data.js");
