@@ -9,7 +9,6 @@
 /prepublish
 /dts-bundle.js
 /lint
-/extra
 /tslint.json
 
 # === Source ===

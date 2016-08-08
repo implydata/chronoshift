@@ -14,11 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare var chronoshift: typeof Chronoshift;
-declare module "chronoshift" {
-  export = Chronoshift;
-}
 
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-  module.exports = Chronoshift;
-}
+import { expect } from "chai";
+
+import { isDate } from './util';
+
+describe("util", () => {
+  describe("isDate", () => {
+    it("works", () => {
+      expect(isDate(new Date)).to.equal(true);
+      expect(isDate([])).to.equal(false);
+    });
+  });
+
+});

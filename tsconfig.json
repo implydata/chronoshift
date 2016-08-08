@@ -4,18 +4,17 @@
     "noEmitOnError": true,
     "declaration": true,
     "removeComments": true,
-    "module": "system",
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "strictNullChecks": true,
-    "outFile": "./build/chronoshift.js",
-    "rootDir": "src"
+    "strictNullChecks": false,
+    "target": "es5",
+    "module": "es6",
+    "rootDir": "src",
+    "outDir": "build"
   },
   "include": [
     "src/*.ts",
+    "src/**/*.ts",
     "typings/*"
-  ],
-  "exclude": [
-    "build/*"
   ]
 }

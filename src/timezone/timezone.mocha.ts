@@ -15,23 +15,17 @@
  * limitations under the License.
  */
 
-/// <reference path="../typings/mocha/mocha.d.ts" />
-/// <reference path="../typings/chai/chai.d.ts" />
-/// <reference path="../build/chronoshift.d.ts" />
-
 import { expect } from "chai";
 
+import { testImmutableClass } from '../../node_modules/immutable-class/build/tester';
+
+import { Timezone } from '../timezone/timezone';
+
 declare function require(file: string): any;
-
-import ImmutableClassTesterModule = require("../node_modules/immutable-class/build/tester");
-import testImmutableClass = ImmutableClassTesterModule.testImmutableClass;
-
-var chronoshift = <typeof Chronoshift>require("../build/chronoshift");
-var Timezone = chronoshift.Timezone;
-
-if (!chronoshift.WallTime.rules) {
-  var tzData:any = require("../lib/walltime/walltime-data.js");
-  chronoshift.WallTime.init(tzData.rules, tzData.zones);
+import { WallTime } from 'walltime-repack';
+if (!WallTime.rules) {
+  var tzData:any = require("../../lib/walltime/walltime-data.js");
+  WallTime.init(tzData.rules, tzData.zones);
 }
 
 describe("Timezone", () => {
@@ -75,4 +69,5 @@ describe("Timezone", () => {
       expect(Timezone.isTimezone(new Timezone(timezoneStr))).to.equal(true)
     });
   });
+
 });
