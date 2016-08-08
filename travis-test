@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 if grep -rq 'describe\.only' ./test
   then
@@ -14,3 +14,4 @@ fi
 
 ./compile
 mocha --compilers js:babel-core/register build/**/*.mocha.js
+mocha test/*.js

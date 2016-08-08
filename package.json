@@ -25,7 +25,7 @@
     "definition": "build/chronoshift.d.ts"
   },
   "scripts": {
-    "test": "./run-tests",
+    "test": "./travis-test",
     "prepublish": "./compile"
   },
   "config": {
