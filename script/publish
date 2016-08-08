@@ -9,6 +9,6 @@ fi
 echo "Trying to publish..."
 
 ./compile
-./run-tests
+./travis-test
 script/version-bump
 npm publish
