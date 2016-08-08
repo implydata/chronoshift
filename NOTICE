@@ -7,9 +7,3 @@ Portions of this software were originally based on chronology, copyright (c) 201
     * https://github.com/facetjs/chronology/blob/master/LICENSE (Apache License 2.0)
   * HOMEPAGE:
     * https://github.com/facetjs/chronology
-
-This software includes chronology, walltime-js (c) 2013 Sprout Social, Inc.
-  * LICENSE:
-    * https://github.com/sproutsocial/walltime-js/blob/master/LICENSE (MIT)
-  * HOMEPAGE:
-    * https://github.com/sproutsocial/walltime-js

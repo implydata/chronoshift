@@ -15,24 +15,18 @@
  * limitations under the License.
  */
 
-/// <reference path="../typings/mocha/mocha.d.ts" />
-/// <reference path="../typings/chai/chai.d.ts" />
-/// <reference path="../build/chronoshift.d.ts" />
-
 import { expect, assert } from "chai";
 var { deepEqual } = assert;
 
-declare function require(file: string): any;
+import { Timezone } from '../timezone/timezone';
+import { parseISODate, parseInterval } from './date-parser';
 
-var chronoshift = require("../build/chronoshift");
-var Timezone = chronoshift.Timezone;
 
-if (!chronoshift.WallTime.rules) {
-  var tzData:any = require("../lib/walltime/walltime-data.js");
-  chronoshift.WallTime.init(tzData.rules, tzData.zones);
+import { WallTime } from 'walltime-repack';
+if (!WallTime.rules) {
+  var tzData:any = require("../../lib/walltime/walltime-data.js");
+  WallTime.init(tzData.rules, tzData.zones);
 }
-
-var { parseISODate, parseInterval } = chronoshift;
 
 describe('date parser', () => {
 

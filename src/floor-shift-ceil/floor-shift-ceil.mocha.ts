@@ -15,22 +15,16 @@
  * limitations under the License.
  */
 
-/// <reference path="../typings/mocha/mocha.d.ts" />
-/// <reference path="../typings/chai/chai.d.ts" />
-/// <reference path="../build/chronoshift.d.ts" />
-
 import { expect } from "chai";
 
-declare function require(file: string): any;
+import { Timezone } from '../timezone/timezone';
+import { shifters } from './floor-shift-ceil'
 
-import ImmutableClassTesterModule = require("../node_modules/immutable-class/build/tester");
 
-var chronoshift = require("../build/chronoshift");
-var Timezone = chronoshift.Timezone;
-
-if (!chronoshift.WallTime.rules) {
-  var tzData:any = require("../lib/walltime/walltime-data.js");
-  chronoshift.WallTime.init(tzData.rules, tzData.zones);
+import { WallTime } from 'walltime-repack';
+if (!WallTime.rules) {
+  var tzData:any = require("../../lib/walltime/walltime-data.js");
+  WallTime.init(tzData.rules, tzData.zones);
 }
 
 function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
@@ -50,7 +44,7 @@ describe("floor/shift/ceil", () => {
       new Date("2012-11-04T00:00:09-07:00"),
       new Date("2012-11-04T00:00:12-07:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.second.shift(d1, tz, 3)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.second.shift(d1, tz, 3)).to.deep.equal(d2));
   });
 
   it("shifts minutes", () => {
@@ -61,23 +55,23 @@ describe("floor/shift/ceil", () => {
       new Date("2012-11-04T00:09:00-07:00"),
       new Date("2012-11-04T00:12:00-07:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.minute.shift(d1, tz, 3)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.minute.shift(d1, tz, 3)).to.deep.equal(d2));
   });
 
   it("floors hour correctly", () => {
-    expect(chronoshift.hour.floor(new Date("2012-11-04T00:30:00-07:00"), tz))
+    expect(shifters.hour.floor(new Date("2012-11-04T00:30:00-07:00"), tz))
       .to.deep.equal(new Date("2012-11-04T00:00:00-07:00"), 'A');
 
-    expect(chronoshift.hour.floor(new Date("2012-11-04T01:30:00-07:00"), tz))
+    expect(shifters.hour.floor(new Date("2012-11-04T01:30:00-07:00"), tz))
       .to.deep.equal(new Date("2012-11-04T01:00:00-08:00"), 'B');
 
-    expect(chronoshift.hour.floor(new Date("2012-11-04T01:30:00-08:00"), tz))
+    expect(shifters.hour.floor(new Date("2012-11-04T01:30:00-08:00"), tz))
       .to.deep.equal(new Date("2012-11-04T01:00:00-08:00"), 'C');
 
-    expect(chronoshift.hour.floor(new Date("2012-11-04T02:30:00-08:00"), tz))
+    expect(shifters.hour.floor(new Date("2012-11-04T02:30:00-08:00"), tz))
       .to.deep.equal(new Date("2012-11-04T02:00:00-08:00"), 'D');
 
-    expect(chronoshift.hour.floor(new Date("2012-11-04T03:30:00-08:00"), tz))
+    expect(shifters.hour.floor(new Date("2012-11-04T03:30:00-08:00"), tz))
       .to.deep.equal(new Date("2012-11-04T03:00:00-08:00"), 'E');
   });
 
@@ -88,7 +82,7 @@ describe("floor/shift/ceil", () => {
       new Date("2012-11-04T02:00:00-08:00"),
       new Date("2012-11-04T03:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.hour.shift(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.hour.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 
   it("shifts day over DST", () => {
@@ -98,7 +92,7 @@ describe("floor/shift/ceil", () => {
       new Date("2012-11-05T00:00:00-08:00"),
       new Date("2012-11-06T00:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.day.shift(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.day.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 
   it("shifts week over DST", () => {
@@ -108,27 +102,27 @@ describe("floor/shift/ceil", () => {
       new Date("2012-11-12T00:00:00-08:00"),
       new Date("2012-11-19T00:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.week.shift(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.week.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 
   it("floors week correctly", () => {
     var d1 = new Date("2014-12-11T22:11:57.469Z");
     var d2 = new Date("2014-12-08T08:00:00.000Z");
-    expect(chronoshift.week.floor(d1, tz)).to.eql(d2);
+    expect(shifters.week.floor(d1, tz)).to.eql(d2);
 
     d1 = new Date("2014-12-07T12:11:57.469Z");
     d2 = new Date("2014-12-01T08:00:00.000Z");
-    expect(chronoshift.week.floor(d1, tz)).to.eql(d2);
+    expect(shifters.week.floor(d1, tz)).to.eql(d2);
   });
 
   it("ceils week correctly", () => {
     var d1 = new Date("2014-12-11T22:11:57.469Z");
     var d2 = new Date("2014-12-15T08:00:00.000Z");
-    expect(chronoshift.week.ceil(d1, tz)).to.eql(d2);
+    expect(shifters.week.ceil(d1, tz)).to.eql(d2);
 
     d1 = new Date("2014-12-07T12:11:57.469Z");
     d2 = new Date("2014-12-08T08:00:00.000Z");
-    expect(chronoshift.week.ceil(d1, tz)).to.eql(d2);
+    expect(shifters.week.ceil(d1, tz)).to.eql(d2);
   });
 
   it("shifts month over DST", () => {
@@ -138,7 +132,7 @@ describe("floor/shift/ceil", () => {
       new Date("2013-01-01T00:00:00-08:00"),
       new Date("2013-02-01T00:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.month.shift(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.month.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 
   it("shifts year", () => {
@@ -148,6 +142,6 @@ describe("floor/shift/ceil", () => {
       new Date("2012-01-01T00:00:00-08:00"),
       new Date("2013-01-01T00:00:00-08:00")
     ];
-    pairwise(dates, (d1, d2) => expect(chronoshift.year.shift(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.year.shift(d1, tz, 1)).to.deep.equal(d2));
   });
 });

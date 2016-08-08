@@ -15,24 +15,18 @@
  * limitations under the License.
  */
 
-/// <reference path="../typings/mocha/mocha.d.ts" />
-/// <reference path="../typings/chai/chai.d.ts" />
-/// <reference path="../build/chronoshift.d.ts" />
-
 import { expect } from "chai";
 
-declare function require(file: string): any;
+import { testImmutableClass } from '../../node_modules/immutable-class/build/tester';
 
-import ImmutableClassTesterModule = require("../node_modules/immutable-class/build/tester");
-import testImmutableClass = ImmutableClassTesterModule.testImmutableClass;
+import { Timezone } from '../timezone/timezone';
+import { Duration } from '../duration/duration';
 
-var chronoshift = <typeof Chronoshift>require("../build/chronoshift");
-var Timezone = chronoshift.Timezone;
-var Duration = chronoshift.Duration;
 
-if (!chronoshift.WallTime.rules) {
-  var tzData:any = require("../lib/walltime/walltime-data.js");
-  chronoshift.WallTime.init(tzData.rules, tzData.zones);
+import { WallTime } from 'walltime-repack';
+if (!WallTime.rules) {
+  var tzData:any = require("../../lib/walltime/walltime-data.js");
+  WallTime.init(tzData.rules, tzData.zones);
 }
 
 describe("Duration", () => {
@@ -71,7 +65,8 @@ describe("Duration", () => {
 
   describe("#toString", () => {
     it("gives back the correct string", () => {
-      var durationStr;
+      var durationStr: string;
+
       durationStr = "P3Y";
       expect(Duration.fromJS(durationStr).toString()).to.equal(durationStr);
 
@@ -197,7 +192,9 @@ describe("Duration", () => {
 
   describe("#shift", () => {
     it("works for weeks", () => {
-      var p1w, p2w;
+      var p1w: Duration;
+      var p2w: Duration;
+
       p1w = Duration.fromJS("P1W");
       expect(p1w.shift(new Date("2012-10-29T00:00:00-07:00"), TZ_LA)).to.deep.equal(new Date("2012-11-05T00:00:00-08:00"));
 
@@ -265,7 +262,8 @@ describe("Duration", () => {
 
   describe("#getCanonicalLength", () => {
     it("gives back the correct canonical length", () => {
-      var durationStr;
+      var durationStr: string;
+
       durationStr = "P3Y";
       expect(Duration.fromJS(durationStr).getCanonicalLength()).to.equal(94608000000);
 
@@ -339,7 +337,8 @@ describe("Duration", () => {
 
   describe("#getDescription()", () => {
     it("gives back the correct description", () => {
-      var durationStr;
+      var durationStr: string;
+
       durationStr = "P1D";
       expect(Duration.fromJS(durationStr).getDescription()).to.equal('day');
 
@@ -362,7 +361,8 @@ describe("Duration", () => {
 
   describe("#getSingleSpan()", () => {
     it("gives back the correct span", () => {
-      var durationStr;
+      var durationStr: string;
+
       durationStr = "P1D";
       expect(Duration.fromJS(durationStr).getSingleSpan()).to.equal('day');
 
@@ -385,7 +385,8 @@ describe("Duration", () => {
 
   describe("#getSingleSpanValue()", () => {
     it("gives back the correct span value", () => {
-      var durationStr;
+      var durationStr: string;
+
       durationStr = "P1D";
       expect(Duration.fromJS(durationStr).getSingleSpanValue()).to.equal(1);
 
