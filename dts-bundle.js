@@ -3,6 +3,6 @@
 var dts = require('dts-bundle');
 
 dts.bundle({
-  name: 'chronology',
+  name: 'chronoshift',
   main: 'build/index.d.ts'
 });
