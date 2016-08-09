@@ -15,8 +15,7 @@
  */
 
 export function isDate(d: any) {
-  return typeof d === 'object' &&
-    d.constructor.name === 'Date';
+  return !!(d && d.toISOString);
 }
 
 

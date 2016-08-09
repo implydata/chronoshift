@@ -24,6 +24,7 @@ describe("util", () => {
     it("works", () => {
       expect(isDate(new Date)).to.equal(true);
       expect(isDate([])).to.equal(false);
+      expect(isDate(null)).to.equal(false);
     });
   });
 
