@@ -21,9 +21,7 @@
     "url": "http://github.com/implydata/chronoshift.git"
   },
   "main": "build/chronoshift.js",
-  "typescript": {
-    "definition": "build/chronoshift.d.ts"
-  },
+  "typings": "build/index.d.ts",
   "scripts": {
     "test": "./travis-test",
     "prepublish": "./compile"
@@ -35,7 +33,7 @@
   },
   "dependencies": {
     "immutable-class": "0.5.2",
-    "walltime-repack": "0.2.3"
+    "walltime-repack": "0.2.4"
   },
   "devDependencies": {
     "@types/chai": "3.4.30",
@@ -50,7 +48,7 @@
     "gulp": "3.9.1",
     "gulp-mocha": "3.0.0",
     "gulp-typescript": "2.13.6",
-    "mocha": "3.0.1",
+    "mocha": "3.0.2",
     "pegjs": "0.9.0",
     "rollup": "0.34.7",
     "run-sequence": "1.2.2",
