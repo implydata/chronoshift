@@ -32,7 +32,7 @@
     }
   },
   "dependencies": {
-    "immutable-class": "0.5.2",
+    "immutable-class": "0.6.x",
     "walltime-repack": "0.2.4"
   },
   "devDependencies": {
@@ -48,11 +48,12 @@
     "gulp": "3.9.1",
     "gulp-mocha": "3.0.0",
     "gulp-typescript": "2.13.6",
+    "immutable-class-tester": "0.5.1",
     "mocha": "3.0.2",
     "pegjs": "0.9.0",
     "rollup": "0.34.7",
     "run-sequence": "1.2.2",
     "tslint": "3.14.0",
-    "typescript": "beta"
+    "typescript": "2.0.0"
   }
 }

@@ -17,7 +17,7 @@
 
 import { expect } from "chai";
 
-import { testImmutableClass } from '../../node_modules/immutable-class/build/tester';
+import { testImmutableClass } from 'immutable-class-tester';
 
 import { Timezone } from '../timezone/timezone';
 import { Duration } from '../duration/duration';
