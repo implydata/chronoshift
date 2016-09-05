@@ -24,7 +24,7 @@
   "typings": "build/index.d.ts",
   "scripts": {
     "test": "./travis-test",
-    "prepublish": "./compile"
+    "compile": "./compile"
   },
   "config": {
     "blanket": {
