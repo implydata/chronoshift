@@ -20,13 +20,6 @@ import { expect } from "chai";
 import { Timezone } from '../timezone/timezone';
 import { shifters } from './floor-shift-ceil'
 
-
-import { WallTime } from 'walltime-repack';
-if (!WallTime.rules) {
-  var tzData:any = require("../../lib/walltime/walltime-data.js");
-  WallTime.init(tzData.rules, tzData.zones);
-}
-
 function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
   for (var i = 0; i < array.length - 1; i++) {
     callback(array[i], array[i + 1])
@@ -63,7 +56,7 @@ describe("floor/shift/ceil", () => {
       .to.deep.equal(new Date("2012-11-04T00:00:00-07:00"), 'A');
 
     expect(shifters.hour.floor(new Date("2012-11-04T01:30:00-07:00"), tz))
-      .to.deep.equal(new Date("2012-11-04T01:00:00-08:00"), 'B');
+      .to.deep.equal(new Date("2012-11-04T01:00:00-07:00"), 'B');
 
     expect(shifters.hour.floor(new Date("2012-11-04T01:30:00-08:00"), tz))
       .to.deep.equal(new Date("2012-11-04T01:00:00-08:00"), 'C');
@@ -78,7 +71,7 @@ describe("floor/shift/ceil", () => {
   it("shifts hour over DST", () => {
     var dates: Date[] = [
       new Date("2012-11-04T00:00:00-07:00"),
-      new Date("2012-11-04T01:00:00-08:00"),
+      new Date("2012-11-04T01:00:00-07:00"),
       new Date("2012-11-04T02:00:00-08:00"),
       new Date("2012-11-04T03:00:00-08:00")
     ];

@@ -1,4 +1,4 @@
-# Chronoshift [![Dependency Status](https://david-dm.org/implyio/chronoshift.svg?theme=shields.io)](https://david-dm.org/implyio/chronoshift) [![devDependency Status](https://david-dm.org/implyio/chronoshift/dev-status.svg?theme=shields.io)](https://david-dm.org/implyio/chronoshift#info=devDependencies) [![Build Status](https://travis-ci.org/implyio/chronoshift.svg?branch=master)](https://travis-ci.org/implyio/chronoshift)
+# Chronoshift
 
 Chronoshift is a library to manipulate time with timezones
 
@@ -8,18 +8,6 @@ In node simply run: `npm install chronoshift`
 
 In the browser you should use the browserified package/chronoshift.js
 
-## Initialization
-
-Chronoshift uses [WallTime.js](https://github.com/sproutsocial/walltime-js) under the hood and it needs to be initialized with timezone data before it can be used.
-
-```javascript
-// Example timezone data can be found in lib/walltime/walltime-data.js
-// it should be imported with require or AJAX
-var tzData = require("./lib/walltime/walltime-data.js");
-
-// Chronoshift's WallTime instance can be accessed like so:
-chronoshift.WallTime.init(tzData.rules, tzData.zones);
-```
 
 ## Usage
 

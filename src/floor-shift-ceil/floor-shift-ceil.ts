@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { WallTime } from 'walltime-repack';
+import * as moment from 'moment-timezone';
 import { Timezone } from '../timezone/timezone';
 
 export interface AlignFn {
@@ -110,12 +110,8 @@ function hourMove(dt: Date, tz: Timezone, step: number) {
     dt = new Date(dt.valueOf());
     dt.setUTCHours(dt.getUTCHours() + step);
   } else {
-    let wt = WallTime.UTCToWallTime(dt, tz.toString());
-    dt = WallTime.WallTimeToUTC(
-      tz.toString(),
-      wt.getFullYear(), wt.getMonth(), wt.getDate(),
-      wt.getHours() + step, wt.getMinutes(), wt.getSeconds(), wt.getMilliseconds()
-    );
+    let wt = moment.tz(dt, tz.toString());
+    dt = new Date(wt.hour(wt.hour() + step).valueOf());
   }
   return dt;
 }
@@ -128,8 +124,8 @@ export const hour = timeShifterFiller({
       dt = new Date(dt.valueOf());
       dt.setUTCMinutes(0, 0, 0);
     } else {
-      let wt = WallTime.UTCToWallTime(dt, tz.toString());
-      dt = WallTime.WallTimeToUTC(tz.toString(), wt.getFullYear(), wt.getMonth(), wt.getDate(), wt.getHours(), 0, 0, 0);
+      let wt = moment.tz(dt, tz.toString());
+      dt = new Date(wt.second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },
@@ -139,8 +135,8 @@ export const hour = timeShifterFiller({
       var adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCHours(adj);
     } else {
-      let wt = WallTime.UTCToWallTime(dt, tz.toString());
-      var cur = wt.getHours();
+      let wt = moment.tz(dt, tz.toString());
+      var cur = wt.hour() as number;
       var adj = floorTo(cur, roundTo);
       if (cur !== adj) return hourMove(dt, tz, adj - cur);
     }
@@ -156,8 +152,8 @@ export const day = timeShifterFiller({
       dt = new Date(dt.valueOf());
       dt.setUTCHours(0, 0, 0, 0);
     } else {
-      let wt = WallTime.UTCToWallTime(dt, tz.toString());
-      dt = WallTime.WallTimeToUTC(tz.toString(), wt.getFullYear(), wt.getMonth(), wt.getDate(), 0, 0, 0, 0);
+      let wt = moment.tz(dt, tz.toString());
+      dt = new Date(wt.hour(0).second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },
@@ -166,12 +162,8 @@ export const day = timeShifterFiller({
       dt = new Date(dt.valueOf());
       dt.setUTCDate(dt.getUTCDate() + step);
     } else {
-      let wt = WallTime.UTCToWallTime(dt, tz.toString());
-      dt = WallTime.WallTimeToUTC(
-        tz.toString(),
-        wt.getFullYear(), wt.getMonth(), wt.getDate() + step,
-        wt.getHours(), wt.getMinutes(), wt.getSeconds(), wt.getMilliseconds()
-      );
+      let wt = moment.tz(dt, tz.toString());
+      dt = new Date(wt.add(step, 'days').valueOf());
     }
     return dt;
   }
@@ -185,12 +177,8 @@ export const week = timeShifterFiller({
       dt.setUTCHours(0, 0, 0, 0);
       dt.setUTCDate(dt.getUTCDate() - adjustDay(dt.getUTCDay()));
     } else {
-      let wt = WallTime.UTCToWallTime(dt, tz.toString());
-      dt = WallTime.WallTimeToUTC(
-        tz.toString(),
-        wt.getFullYear(), wt.getMonth(), wt.getDate() - adjustDay(wt.getDay()),
-        0, 0, 0, 0
-      );
+      let wt = moment.tz(dt, tz.toString());
+      dt = new Date(wt.date(wt.date() - adjustDay(wt.day())).hour(0).second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },
@@ -199,12 +187,8 @@ export const week = timeShifterFiller({
       dt = new Date(dt.valueOf());
       dt.setUTCDate(dt.getUTCDate() + step * 7);
     } else {
-      let wt = WallTime.UTCToWallTime(dt, tz.toString());
-      dt = WallTime.WallTimeToUTC(
-        tz.toString(),
-        wt.getFullYear(), wt.getMonth(), wt.getDate() + step * 7,
-        wt.getHours(), wt.getMinutes(), wt.getSeconds(), wt.getMilliseconds()
-      );
+      let wt = moment.tz(dt, tz.toString());
+      dt = new Date(wt.add(step * 7, 'days').valueOf());
     }
     return dt;
   }
@@ -215,12 +199,8 @@ function monthShift(dt: Date, tz: Timezone, step: number) {
     dt = new Date(dt.valueOf());
     dt.setUTCMonth(dt.getUTCMonth() + step);
   } else {
-    let wt = WallTime.UTCToWallTime(dt, tz.toString());
-    dt = WallTime.WallTimeToUTC(
-      tz.toString(),
-      wt.getFullYear(), wt.getMonth() + step, wt.getDate(),
-      wt.getHours(), wt.getMinutes(), wt.getSeconds(), wt.getMilliseconds()
-    );
+    let wt = moment.tz(dt, tz.toString());
+    dt = new Date(wt.add(step, 'month').valueOf());
   }
   return dt;
 }
@@ -234,8 +214,8 @@ export const month = timeShifterFiller({
       dt.setUTCHours(0, 0, 0, 0);
       dt.setUTCDate(1);
     } else {
-      let wt = WallTime.UTCToWallTime(dt, tz.toString());
-      dt = WallTime.WallTimeToUTC(tz.toString(), wt.getFullYear(), wt.getMonth(), 1, 0, 0, 0, 0);
+      let wt = moment.tz(dt, tz.toString());
+      dt = new Date(wt.date(1).hour(0).second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },
@@ -245,7 +225,8 @@ export const month = timeShifterFiller({
       var adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCMonth(adj);
     } else {
-      var cur = dt.getMonth();
+      let wt = moment.tz(dt, tz.toString());
+      var cur = wt.month();
       var adj = floorTo(cur, roundTo);
       if (cur !== adj) return monthShift(dt, tz, adj - cur);
     }
@@ -259,12 +240,8 @@ function yearShift(dt: Date, tz: Timezone, step: number) {
     dt = new Date(dt.valueOf());
     dt.setUTCFullYear(dt.getUTCFullYear() + step);
   } else {
-    let wt = WallTime.UTCToWallTime(dt, tz.toString());
-    dt = WallTime.WallTimeToUTC(
-      tz.toString(),
-      wt.getFullYear() + step, wt.getMonth(), wt.getDate(),
-      wt.getHours(), wt.getMinutes(), wt.getSeconds(), wt.getMilliseconds()
-    );
+    let wt = moment.tz(dt, tz.toString());
+    dt = new Date(wt.add(step, 'years'));
   }
   return dt;
 }
@@ -278,8 +255,8 @@ export const year = timeShifterFiller({
       dt.setUTCHours(0, 0, 0, 0);
       dt.setUTCMonth(0, 1);
     } else {
-      let wt = WallTime.UTCToWallTime(dt, tz.toString());
-      dt = WallTime.WallTimeToUTC(tz.toString(), wt.getFullYear(), 0, 1, 0, 0, 0, 0);
+      let wt = moment.tz(dt, tz.toString());
+      dt = new Date(wt.month(0).date(1).hour(0).second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },
@@ -289,7 +266,8 @@ export const year = timeShifterFiller({
       var adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCFullYear(adj);
     } else {
-      var cur = dt.getFullYear();
+      let wt = moment.tz(dt, tz.toString());
+      var cur = wt.year();
       var adj = floorTo(cur, roundTo);
       if (cur !== adj) return yearShift(dt, tz, adj - cur);
     }

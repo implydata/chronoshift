@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
+import * as moment from 'moment-timezone';
 import { Class, Instance, isInstanceOf } from 'immutable-class';
-import { WallTime } from 'walltime-repack';
 
 /**
  * Represents timezones
@@ -42,8 +42,8 @@ export class Timezone implements Instance<string, string> {
     if (typeof timezone !== 'string') {
       throw new TypeError("timezone description must be a string");
     }
-    if (timezone !== 'Etc/UTC') {
-      WallTime.UTCToWallTime(new Date(0), timezone); // This will throw an error if timezone is not a real timezone
+    if (timezone !== 'Etc/UTC' && !moment.tz.zone(timezone)) {
+      throw new Error(`timezone '${timezone}' does not exist`);
     }
     this.timezone = timezone;
   }

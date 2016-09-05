@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { WallTime as WT } from 'walltime-repack';
+import * as momentTz from 'moment-timezone';
 
 export * from './date-parser/date-parser';
 export * from './floor-shift-ceil/floor-shift-ceil';
@@ -22,4 +22,4 @@ export * from './timezone/timezone';
 export * from './duration/duration';
 export * from './utils/utils';
 
-export var WallTime: any = WT;
+export var moment: any = momentTz;

@@ -21,13 +21,6 @@ import { testImmutableClass } from 'immutable-class-tester';
 
 import { Timezone } from '../timezone/timezone';
 
-
-import { WallTime } from 'walltime-repack';
-if (!WallTime.rules) {
-  var tzData:any = require("../../lib/walltime/walltime-data.js");
-  WallTime.init(tzData.rules, tzData.zones);
-}
-
 describe("Timezone", () => {
   it("is an immutable class", () => {
     testImmutableClass(Timezone, [
@@ -39,11 +32,11 @@ describe("Timezone", () => {
 
   describe("errors", () => {
     it("throws error if invalid timezone", () => {
-      expect(() => new Timezone("")).to.throw(Error, "Unable to find time zone named <blank>");
+      expect(() => new Timezone("")).to.throw(Error, "timezone '' does not exist");
 
-      expect(() => new Timezone("Blah/UTC")).to.throw(Error, "Unable to find time zone named Blah/UTC");
+      expect(() => new Timezone("Blah/UTC")).to.throw(Error, "timezone 'Blah/UTC' does not exist");
 
-      expect(() => new Timezone("America/Lost_Angeles")).to.throw(Error, "Unable to find time zone named America/Lost_Angeles");
+      expect(() => new Timezone("America/Lost_Angeles")).to.throw(Error, "timezone 'America/Lost_Angeles' does not exist");
     });
   });
 

@@ -22,13 +22,6 @@ import { testImmutableClass } from 'immutable-class-tester';
 import { Timezone } from '../timezone/timezone';
 import { Duration } from '../duration/duration';
 
-
-import { WallTime } from 'walltime-repack';
-if (!WallTime.rules) {
-  var tzData:any = require("../../lib/walltime/walltime-data.js");
-  WallTime.init(tzData.rules, tzData.zones);
-}
-
 describe("Duration", () => {
   var TZ_LA = Timezone.fromJS("America/Los_Angeles");
   var TZ_JUNEAU = Timezone.fromJS("America/Juneau");

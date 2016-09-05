@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { WallTime } from 'walltime-repack';
+import * as moment from 'moment-timezone';
 import { Timezone } from '../timezone/timezone';
 import { Duration } from '../duration/duration';
 
@@ -156,7 +156,15 @@ export function parseISODate(date: string, timezone = Timezone.UTC): Date | null
         // timezone explicitly set to null = use local timezone
         return new Date(struct[1], struct[2], struct[3], struct[4], struct[5], struct[6], struct[7]);
       } else {
-        return WallTime.WallTimeToUTC(timezone.toString(), struct[1], struct[2], struct[3], struct[4], struct[5], struct[6], struct[7]);
+        return new Date(moment.tz({
+          year: struct[1],
+          month: struct[2],
+          day: struct[3],
+          hour: struct[4],
+          minute: struct[5],
+          second: struct[6],
+          millisecond: struct[7]
+        }, timezone.toString()).valueOf());
       }
     } else {
       if (struct[8] !== 'Z' && struct[9] !== undefined) {

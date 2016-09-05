@@ -21,13 +21,6 @@ var { deepEqual } = assert;
 import { Timezone } from '../timezone/timezone';
 import { parseISODate, parseInterval } from './date-parser';
 
-
-import { WallTime } from 'walltime-repack';
-if (!WallTime.rules) {
-  var tzData:any = require("../../lib/walltime/walltime-data.js");
-  WallTime.init(tzData.rules, tzData.zones);
-}
-
 describe('date parser', () => {
 
   describe('parseISODate', () => {

@@ -4,6 +4,6 @@ export default {
   dest: 'build/chronoshift.js',
   external: [
     'immutable-class',
-    'walltime-repack'
+    'moment-timezone'
   ]
 };
