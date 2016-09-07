@@ -7,9 +7,6 @@ echo "Compile TypeScript"
 echo "Combine with rollup"
 node_modules/.bin/rollup -c
 
-echo "Bundle types"
-node dts-bundle
-
 # Package
 echo "Package with browserify"
 rm -rf package/*

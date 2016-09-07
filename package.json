@@ -43,7 +43,6 @@
     "blanket": "1.2.3",
     "browserify": "13.1.0",
     "chai": "3.5.0",
-    "dts-bundle": "0.5.0",
     "event-stream": "3.3.4",
     "gulp": "3.9.1",
     "gulp-mocha": "3.0.1",

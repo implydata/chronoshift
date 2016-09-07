@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as momentTz from 'moment-timezone';
+import * as momentTz from 'moment-timezone-tsc';
 
 export * from './date-parser/date-parser';
 export * from './floor-shift-ceil/floor-shift-ceil';
