@@ -22,7 +22,12 @@
   },
   "main": "build/chronoshift.js",
   "typings": "build/index.d.ts",
+  "files": [
+    "build/",
+    "typings/"
+  ],
   "scripts": {
+    "prepublish": "node_modules/.bin/tdi",
     "test": "./travis-test",
     "compile": "./compile"
   },
@@ -32,26 +37,26 @@
     }
   },
   "dependencies": {
-    "immutable-class": "0.6.11",
-    "moment-timezone-tsc": "0.5.5"
+    "immutable-class": "0.6.16",
+    "moment-timezone": "0.5.5"
   },
   "devDependencies": {
-    "@types/chai": "3.4.32",
-    "@types/mocha": "2.2.31",
-    "babel-core": "6.14.0",
-    "babel-preset-es2015": "6.14.0",
+    "@types/mocha": "2.2.32",
+    "babel-core": "6.16.0",
+    "babel-preset-es2015": "6.16.0",
     "blanket": "1.2.3",
     "browserify": "13.1.0",
     "chai": "3.5.0",
     "event-stream": "3.3.4",
     "gulp": "3.9.1",
     "gulp-mocha": "3.0.1",
-    "gulp-typescript": "2.13.6",
-    "immutable-class-tester": "0.5.3",
-    "mocha": "3.0.2",
-    "rollup": "0.34.13",
+    "gulp-typescript": "3.0.1",
+    "immutable-class-tester": "0.5.6",
+    "mocha": "3.1.0",
+    "rollup": "0.36.1",
     "run-sequence": "1.2.2",
+    "tdi": "0.1.2",
     "tslint": "3.15.1",
-    "typescript": "2.0.0"
+    "typescript": "2.0.3"
   }
 }
