@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { Class, Instance, isInstanceOf } from 'immutable-class';
+import { Class, Instance } from 'immutable-class';
 import { Timezone } from '../timezone/timezone';
 import { shifters, second } from '../floor-shift-ceil/floor-shift-ceil'
 
@@ -146,7 +146,7 @@ export class Duration implements Instance<DurationValue, string> {
   }
 
   static isDuration(candidate: any): boolean {
-    return isInstanceOf(candidate, Duration);
+    return candidate instanceof Duration;
   }
 
   /**
