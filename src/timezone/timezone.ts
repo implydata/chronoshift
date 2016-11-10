@@ -16,7 +16,7 @@
  */
 
 import * as moment from 'moment-timezone';
-import { Class, Instance, isInstanceOf } from 'immutable-class';
+import { Class, Instance } from 'immutable-class';
 
 /**
  * Represents timezones
@@ -28,7 +28,7 @@ export class Timezone implements Instance<string, string> {
   private timezone: string;
 
   static isTimezone(candidate: any): boolean {
-    return isInstanceOf(candidate, Timezone);
+    return candidate instanceof Timezone;
   }
 
   static fromJS(spec: string): Timezone {
