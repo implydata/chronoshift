@@ -21,16 +21,16 @@ import { Timezone } from '../timezone/timezone';
 import { shifters } from './floor-shift-ceil'
 
 function pairwise<T>(array: T[], callback:(t1:T, t2:T) => void) {
-  for (var i = 0; i < array.length - 1; i++) {
+  for (let i = 0; i < array.length - 1; i++) {
     callback(array[i], array[i + 1])
   }
 }
 
 describe("floor, move, ceil (UTC)", () => {
-  var tz = Timezone.UTC;
+  let tz = Timezone.UTC;
 
   it("moves seconds", () => {
-    var dates: Date[] = [
+    let dates: Date[] = [
       new Date("2012-11-04T00:00:00"),
       new Date("2012-11-04T00:00:03"),
       new Date("2012-11-04T00:00:06"),
@@ -49,7 +49,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves minutes", () => {
-    var dates: Date[] = [
+    let dates: Date[] = [
       new Date("2012-11-04T00:00:00"),
       new Date("2012-11-04T00:03:00"),
       new Date("2012-11-04T00:06:00"),
@@ -77,7 +77,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves hour", () => {
-    var dates: Date[] = [
+    let dates: Date[] = [
       new Date("2012-11-04T00:00:00"),
       new Date("2012-11-04T01:00:00"),
       new Date("2012-11-04T02:00:00"),
@@ -87,7 +87,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves day", () => {
-    var dates: Date[] = [
+    let dates: Date[] = [
       new Date("2012-11-03T00:00:00"),
       new Date("2012-11-04T00:00:00"),
       new Date("2012-11-05T00:00:00"),
@@ -97,8 +97,8 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("ceils day", () => {
-    var d1 = new Date("2014-12-11T22:11:57.469Z");
-    var d2 = new Date("2014-12-12T00:00:00.000Z");
+    let d1 = new Date("2014-12-11T22:11:57.469Z");
+    let d2 = new Date("2014-12-12T00:00:00.000Z");
     expect(shifters.day.ceil(d1, tz)).to.eql(d2);
 
     d1 = new Date("2014-12-08T00:00:00.000Z");
@@ -107,7 +107,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves week", () => {
-    var dates: Date[] = [
+    let dates: Date[] = [
       new Date("2012-10-29T00:00:00"),
       new Date("2012-11-05T00:00:00"),
       new Date("2012-11-12T00:00:00"),
@@ -117,8 +117,8 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("floors week correctly", () => {
-    var d1 = new Date("2014-12-11T22:11:57.469Z");
-    var d2 = new Date("2014-12-08T00:00:00.000Z");
+    let d1 = new Date("2014-12-11T22:11:57.469Z");
+    let d2 = new Date("2014-12-08T00:00:00.000Z");
     expect(shifters.week.floor(d1, tz)).to.eql(d2);
 
     d1 = new Date("2014-12-07T12:11:57.469Z");
@@ -127,8 +127,8 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("ceils week correctly", () => {
-    var d1 = new Date("2014-12-11T22:11:57.469Z");
-    var d2 = new Date("2014-12-15T00:00:00.000Z");
+    let d1 = new Date("2014-12-11T22:11:57.469Z");
+    let d2 = new Date("2014-12-15T00:00:00.000Z");
     expect(shifters.week.ceil(d1, tz)).to.eql(d2);
 
     d1 = new Date("2014-12-07T12:11:57.469Z");
@@ -137,7 +137,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves month", () => {
-    var dates: Date[] = [
+    let dates: Date[] = [
       new Date("2012-11-01T00:00:00"),
       new Date("2012-12-01T00:00:00"),
       new Date("2013-01-01T00:00:00"),
@@ -147,7 +147,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves year", () => {
-    var dates: Date[] = [
+    let dates: Date[] = [
       new Date("2010-01-01T00:00:00"),
       new Date("2011-01-01T00:00:00"),
       new Date("2012-01-01T00:00:00"),

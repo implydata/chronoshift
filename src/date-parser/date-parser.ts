@@ -20,7 +20,7 @@ import { Duration } from '../duration/duration';
 
 function parseYear(v: string): number {
   if (v.length === 2) {
-    var vn = parseInt(v, 10);
+    let vn = parseInt(v, 10);
     return (vn < 70 ? 2000 : 1900) + vn;
   } else if (v.length === 4) {
     return parseInt(v, 10);
@@ -30,31 +30,31 @@ function parseYear(v: string): number {
 }
 
 function parseMonth(v: string): number {
-  var vn = parseInt(v, 10);
+  let vn = parseInt(v, 10);
   if (vn <= 0 || 12 < vn) throw new Error('Invalid month in date');
   return vn - 1;
 }
 
 function parseDay(v: string): number {
-  var vn = parseInt(v, 10);
+  let vn = parseInt(v, 10);
   if (vn <= 0 || 31 < vn) throw new Error('Invalid day in date');
   return vn;
 }
 
 function parseHour(v: string): number {
-  var vn = parseInt(v, 10);
+  let vn = parseInt(v, 10);
   if (vn < 0 || 24 < vn) throw new Error('Invalid hour in date');
   return vn;
 }
 
 function parseMinute(v: string): number {
-  var vn = parseInt(v, 10);
+  let vn = parseInt(v, 10);
   if (vn < 0 || 60 < vn) throw new Error('Invalid minute in date');
   return vn;
 }
 
 function parseSecond(v: string): number {
-  var vn = parseInt(v, 10);
+  let vn = parseInt(v, 10);
   if (vn < 0 || 60 < vn) throw new Error('Invalid second in date');
   return vn;
 }
@@ -66,8 +66,8 @@ function parseMillisecond(v: string): number {
 
 export function parseSQLDate(type: string, v: string): Date {
   if (type === 't') throw new Error('time literals are not supported');
-  var m: RegExpMatchArray | null;
-  var d: number;
+  let m: RegExpMatchArray | null;
+  let d: number;
   if (type === 'ts') {
     if (m = v.match(/^(\d{2}(?:\d{2})?)(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/)) {
       d = Date.UTC(parseYear(m[1]), parseMonth(m[2]), parseDay(m[3]), parseHour(m[4]), parseMinute(m[5]), parseSecond(m[6]));
@@ -91,8 +91,8 @@ export function parseSQLDate(type: string, v: string): Date {
 // Taken from: https://github.com/csnover/js-iso8601/blob/lax/iso8601.js
 const numericKeys = [1, 4, 5, 6, 10, 11];
 export function parseISODate(date: string, timezone = Timezone.UTC): Date | null {
-  var struct: any;
-  var minutesOffset = 0;
+  let struct: any;
+  let minutesOffset = 0;
 
   /*
   (
@@ -140,7 +140,7 @@ export function parseISODate(date: string, timezone = Timezone.UTC): Date | null
   //              1 YYYY                 2 MM        3 DD               4 HH        5 mm        6 ss           7 msec             8 Z 9 ±    10 tzHH    11 tzmm
   if ((struct = /^(\d{4}|[+\-]\d{6})(?:-?(\d{2})(?:-?(\d{2}))?)?(?:[ T]?(\d{2})(?::?(\d{2})(?::?(\d{2})(?:[,\.](\d{1,}))?)?)?)?(?:(Z)|([+\-])(\d{2})(?::?(\d{2}))?)?$/.exec(date))) {
     // avoid NaN timestamps caused by “undefined” values being passed to Date.UTC
-    for (var i = 0, k: number; (k = numericKeys[i]); ++i) {
+    for (let i = 0, k: number; (k = numericKeys[i]); ++i) {
       struct[k] = +struct[k] || 0;
     }
 
@@ -193,18 +193,18 @@ export interface IntervalParse {
 }
 
 export function parseInterval(str: string, timezone = Timezone.UTC, now = new Date()): IntervalParse {
-  var parts = str.split('/');
+  let parts = str.split('/');
   if (parts.length > 2) throw new Error(`Can not parse string ${str}`);
 
-  var start: Date | null = null;
-  var end: Date | null = null;
-  var duration: Duration | null = null;
+  let start: Date | null = null;
+  let end: Date | null = null;
+  let duration: Duration | null = null;
 
-  var p0: string = parts[0];
+  let p0: string = parts[0];
   if (parts.length === 1) {
     duration = Duration.fromJS(p0);
   } else {
-    var p1 = parts[1];
+    let p1 = parts[1];
     if (p0[0] === 'P') {
       duration = Duration.fromJS(p0);
       end = parseISODate(p1, timezone);
@@ -233,8 +233,8 @@ export function parseInterval(str: string, timezone = Timezone.UTC, now = new Da
    <duration>
    */
 
-  var computedStart: Date;
-  var computedEnd: Date;
+  let computedStart: Date;
+  let computedEnd: Date;
   if (start) {
     computedStart = start;
     if (duration) {
