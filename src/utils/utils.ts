@@ -17,5 +17,3 @@
 export function isDate(d: any) {
   return !!(d && d.toISOString);
 }
-
-

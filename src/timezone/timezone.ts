@@ -21,7 +21,7 @@ import { Class, Instance } from 'immutable-class';
 /**
  * Represents timezones
  */
-var check: Class<string, string>;
+let check: Class<string, string>;
 export class Timezone implements Instance<string, string> {
   static UTC: Timezone = new Timezone('Etc/UTC');
 
@@ -29,6 +29,16 @@ export class Timezone implements Instance<string, string> {
 
   static isTimezone(candidate: any): boolean {
     return candidate instanceof Timezone;
+  }
+
+  static formatDateWithTimezone(d: Date, timezone?: Timezone) {
+    let str: string;
+    if (timezone && !timezone.isUTC()) {
+      str = moment.tz(d, timezone.toString()).format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+    } else {
+      str = d.toISOString();
+    }
+    return str.replace('.000', '');
   }
 
   static fromJS(spec: string): Timezone {

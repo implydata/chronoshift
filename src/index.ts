@@ -22,4 +22,4 @@ export * from './timezone/timezone';
 export * from './duration/duration';
 export * from './utils/utils';
 
-export var moment: any = momentTz;
+export let moment: any = momentTz;

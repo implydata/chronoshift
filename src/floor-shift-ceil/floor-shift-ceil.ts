@@ -51,9 +51,9 @@ function floorTo(n: number, roundTo: number): number {
 }
 
 function timeShifterFiller(tm: TimeShifter): TimeShifter {
-  var { floor, shift } = tm;
+  let { floor, shift } = tm;
   tm.ceil = (dt: Date, tz: Timezone) => {
-    var floored = floor(dt, tz);
+    let floored = floor(dt, tz);
     if (floored.valueOf() === dt.valueOf()) return dt; // Just like ceil(3) is 3 and not 4
     return shift(floored, tz, 1);
   };
@@ -71,8 +71,8 @@ export const second = timeShifterFiller({
     return dt;
   },
   round: (dt, roundTo, tz) => {
-    var cur = dt.getUTCSeconds();
-    var adj = floorTo(cur, roundTo);
+    let cur = dt.getUTCSeconds();
+    let adj = floorTo(cur, roundTo);
     if (cur !== adj) dt.setUTCSeconds(adj);
     return dt;
   },
@@ -93,8 +93,8 @@ export const minute = timeShifterFiller({
     return dt;
   },
   round: (dt, roundTo, tz) => {
-    var cur = dt.getUTCMinutes();
-    var adj = floorTo(cur, roundTo);
+    let cur = dt.getUTCMinutes();
+    let adj = floorTo(cur, roundTo);
     if (cur !== adj) dt.setUTCMinutes(adj);
     return dt;
   },
@@ -131,13 +131,13 @@ export const hour = timeShifterFiller({
   },
   round: (dt, roundTo, tz) => {
     if (tz.isUTC()) {
-      var cur = dt.getUTCHours();
-      var adj = floorTo(cur, roundTo);
+      let cur = dt.getUTCHours();
+      let adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCHours(adj);
     } else {
       let wt = moment.tz(dt, tz.toString());
-      var cur = wt.hour() as number;
-      var adj = floorTo(cur, roundTo);
+      let cur = wt.hour() as number;
+      let adj = floorTo(cur, roundTo);
       if (cur !== adj) return hourMove(dt, tz, adj - cur);
     }
     return dt;
@@ -221,13 +221,13 @@ export const month = timeShifterFiller({
   },
   round: (dt, roundTo, tz) => {
     if (tz.isUTC()) {
-      var cur = dt.getUTCMonth();
-      var adj = floorTo(cur, roundTo);
+      let cur = dt.getUTCMonth();
+      let adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCMonth(adj);
     } else {
       let wt = moment.tz(dt, tz.toString());
-      var cur = wt.month();
-      var adj = floorTo(cur, roundTo);
+      let cur = wt.month();
+      let adj = floorTo(cur, roundTo);
       if (cur !== adj) return monthShift(dt, tz, adj - cur);
     }
     return dt;
@@ -262,13 +262,13 @@ export const year = timeShifterFiller({
   },
   round: (dt, roundTo, tz) => {
     if (tz.isUTC()) {
-      var cur = dt.getUTCFullYear();
-      var adj = floorTo(cur, roundTo);
+      let cur = dt.getUTCFullYear();
+      let adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCFullYear(adj);
     } else {
       let wt = moment.tz(dt, tz.toString());
-      var cur = wt.year();
-      var adj = floorTo(cur, roundTo);
+      let cur = wt.year();
+      let adj = floorTo(cur, roundTo);
       if (cur !== adj) return yearShift(dt, tz, adj - cur);
     }
     return dt;

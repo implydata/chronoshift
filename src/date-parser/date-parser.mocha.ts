@@ -16,7 +16,7 @@
  */
 
 import { expect, assert } from "chai";
-var { deepEqual } = assert;
+let { deepEqual } = assert;
 
 import { Timezone } from '../timezone/timezone';
 import { parseISODate, parseInterval } from './date-parser';
@@ -24,8 +24,8 @@ import { parseISODate, parseInterval } from './date-parser';
 describe('date parser', () => {
 
   describe('parseISODate', () => {
-    var sixHours       = 6 * 60 * 60 * 1000,
-      sixHoursThirty = sixHours + 30 * 60 * 1000;
+    const sixHours = 6 * 60 * 60 * 1000;
+    const sixHoursThirty = sixHours + 30 * 60 * 1000;
 
     // Taken from https://github.com/csnover/js-iso8601/blob/lax/tests/test.js
     it('date-part', () => {
@@ -104,7 +104,7 @@ describe('date parser', () => {
     });
 
     it('date-time (tz = America/Los_Angeles)', () => {
-      var tz = Timezone.fromJS('America/Los_Angeles');
+      let tz = Timezone.fromJS('America/Los_Angeles');
 
       deepEqual(parseISODate('2001-02-03T04:05', tz),        new Date(Date.UTC(2001, 1, 3, 4 + 8, 5, 0, 0)), '2001-02-03T04:05');
       deepEqual(parseISODate('2001-02-03T04:05:06', tz),     new Date(Date.UTC(2001, 1, 3, 4 + 8, 5, 6, 0)), '2001-02-03T04:05:06');
@@ -117,7 +117,7 @@ describe('date parser', () => {
     });
 
     it('date-time (tz = null / local)', () => {
-      var tz: any = null;
+      let tz: any = null;
 
       deepEqual(parseISODate('2001-02-03T04:05', tz),        new Date(2001, 1, 3, 4, 5, 0, 0), '2001-02-03T04:05');
       deepEqual(parseISODate('2001-02-03T04:05:06', tz),     new Date(2001, 1, 3, 4, 5, 6, 0), '2001-02-03T04:05:06');
@@ -167,30 +167,30 @@ describe('date parser', () => {
      */
 
     it('works with [start]/[end]', () => {
-      var tz = Timezone.UTC;
-      var interval = parseInterval('2001-02-03T03:05:06.007Z/2001-02-03T04:05:06.007Z', tz);
+      let tz = Timezone.UTC;
+      let interval = parseInterval('2001-02-03T03:05:06.007Z/2001-02-03T04:05:06.007Z', tz);
       expect(interval.computedStart).to.deep.equal(new Date('2001-02-03T03:05:06.007Z'));
       expect(interval.computedEnd).to.deep.equal(new Date('2001-02-03T04:05:06.007Z'));
     });
 
     it('works with [start]/[duration]', () => {
-      var tz = Timezone.UTC;
-      var interval = parseInterval('2001-02-03T03:05:06.007Z/PT1H', tz);
+      let tz = Timezone.UTC;
+      let interval = parseInterval('2001-02-03T03:05:06.007Z/PT1H', tz);
       expect(interval.computedStart).to.deep.equal(new Date('2001-02-03T03:05:06.007Z'));
       expect(interval.computedEnd).to.deep.equal(new Date('2001-02-03T04:05:06.007Z'));
     });
 
     it('works with [duration]/[end]', () => {
-      var tz = Timezone.UTC;
-      var interval = parseInterval('PT1H/2001-02-03T04:05:06.007Z', tz);
+      let tz = Timezone.UTC;
+      let interval = parseInterval('PT1H/2001-02-03T04:05:06.007Z', tz);
       expect(interval.computedStart).to.deep.equal(new Date('2001-02-03T03:05:06.007Z'));
       expect(interval.computedEnd).to.deep.equal(new Date('2001-02-03T04:05:06.007Z'));
     });
 
     it('works with [duration]', () => {
-      var now = new Date('2001-02-03T04:05:06.007Z');
-      var tz = Timezone.UTC;
-      var interval = parseInterval('PT1H', tz, now);
+      let now = new Date('2001-02-03T04:05:06.007Z');
+      let tz = Timezone.UTC;
+      let interval = parseInterval('PT1H', tz, now);
       expect(interval.computedStart).to.deep.equal(new Date('2001-02-03T03:05:06.007Z'));
       expect(interval.computedEnd).to.deep.equal(new Date('2001-02-03T04:05:06.007Z'));
     });
