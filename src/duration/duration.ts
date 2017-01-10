@@ -206,6 +206,13 @@ export class Duration implements Instance<DurationValue, string> {
     return Duration.fromCanonicalLength(newCanonicalDuration);
   }
 
+  public multiply(multiplier: number): Duration {
+    if (multiplier <= 0) throw new Error("Multiplier must be positive non-zero");
+    if (multiplier === 1) return this;
+    var newCanonicalDuration = this.getCanonicalLength() * multiplier;
+    return Duration.fromCanonicalLength(newCanonicalDuration);
+  }
+
   public valueOf() {
     return this.spans;
   }
