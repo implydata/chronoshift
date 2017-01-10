@@ -9,7 +9,7 @@
     "strictNullChecks": false,
     "importHelpers": true,
     "target": "es5",
-    "module": "es6",
+    "module": "commonjs",
     "rootDir": "src",
     "outDir": "build",
     "moduleResolution": "node"
