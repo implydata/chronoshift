@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { expect } from "chai";
+import { expect } from 'chai';
 
 import { testImmutableClass } from 'immutable-class-tester';
 

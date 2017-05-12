@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import * as moment from 'moment-timezone';
 import { Class, Instance } from 'immutable-class';
+import * as moment from 'moment-timezone';
 
 /**
  * Represents timezones

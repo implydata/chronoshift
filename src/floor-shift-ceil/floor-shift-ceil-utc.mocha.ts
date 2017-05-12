@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-import { expect } from "chai";
+import { expect } from 'chai';
 
 import { Timezone } from '../timezone/timezone';
-import { shifters } from './floor-shift-ceil'
+import { shifters } from './floor-shift-ceil';
 
 function pairwise<T>(array: T[], callback:(t1:T, t2:T) => void) {
   for (let i = 0; i < array.length - 1; i++) {
