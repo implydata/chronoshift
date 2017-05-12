@@ -27,7 +27,7 @@
     "typings/"
   ],
   "scripts": {
-    "prepare": "tdi",
+    "prepare": "tdi -q",
     "test": "./travis-test",
     "compile": "./compile"
   },
