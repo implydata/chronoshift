@@ -327,6 +327,34 @@ describe("Duration", () => {
     });
   });
 
+  describe("#multiply()", () => {
+    it("works with a simple duration", () => {
+      var d = Duration.fromJS("P1D");
+      expect(d.multiply(5).toJS()).to.eql("P5D");
+    });
+
+    it("works with a less simple duration", () => {
+      var d = Duration.fromJS("P1DT2H");
+      expect(d.multiply(2).toJS()).to.eql("P2DT4H");
+    });
+
+    it("works with weeks", () => {
+      var d = Duration.fromJS("P1W");
+      expect(d.multiply(5).toJS()).to.eql("P1M5D");
+    });
+
+    it("throws an error if result is going to be negative", () => {
+      var d = Duration.fromJS("P1D");
+      expect(() => d.multiply(-1)).to.throw('Multiplier must be positive non-zero');
+    });
+
+    it("gets description properly", () => {
+      var d = Duration.fromJS("P2D");
+      expect(d.multiply(2).getDescription(true)).to.equal("4 Days");
+    });
+  });
+
+
 
   describe("#getDescription()", () => {
     it("gives back the correct description", () => {
