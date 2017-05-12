@@ -15,8 +15,8 @@
  */
 
 import * as moment from 'moment-timezone';
-import { Timezone } from '../timezone/timezone';
 import { Duration } from '../duration/duration';
+import { Timezone } from '../timezone/timezone';
 
 function parseYear(v: string): number {
   if (v.length === 2) {

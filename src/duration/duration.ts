@@ -16,8 +16,8 @@
  */
 
 import { Class, Instance } from 'immutable-class';
+import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';
-import { shifters, second } from '../floor-shift-ceil/floor-shift-ceil'
 
 let spansWithWeek = ["year", "month", "week", "day", "hour", "minute", "second"];
 let spansWithoutWeek = ["year", "month", "day", "hour", "minute", "second"];

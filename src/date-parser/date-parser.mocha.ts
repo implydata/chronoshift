@@ -15,11 +15,10 @@
  * limitations under the License.
  */
 
-import { expect, assert } from "chai";
-let { deepEqual } = assert;
-
+import { assert, expect } from 'chai';
 import { Timezone } from '../timezone/timezone';
-import { parseISODate, parseInterval } from './date-parser';
+import { parseInterval, parseISODate } from './date-parser';
+let { deepEqual } = assert;
 
 describe('date parser', () => {
 

@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-import { expect } from "chai";
+import { expect } from 'chai';
 
 import { testImmutableClass } from 'immutable-class-tester';
+import { Duration } from '../duration/duration';
 
 import { Timezone } from '../timezone/timezone';
-import { Duration } from '../duration/duration';
 
 describe("Duration", () => {
   let TZ_LA = Timezone.fromJS("America/Los_Angeles");
