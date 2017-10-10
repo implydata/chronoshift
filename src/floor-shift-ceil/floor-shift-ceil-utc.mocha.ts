@@ -31,67 +31,67 @@ describe("floor, move, ceil (UTC)", () => {
 
   it("moves seconds", () => {
     let dates: Date[] = [
-      new Date("2012-11-04T00:00:00"),
-      new Date("2012-11-04T00:00:03"),
-      new Date("2012-11-04T00:00:06"),
-      new Date("2012-11-04T00:00:09"),
-      new Date("2012-11-04T00:00:12")
+      new Date("2012-11-04T00:00:00Z"),
+      new Date("2012-11-04T00:00:03Z"),
+      new Date("2012-11-04T00:00:06Z"),
+      new Date("2012-11-04T00:00:09Z"),
+      new Date("2012-11-04T00:00:12Z")
     ];
     pairwise(dates, (d1, d2) => expect(shifters.second.move(d1, tz, 3)).to.deep.equal(d2));
   });
 
   it("rounds minutes", () => {
-    expect(shifters.minute.round(new Date("2012-11-04T00:29:00"), 15, tz))
-      .to.deep.equal(new Date("2012-11-04T00:15:00"));
+    expect(shifters.minute.round(new Date("2012-11-04T00:29:00Z"), 15, tz))
+      .to.deep.equal(new Date("2012-11-04T00:15:00Z"));
 
-    expect(shifters.minute.round(new Date("2012-11-04T00:29:00"), 4, tz))
-      .to.deep.equal(new Date("2012-11-04T00:28:00"));
+    expect(shifters.minute.round(new Date("2012-11-04T00:29:00Z"), 4, tz))
+      .to.deep.equal(new Date("2012-11-04T00:28:00Z"));
   });
 
   it("moves minutes", () => {
     let dates: Date[] = [
-      new Date("2012-11-04T00:00:00"),
-      new Date("2012-11-04T00:03:00"),
-      new Date("2012-11-04T00:06:00"),
-      new Date("2012-11-04T00:09:00"),
-      new Date("2012-11-04T00:12:00")
+      new Date("2012-11-04T00:00:00Z"),
+      new Date("2012-11-04T00:03:00Z"),
+      new Date("2012-11-04T00:06:00Z"),
+      new Date("2012-11-04T00:09:00Z"),
+      new Date("2012-11-04T00:12:00Z")
     ];
     pairwise(dates, (d1, d2) => expect(shifters.minute.move(d1, tz, 3)).to.deep.equal(d2));
   });
 
   it("floors hour correctly", () => {
-    expect(shifters.hour.floor(new Date("2012-11-04T00:30:00"), tz))
-      .to.deep.equal(new Date("2012-11-04T00:00:00"));
+    expect(shifters.hour.floor(new Date("2012-11-04T00:30:00Z"), tz))
+      .to.deep.equal(new Date("2012-11-04T00:00:00Z"));
 
-    expect(shifters.hour.floor(new Date("2012-11-04T01:30:00"), tz))
-      .to.deep.equal(new Date("2012-11-04T01:00:00"));
+    expect(shifters.hour.floor(new Date("2012-11-04T01:30:00Z"), tz))
+      .to.deep.equal(new Date("2012-11-04T01:00:00Z"));
 
-    expect(shifters.hour.floor(new Date("2012-11-04T01:30:00"), tz))
-      .to.deep.equal(new Date("2012-11-04T01:00:00"));
+    expect(shifters.hour.floor(new Date("2012-11-04T01:30:00Z"), tz))
+      .to.deep.equal(new Date("2012-11-04T01:00:00Z"));
 
-    expect(shifters.hour.floor(new Date("2012-11-04T02:30:00"), tz))
-      .to.deep.equal(new Date("2012-11-04T02:00:00"));
+    expect(shifters.hour.floor(new Date("2012-11-04T02:30:00Z"), tz))
+      .to.deep.equal(new Date("2012-11-04T02:00:00Z"));
 
-    expect(shifters.hour.floor(new Date("2012-11-04T03:30:00"), tz))
-      .to.deep.equal(new Date("2012-11-04T03:00:00"));
+    expect(shifters.hour.floor(new Date("2012-11-04T03:30:00Z"), tz))
+      .to.deep.equal(new Date("2012-11-04T03:00:00Z"));
   });
 
   it("moves hour", () => {
     let dates: Date[] = [
-      new Date("2012-11-04T00:00:00"),
-      new Date("2012-11-04T01:00:00"),
-      new Date("2012-11-04T02:00:00"),
-      new Date("2012-11-04T03:00:00")
+      new Date("2012-11-04T00:00:00Z"),
+      new Date("2012-11-04T01:00:00Z"),
+      new Date("2012-11-04T02:00:00Z"),
+      new Date("2012-11-04T03:00:00Z")
     ];
     pairwise(dates, (d1, d2) => expect(shifters.hour.move(d1, tz, 1)).to.deep.equal(d2));
   });
 
   it("moves day", () => {
     let dates: Date[] = [
-      new Date("2012-11-03T00:00:00"),
-      new Date("2012-11-04T00:00:00"),
-      new Date("2012-11-05T00:00:00"),
-      new Date("2012-11-06T00:00:00")
+      new Date("2012-11-03T00:00:00Z"),
+      new Date("2012-11-04T00:00:00Z"),
+      new Date("2012-11-05T00:00:00Z"),
+      new Date("2012-11-06T00:00:00Z")
     ];
     pairwise(dates, (d1, d2) => expect(shifters.day.move(d1, tz, 1)).to.deep.equal(d2));
   });
@@ -108,10 +108,10 @@ describe("floor, move, ceil (UTC)", () => {
 
   it("moves week", () => {
     let dates: Date[] = [
-      new Date("2012-10-29T00:00:00"),
-      new Date("2012-11-05T00:00:00"),
-      new Date("2012-11-12T00:00:00"),
-      new Date("2012-11-19T00:00:00")
+      new Date("2012-10-29T00:00:00Z"),
+      new Date("2012-11-05T00:00:00Z"),
+      new Date("2012-11-12T00:00:00Z"),
+      new Date("2012-11-19T00:00:00Z")
     ];
     pairwise(dates, (d1, d2) => expect(shifters.week.move(d1, tz, 1)).to.deep.equal(d2));
   });
@@ -138,20 +138,20 @@ describe("floor, move, ceil (UTC)", () => {
 
   it("moves month", () => {
     let dates: Date[] = [
-      new Date("2012-11-01T00:00:00"),
-      new Date("2012-12-01T00:00:00"),
-      new Date("2013-01-01T00:00:00"),
-      new Date("2013-02-01T00:00:00")
+      new Date("2012-11-01T00:00:00Z"),
+      new Date("2012-12-01T00:00:00Z"),
+      new Date("2013-01-01T00:00:00Z"),
+      new Date("2013-02-01T00:00:00Z")
     ];
     pairwise(dates, (d1, d2) => expect(shifters.month.move(d1, tz, 1)).to.deep.equal(d2));
   });
 
   it("moves year", () => {
     let dates: Date[] = [
-      new Date("2010-01-01T00:00:00"),
-      new Date("2011-01-01T00:00:00"),
-      new Date("2012-01-01T00:00:00"),
-      new Date("2013-01-01T00:00:00")
+      new Date("2010-01-01T00:00:00Z"),
+      new Date("2011-01-01T00:00:00Z"),
+      new Date("2012-01-01T00:00:00Z"),
+      new Date("2013-01-01T00:00:00Z")
     ];
     pairwise(dates, (d1, d2) => expect(shifters.year.move(d1, tz, 1)).to.deep.equal(d2));
   });
