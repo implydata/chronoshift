@@ -68,12 +68,42 @@ describe("floor/shift/ceil", () => {
       .to.deep.equal(new Date("2012-11-04T03:00:00-08:00"), 'E');
   });
 
-  it("shifts hour over DST", () => {
+  it("shifting 24 hours over DST is not the same as shifting a day", () => {
+    let start = new Date("2012-11-04T07:00:00Z");
+
+    let shift1Day = shifters.day.shift(start, tz, 1);
+    let shift24Hours = shifters.hour.shift(start, tz, 24);
+
+    expect(shift1Day).to.deep.equal(new Date("2012-11-05T08:00:00Z"), 'day');
+    expect(shift24Hours).to.deep.equal(new Date("2012-11-05T07:00:00Z"), '24 hours');
+  });
+
+  it("shifts hour over DST 1", () => {
     let dates: Date[] = [
       new Date("2012-11-04T00:00:00-07:00"),
-      new Date("2012-11-04T01:00:00-07:00"),
-      new Date("2012-11-04T02:00:00-08:00"),
-      new Date("2012-11-04T03:00:00-08:00")
+      new Date("2012-11-04T08:00:00Z"),
+      new Date("2012-11-04T09:00:00Z"),
+      new Date("2012-11-04T10:00:00Z"),
+      new Date("2012-11-04T11:00:00Z")
+    ];
+    pairwise(dates, (d1, d2) => expect(shifters.hour.shift(d1, tz, 1)).to.deep.equal(d2));
+  });
+
+  it("shifts hour over DST 1", () => {
+    expect(shifters.hour.floor(new Date("2012-11-04T00:05:00-07:00"), tz)).to.deep.equal(new Date("2012-11-04T00:00:00-07:00"));
+    expect(shifters.hour.floor(new Date("2012-11-04T01:05:00-07:00"), tz)).to.deep.equal(new Date("2012-11-04T01:00:00-07:00"));
+    expect(shifters.hour.floor(new Date("2012-11-04T02:05:00-07:00"), tz)).to.deep.equal(new Date("2012-11-04T02:00:00-07:00"));
+    expect(shifters.hour.floor(new Date("2012-11-04T03:05:00-07:00"), tz)).to.deep.equal(new Date("2012-11-04T03:00:00-07:00"));
+  });
+
+  it("shifts hour over DST 2", () => {
+    // "2018-03-11T09:00:00Z"
+    let dates: Date[] = [
+      new Date("2018-03-11T01:00:00-07:00"),
+      new Date("2018-03-11T09:00:00Z"),
+      new Date("2018-03-11T10:00:00Z"),
+      new Date("2018-03-11T11:00:00Z"),
+      new Date("2018-03-11T12:00:00Z")
     ];
     pairwise(dates, (d1, d2) => expect(shifters.hour.shift(d1, tz, 1)).to.deep.equal(d2));
   });

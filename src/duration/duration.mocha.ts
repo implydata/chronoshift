@@ -104,7 +104,7 @@ describe("Duration", () => {
         new Date("2012-10-29T00:00:00-07:00"),
         new Date(new Date("2012-11-05T00:00:00-08:00").valueOf() - 1000),
         TZ_LA
-      ).toString()).to.equal("P6DT23H59M59S");
+      ).toString()).to.equal("P6DT24H59M59S");
 
       expect(new Duration(
         new Date("2012-01-01T00:00:00-08:00"),

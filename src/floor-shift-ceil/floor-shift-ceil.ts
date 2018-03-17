@@ -105,14 +105,10 @@ export const minute = timeShifterFiller({
   }
 });
 
+// Movement by hour is tz independent because in every timezone an hour is 60 min
 function hourMove(dt: Date, tz: Timezone, step: number) {
-  if (tz.isUTC()) {
-    dt = new Date(dt.valueOf());
-    dt.setUTCHours(dt.getUTCHours() + step);
-  } else {
-    let wt = moment.tz(dt, tz.toString());
-    dt = new Date(wt.hour(wt.hour() + step).valueOf());
-  }
+  dt = new Date(dt.valueOf());
+  dt.setUTCHours(dt.getUTCHours() + step);
   return dt;
 }
 
@@ -241,7 +237,7 @@ function yearShift(dt: Date, tz: Timezone, step: number) {
     dt.setUTCFullYear(dt.getUTCFullYear() + step);
   } else {
     let wt = moment.tz(dt, tz.toString());
-    dt = new Date(wt.add(step, 'years'));
+    dt = new Date(wt.add(step, 'years') as any);
   }
   return dt;
 }
