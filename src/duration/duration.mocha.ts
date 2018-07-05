@@ -46,7 +46,7 @@ describe("Duration", () => {
 
       expect(() => Duration.fromJS("P0YT0H")).to.throw(Error, "Duration can not be empty");
 
-      expect(() => Duration.fromJS("P0W").shift(new Date(), TZ_LA)).to.throw(Error, "Duration can not be empty");
+      expect(() => Duration.fromJS("P0W").shift(new Date(), TZ_LA)).to.throw(Error, "Duration can not have empty weeks");
 
       expect(() => Duration.fromJS("P0Y0MT0H0M0S").shift(new Date(), TZ_LA)).to.throw(Error, "Duration can not be empty");
     });
@@ -79,8 +79,19 @@ describe("Duration", () => {
   });
 
   describe("fromCanonicalLength", () => {
-    it("works", () => {
+    it("handles zero", () => {
+      expect(() => {
+        Duration.fromCanonicalLength(0)
+      }).to.throw('length must be positive');
+    });
+
+    it("works 1", () => {
       expect(Duration.fromCanonicalLength(86400000).toJS()).to.eql("P1D");
+    });
+
+    it("works 2", () => {
+      const len = new Date('2018-03-01T00:00:00Z').valueOf() - new Date('2016-02-22T00:00:00Z').valueOf();
+      expect(Duration.fromCanonicalLength(len).toJS()).to.eql("P2Y8D");
     });
   });
 
@@ -329,27 +340,27 @@ describe("Duration", () => {
 
   describe("#multiply()", () => {
     it("works with a simple duration", () => {
-      var d = Duration.fromJS("P1D");
+      let d = Duration.fromJS("P1D");
       expect(d.multiply(5).toJS()).to.eql("P5D");
     });
 
     it("works with a less simple duration", () => {
-      var d = Duration.fromJS("P1DT2H");
+      let d = Duration.fromJS("P1DT2H");
       expect(d.multiply(2).toJS()).to.eql("P2DT4H");
     });
 
     it("works with weeks", () => {
-      var d = Duration.fromJS("P1W");
-      expect(d.multiply(5).toJS()).to.eql("P1M5D");
+      let d = Duration.fromJS("P1W");
+      expect(d.multiply(5).toJS()).to.eql("P5W");
     });
 
     it("throws an error if result is going to be negative", () => {
-      var d = Duration.fromJS("P1D");
+      let d = Duration.fromJS("P1D");
       expect(() => d.multiply(-1)).to.throw('Multiplier must be positive non-zero');
     });
 
     it("gets description properly", () => {
-      var d = Duration.fromJS("P2D");
+      let d = Duration.fromJS("P2D");
       expect(d.multiply(2).getDescription(true)).to.equal("4 Days");
     });
   });

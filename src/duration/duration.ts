@@ -48,7 +48,7 @@ function getSpansFromString(durationStr: string): DurationValue {
   let matches: RegExpExecArray | null;
   if (matches = periodWeekRegExp.exec(durationStr)) {
     spans.week = Number(matches[1]);
-    if (!spans.week) throw new Error("Duration can not be empty");
+    if (!spans.week) throw new Error("Duration can not have empty weeks");
   } else if (matches = periodRegExp.exec(durationStr)) {
     let nums = matches.map(Number);
     for (let i = 0; i < spansWithoutWeek.length; i++) {
@@ -130,16 +130,31 @@ export class Duration implements Instance<DurationValue, string> {
   }
 
   static fromCanonicalLength(length: number): Duration {
+    if (length <= 0) throw new Error('length must be positive');
     let spans: any = {};
+    let spansUsed = 0;
 
-    for (let i = 0; i < spansWithWeek.length; i++) {
-      let span = spansWithWeek[i];
+    let lengthLeft = length;
+    for (let i = 0; i < spansWithoutWeek.length; i++) {
+      let span = spansWithoutWeek[i];
       let spanLength = shifters[span].canonicalLength;
-      let count = Math.floor(length / spanLength);
+      let count = Math.floor(lengthLeft / spanLength);
 
-      length -= spanLength * count;
+      if (count) {
+        lengthLeft -= spanLength * count;
+        spans[span] = count;
+        spansUsed++;
+      }
+    }
 
-      spans[span] = count;
+    if (
+      length % shifters['week'].canonicalLength === 0 && // Weeks fits
+      (
+        spansUsed > 1 || // We already have a more complex span
+        spans['day'] // or... we only have days and it might be simpler to express as weeks
+      )
+    ) {
+      spans = { week: length / shifters['week'].canonicalLength };
     }
 
     return new Duration(spans);
@@ -209,7 +224,7 @@ export class Duration implements Instance<DurationValue, string> {
   public multiply(multiplier: number): Duration {
     if (multiplier <= 0) throw new Error("Multiplier must be positive non-zero");
     if (multiplier === 1) return this;
-    var newCanonicalDuration = this.getCanonicalLength() * multiplier;
+    let newCanonicalDuration = this.getCanonicalLength() * multiplier;
     return Duration.fromCanonicalLength(newCanonicalDuration);
   }
 
