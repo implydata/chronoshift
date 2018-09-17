@@ -93,6 +93,11 @@ describe("Duration", () => {
       const len = new Date('2018-03-01T00:00:00Z').valueOf() - new Date('2016-02-22T00:00:00Z').valueOf();
       expect(Duration.fromCanonicalLength(len).toJS()).to.eql("P2Y8D");
     });
+
+    it("works 3", () => {
+      const len = new Date('2018-09-15T00:00:00Z').valueOf() - new Date('2018-09-04T00:00:00Z').valueOf();
+      expect(Duration.fromCanonicalLength(len).toJS()).to.eql("P11D");
+    });
   });
 
   describe("construct from span", () => {
