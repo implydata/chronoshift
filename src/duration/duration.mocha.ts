@@ -98,6 +98,16 @@ describe("Duration", () => {
       const len = new Date('2018-09-15T00:00:00Z').valueOf() - new Date('2018-09-04T00:00:00Z').valueOf();
       expect(Duration.fromCanonicalLength(len).toJS()).to.eql("P11D");
     });
+
+    it("works with months", () => {
+      expect(Duration.fromCanonicalLength(2592000000).toJS()).to.eql("P1M");
+      expect(Duration.fromCanonicalLength(2678400000).toJS()).to.eql("P1M1D");
+    });
+
+    it("works without months", () => {
+      expect(Duration.fromCanonicalLength(2592000000, true).toJS()).to.eql("P30D");
+      expect(Duration.fromCanonicalLength(2678400000, true).toJS()).to.eql("P31D");
+    });
   });
 
   describe("construct from span", () => {

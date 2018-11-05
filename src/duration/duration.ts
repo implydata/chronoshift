@@ -19,8 +19,9 @@ import { Class, Instance } from 'immutable-class';
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';
 
-let spansWithWeek = ["year", "month", "week", "day", "hour", "minute", "second"];
-let spansWithoutWeek = ["year", "month", "day", "hour", "minute", "second"];
+const SPANS_WITH_WEEK = ["year", "month", "week", "day", "hour", "minute", "second"];
+const SPANS_WITHOUT_WEEK = ["year", "month", "day", "hour", "minute", "second"];
+const SPANS_WITHOUT_WEEK_OR_MONTH = ["year", "day", "hour", "minute", "second"];
 
 export interface DurationValue {
   year?: number;
@@ -51,8 +52,8 @@ function getSpansFromString(durationStr: string): DurationValue {
     if (!spans.week) throw new Error("Duration can not have empty weeks");
   } else if (matches = periodRegExp.exec(durationStr)) {
     let nums = matches.map(Number);
-    for (let i = 0; i < spansWithoutWeek.length; i++) {
-      let span = spansWithoutWeek[i];
+    for (let i = 0; i < SPANS_WITHOUT_WEEK.length; i++) {
+      let span = SPANS_WITHOUT_WEEK[i];
       let value = nums[i + 1];
       if (value) spans[span] = value;
     }
@@ -69,8 +70,8 @@ function getSpansFromStartEnd(start: Date, end: Date, timezone: Timezone): Durat
 
   let spans: DurationValue = {};
   let iterator: Date = start;
-  for (let i = 0; i < spansWithoutWeek.length; i++) {
-    let span = spansWithoutWeek[i];
+  for (let i = 0; i < SPANS_WITHOUT_WEEK.length; i++) {
+    let span = SPANS_WITHOUT_WEEK[i];
     let spanCount = 0;
 
     // Shortcut
@@ -107,8 +108,8 @@ function getSpansFromStartEnd(start: Date, end: Date, timezone: Timezone): Durat
 
 function removeZeros(spans: DurationValue): DurationValue {
   let newSpans: DurationValue = {};
-  for (let i = 0; i < spansWithWeek.length; i++) {
-    let span = spansWithWeek[i];
+  for (let i = 0; i < SPANS_WITH_WEEK.length; i++) {
+    let span = SPANS_WITH_WEEK[i];
     if (spans[span] > 0) {
       newSpans[span] = spans[span];
     }
@@ -129,14 +130,15 @@ export class Duration implements Instance<DurationValue, string> {
     return new Duration(getSpansFromString(durationStr));
   }
 
-  static fromCanonicalLength(length: number): Duration {
+  static fromCanonicalLength(length: number, skipMonths = false): Duration {
     if (length <= 0) throw new Error('length must be positive');
+    const spansToCheck = skipMonths ? SPANS_WITHOUT_WEEK_OR_MONTH : SPANS_WITHOUT_WEEK;
     let spans: any = {};
     let spansUsed = 0;
 
     let lengthLeft = length;
-    for (let i = 0; i < spansWithoutWeek.length; i++) {
-      let span = spansWithoutWeek[i];
+    for (let i = 0; i < spansToCheck.length; i++) {
+      let span = spansToCheck[i];
       let spanLength = shifters[span].canonicalLength;
       let count = Math.floor(lengthLeft / spanLength);
 
@@ -195,8 +197,8 @@ export class Duration implements Instance<DurationValue, string> {
       strArr.push(String(spans.week), 'W');
     } else {
       let addedT = false;
-      for (let i = 0; i < spansWithoutWeek.length; i++) {
-        let span = spansWithoutWeek[i];
+      for (let i = 0; i < SPANS_WITHOUT_WEEK.length; i++) {
+        let span = SPANS_WITHOUT_WEEK[i];
         let value = spans[span];
         if (!value) continue;
         if (!addedT && i >= 3) {
@@ -289,7 +291,7 @@ export class Duration implements Instance<DurationValue, string> {
    */
   public shift(date: Date, timezone: Timezone, step: number = 1): Date {
     let spans = this.spans;
-    for (let span of spansWithWeek) {
+    for (let span of SPANS_WITH_WEEK) {
       let value = spans[span];
       if (value) date = shifters[span].shift(date, timezone, step * value);
     }
@@ -335,7 +337,7 @@ export class Duration implements Instance<DurationValue, string> {
   public getCanonicalLength(): number {
     let spans = this.spans;
     let length = 0;
-    for (let span of spansWithWeek) {
+    for (let span of SPANS_WITH_WEEK) {
       let value = spans[span];
       if (value) length += value * shifters[span].canonicalLength;
     }
@@ -345,7 +347,7 @@ export class Duration implements Instance<DurationValue, string> {
   public getDescription(capitalize?: boolean): string {
     let spans = this.spans;
     let description: string[] = [];
-    for (let span of spansWithWeek) {
+    for (let span of SPANS_WITH_WEEK) {
       let value = spans[span];
       let spanTitle = capitalize ? capitalizeFirst(span) : span;
       if (value) {
