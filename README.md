@@ -85,7 +85,7 @@ $ npm install
 Watch :
 
 ```
-$ gulp watch
+$ npm run watch
 ```
 
 ## Questions & Support
