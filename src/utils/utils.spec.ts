@@ -15,16 +15,14 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
-
 import { isDate } from './utils';
 
 describe("util", () => {
   describe("isDate", () => {
     it("works", () => {
-      expect(isDate(new Date)).to.equal(true);
-      expect(isDate([])).to.equal(false);
-      expect(isDate(null)).to.equal(false);
+      expect(isDate(new Date)).toBe(true);
+      expect(isDate([])).toBe(false);
+      expect(isDate(null)).toBe(false);
     });
   });
 

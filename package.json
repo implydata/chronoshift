@@ -31,33 +31,32 @@
     "test": "./travis-test",
     "compile": "./compile"
   },
-  "config": {
-    "blanket": {
-      "pattern": "chronoshift/build/"
-    }
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "\\.s?css$": "identity-obj-proxy"
+    },
+    "testMatch": [
+      "**/?(*.)+(spec).ts?(x)"
+    ],
+    "setupFilesAfterEnv": ["jest-expect-message"]
   },
   "dependencies": {
-    "immutable-class": "~0.7.0",
-    "moment-timezone": "~0.5.21",
-    "tslib": "~1.9.3"
+    "immutable-class": "~0.7.7",
+    "moment-timezone": "~0.5.25",
+    "tslib": "~1.10.0"
   },
   "devDependencies": {
-    "@types/mocha": "5.2.5",
-    "babel-core": "6.26.3",
-    "babel-preset-es2015": "6.24.1",
-    "blanket": "1.2.3",
-    "browserify": "16.2.2",
-    "chai": "4.1.2",
-    "gulp": "3.9.1",
-    "gulp-mocha": "6.0.0",
-    "gulp-typescript": "5.0.0-alpha.3",
+    "@types/jest": "^24.0.15",
+    "@types/jest-expect-message": "^1.0.0",
+    "@types/node": "^12.0.8",
     "immutable-class-tester": "0.6.0",
-    "mocha": "5.2.0",
-    "rollup": "0.66.0",
-    "run-sequence": "2.2.1",
-    "tdi": "0.6.4",
-    "ts-node": "7.0.1",
-    "tslint": "5.11.0",
-    "typescript": "3.0.3"
+    "jest": "^24.8.0",
+    "jest-expect-message": "^1.0.2",
+    "ts-jest": "^24.0.2",
+    "ts-node": "8.3.0",
+    "tslint": "5.17.0",
+    "typescript": "3.5.2"
   }
 }

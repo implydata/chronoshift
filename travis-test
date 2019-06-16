@@ -12,6 +12,4 @@ if grep -rq 'it\.only' ./test
     exit 1
 fi
 
-./compile
-mocha --compilers js:babel-core/register build/**/*.mocha.js
-mocha test/*.js
+jest
