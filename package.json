@@ -23,13 +23,12 @@
   "main": "build/chronoshift.js",
   "typings": "build/index.d.ts",
   "files": [
-    "build/",
-    "typings/"
+    "build/"
   ],
   "scripts": {
-    "prepare": "tdi -q",
-    "test": "./travis-test",
-    "compile": "./compile"
+    "test": "jest",
+    "compile": "webpack -p",
+    "watch": "webpack -w"
   },
   "jest": {
     "preset": "ts-jest",
@@ -40,7 +39,9 @@
     "testMatch": [
       "**/?(*.)+(spec).ts?(x)"
     ],
-    "setupFilesAfterEnv": ["jest-expect-message"]
+    "setupFilesAfterEnv": [
+      "jest-expect-message"
+    ]
   },
   "dependencies": {
     "immutable-class": "~0.7.7",
@@ -55,8 +56,11 @@
     "jest": "^24.8.0",
     "jest-expect-message": "^1.0.2",
     "ts-jest": "^24.0.2",
+    "ts-loader": "^6.0.2",
     "ts-node": "8.3.0",
     "tslint": "5.17.0",
-    "typescript": "3.5.2"
+    "typescript": "3.5.2",
+    "webpack": "^4.34.0",
+    "webpack-cli": "^3.3.4"
   }
 }

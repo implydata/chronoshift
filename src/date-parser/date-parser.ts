@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import { Duration } from '../duration/duration';
 import { Timezone } from '../timezone/timezone';
 

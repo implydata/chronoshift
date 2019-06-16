@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import { Timezone } from '../timezone/timezone';
 
 export interface AlignFn {

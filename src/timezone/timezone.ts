@@ -16,7 +16,7 @@
  */
 
 import { Class, Instance } from 'immutable-class';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 
 /**
  * Represents timezones
