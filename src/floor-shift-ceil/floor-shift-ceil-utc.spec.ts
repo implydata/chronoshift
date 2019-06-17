@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  */
 
 import { Timezone } from '../timezone/timezone';
+
 import { shifters } from './floor-shift-ceil';
 
 function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
@@ -25,10 +26,10 @@ function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
 }
 
 describe("floor, move, ceil (UTC)", () => {
-  let tz = Timezone.UTC;
+  const tz = Timezone.UTC;
 
   it("moves seconds", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00Z"),
       new Date("2012-11-04T00:00:03Z"),
       new Date("2012-11-04T00:00:06Z"),
@@ -47,7 +48,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves minutes", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00Z"),
       new Date("2012-11-04T00:03:00Z"),
       new Date("2012-11-04T00:06:00Z"),
@@ -75,7 +76,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves hour", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00Z"),
       new Date("2012-11-04T01:00:00Z"),
       new Date("2012-11-04T02:00:00Z"),
@@ -85,7 +86,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves day", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-03T00:00:00Z"),
       new Date("2012-11-04T00:00:00Z"),
       new Date("2012-11-05T00:00:00Z"),
@@ -105,7 +106,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves week", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-10-29T00:00:00Z"),
       new Date("2012-11-05T00:00:00Z"),
       new Date("2012-11-12T00:00:00Z"),
@@ -135,7 +136,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves month", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-01T00:00:00Z"),
       new Date("2012-12-01T00:00:00Z"),
       new Date("2013-01-01T00:00:00Z"),
@@ -145,7 +146,7 @@ describe("floor, move, ceil (UTC)", () => {
   });
 
   it("moves year", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2010-01-01T00:00:00Z"),
       new Date("2011-01-01T00:00:00Z"),
       new Date("2012-01-01T00:00:00Z"),

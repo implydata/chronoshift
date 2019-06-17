@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 import { testImmutableClass } from 'immutable-class-tester';
-import { Duration } from '../duration/duration';
 
+import { Duration } from '../duration/duration';
 import { Timezone } from '../timezone/timezone';
 
 describe("Duration", () => {
-  let TZ_LA = Timezone.fromJS("America/Los_Angeles");
-  let TZ_JUNEAU = Timezone.fromJS("America/Juneau");
+  const TZ_LA = Timezone.fromJS("America/Los_Angeles");
+  const TZ_JUNEAU = Timezone.fromJS("America/Juneau");
 
   it("is an immutable class", () => {
     testImmutableClass(Duration, [
@@ -50,7 +50,7 @@ describe("Duration", () => {
     });
 
     it("throws error if fromJS is not given a string", () => {
-      expect(() => Duration.fromJS((<any>new Date()))).toThrow("Duration JS must be a string");
+      expect(() => Duration.fromJS((new Date() as any))).toThrow("Duration JS must be a string");
     });
   });
 
@@ -140,15 +140,15 @@ describe("Duration", () => {
 
   describe("#isFloorable", () => {
     it("works on floorable things", () => {
-      let vs = 'P1Y P5Y P10Y P100Y P1M P2M P3M P4M P1D'.split(' ');
-      for (let v of vs) {
+      const vs = 'P1Y P5Y P10Y P100Y P1M P2M P3M P4M P1D'.split(' ');
+      for (const v of vs) {
         expect(Duration.fromJS(v).isFloorable(), v).toEqual(true);
       }
     });
 
     it("works on not floorable things", () => {
-      let vs = 'P1Y1M P5M P2D P3D'.split(' ');
-      for (let v of vs) {
+      const vs = 'P1Y1M P5M P2D P3D'.split(' ');
+      for (const v of vs) {
         expect(Duration.fromJS(v).isFloorable(), v).toEqual(false);
       }
     });
@@ -164,27 +164,27 @@ describe("Duration", () => {
     });
 
     it("works for year", () => {
-      let p1y = Duration.fromJS("P1Y");
+      const p1y = Duration.fromJS("P1Y");
       expect(p1y.floor(new Date("2013-09-29T01:02:03.456-07:00"), TZ_LA)).toEqual(new Date("2013-01-01T00:00:00.000-08:00"));
     });
 
     it("works for PT2M", () => {
-      let pt2h = Duration.fromJS("PT2M");
+      const pt2h = Duration.fromJS("PT2M");
       expect(pt2h.floor(new Date("2013-09-29T03:03:03.456-07:00"), TZ_LA)).toEqual(new Date("2013-09-29T03:02:00.000-07:00"));
     });
 
     it("works for P2H", () => {
-      let pt2h = Duration.fromJS("PT2H");
+      const pt2h = Duration.fromJS("PT2H");
       expect(pt2h.floor(new Date("2013-09-29T03:02:03.456-07:00"), TZ_LA)).toEqual(new Date("2013-09-29T02:00:00.000-07:00"));
     });
 
     it("works for PT12H", () => {
-      let pt12h = Duration.fromJS("PT12H");
+      const pt12h = Duration.fromJS("PT12H");
       expect(pt12h.floor(new Date("2015-09-12T13:05:00-08:00"), TZ_JUNEAU)).toEqual(new Date("2015-09-12T12:00:00-08:00"));
     });
 
     it("works for P1W", () => {
-      let p1w = Duration.fromJS("P1W");
+      const p1w = Duration.fromJS("P1W");
 
       expect(p1w.floor(new Date("2013-09-29T01:02:03.456-07:00"), TZ_LA))
         .toEqual(new Date("2013-09-23T07:00:00.000Z"));
@@ -194,14 +194,14 @@ describe("Duration", () => {
     });
 
     it("works for P3M", () => {
-      let p3m = Duration.fromJS("P3M");
+      const p3m = Duration.fromJS("P3M");
       expect(p3m.floor(new Date("2013-09-29T03:02:03.456-07:00"), TZ_LA)).toEqual(new Date("2013-07-01T00:00:00.000-07:00"));
 
       expect(p3m.floor(new Date("2013-02-29T03:02:03.456-07:00"), TZ_LA)).toEqual(new Date("2013-01-01T00:00:00.000-08:00"));
     });
 
     it("works for P4Y", () => {
-      let p4y = Duration.fromJS("P4Y");
+      const p4y = Duration.fromJS("P4Y");
       expect(p4y.floor(new Date("2013-09-29T03:02:03.456-07:00"), TZ_LA)).toEqual(new Date("2012-01-01T00:00:00.000-08:00"));
     });
 
@@ -223,14 +223,14 @@ describe("Duration", () => {
     });
 
     it("works for general complex case", () => {
-      let pComplex = Duration.fromJS("P1Y2M3DT4H5M6S");
+      const pComplex = Duration.fromJS("P1Y2M3DT4H5M6S");
       expect(pComplex.shift(new Date("2012-01-01T00:00:00-08:00"), TZ_LA)).toEqual(new Date("2013-03-04T04:05:06-08:00"));
     });
   });
 
   describe("#materialize", () => {
     it("works for weeks", () => {
-      let p1w = Duration.fromJS("P1W");
+      const p1w = Duration.fromJS("P1W");
 
       expect(p1w.materialize(new Date("2012-10-29T00:00:00-07:00"), new Date("2012-12-01T00:00:00-08:00"), TZ_LA)).toEqual([
         new Date('2012-10-29T07:00:00.000Z'),
@@ -251,7 +251,7 @@ describe("Duration", () => {
 
   describe("#isAligned", () => {
     it("works for weeks", () => {
-      let p1w = Duration.fromJS("P1W");
+      const p1w = Duration.fromJS("P1W");
       expect(p1w.isAligned(new Date("2012-10-29T00:00:00-07:00"), TZ_LA)).toEqual(true);
       expect(p1w.isAligned(new Date("2012-10-29T00:00:00-07:00"), Timezone.UTC)).toEqual(false);
     });
@@ -260,17 +260,17 @@ describe("Duration", () => {
 
   describe("#dividesBy", () => {
     it("works for true", () => {
-      let vs = 'P5Y/P1Y P1D/P1D P1M/P1D P1W/P1D P1D/PT6H PT3H/PT1H'.split(' ');
-      for (let v of vs) {
-        let p = v.split('/');
+      const vs = 'P5Y/P1Y P1D/P1D P1M/P1D P1W/P1D P1D/PT6H PT3H/PT1H'.split(' ');
+      for (const v of vs) {
+        const p = v.split('/');
         expect(Duration.fromJS(p[0]).dividesBy(Duration.fromJS(p[1])), v).toEqual(true);
       }
     });
 
     it("works for false", () => {
-      let vs = 'P1D/P1M PT5H/PT1H'.split(' ');
-      for (let v of vs) {
-        let p = v.split('/');
+      const vs = 'P1D/P1M PT5H/PT1H'.split(' ');
+      for (const v of vs) {
+        const p = v.split('/');
         expect(Duration.fromJS(p[0]).dividesBy(Duration.fromJS(p[1])), v).toEqual(false);
       }
     });
@@ -297,15 +297,15 @@ describe("Duration", () => {
 
   describe("#add()", () => {
     it("works with a simple duration", () => {
-      let d1 = Duration.fromJS("P1D");
-      let d2 = Duration.fromJS("P1D");
+      const d1 = Duration.fromJS("P1D");
+      const d2 = Duration.fromJS("P1D");
 
       expect(d1.add(d2).toJS()).toEqual("P2D");
     });
 
     it("works with heterogeneous spans", () => {
-      let d1 = Duration.fromJS("P1D");
-      let d2 = Duration.fromJS("P1Y");
+      const d1 = Duration.fromJS("P1D");
+      const d2 = Duration.fromJS("P1Y");
 
       expect(d1.add(d2).toJS()).toEqual("P1Y1D");
     });
@@ -323,29 +323,29 @@ describe("Duration", () => {
 
   describe("#subtract()", () => {
     it("works with a simple duration", () => {
-      let d1 = Duration.fromJS("P1DT2H");
-      let d2 = Duration.fromJS("PT1H");
+      const d1 = Duration.fromJS("P1DT2H");
+      const d2 = Duration.fromJS("PT1H");
 
       expect(d1.subtract(d2).toJS()).toEqual("P1DT1H");
     });
 
     it("works with a less simple duration", () => {
-      let d1 = Duration.fromJS("P1D");
-      let d2 = Duration.fromJS("PT1H");
+      const d1 = Duration.fromJS("P1D");
+      const d2 = Duration.fromJS("PT1H");
 
       expect(d1.subtract(d2).toJS()).toEqual("PT23H");
     });
 
     it("works with weeks", () => {
-      let d1 = Duration.fromJS("P1W");
-      let d2 = Duration.fromJS("P1D");
+      const d1 = Duration.fromJS("P1W");
+      const d2 = Duration.fromJS("P1D");
 
       expect(d1.subtract(d2).toJS()).toEqual("P6D");
     });
 
     it("throws an error if result is going to be negative", () => {
-      let d1 = Duration.fromJS("P1D");
-      let d2 = Duration.fromJS("P2D");
+      const d1 = Duration.fromJS("P1D");
+      const d2 = Duration.fromJS("P2D");
 
       expect(() => d1.subtract(d2)).toThrow();
     });
@@ -353,31 +353,30 @@ describe("Duration", () => {
 
   describe("#multiply()", () => {
     it("works with a simple duration", () => {
-      let d = Duration.fromJS("P1D");
+      const d = Duration.fromJS("P1D");
       expect(d.multiply(5).toJS()).toEqual("P5D");
     });
 
     it("works with a less simple duration", () => {
-      let d = Duration.fromJS("P1DT2H");
+      const d = Duration.fromJS("P1DT2H");
       expect(d.multiply(2).toJS()).toEqual("P2DT4H");
     });
 
     it("works with weeks", () => {
-      let d = Duration.fromJS("P1W");
+      const d = Duration.fromJS("P1W");
       expect(d.multiply(5).toJS()).toEqual("P5W");
     });
 
     it("throws an error if result is going to be negative", () => {
-      let d = Duration.fromJS("P1D");
+      const d = Duration.fromJS("P1D");
       expect(() => d.multiply(-1)).toThrow('Multiplier must be positive non-zero');
     });
 
     it("gets description properly", () => {
-      let d = Duration.fromJS("P2D");
+      const d = Duration.fromJS("P2D");
       expect(d.multiply(2).getDescription(true)).toEqual("4 Days");
     });
   });
-
 
 
   describe("#getDescription()", () => {

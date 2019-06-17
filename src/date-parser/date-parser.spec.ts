@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  */
 
 import { Timezone } from '../timezone/timezone';
+
 import { parseInterval, parseISODate } from './date-parser';
 
 describe('date parser', () => {
@@ -101,7 +102,7 @@ describe('date parser', () => {
     });
 
     it('date-time (tz = America/Los_Angeles)', () => {
-      let tz = Timezone.fromJS('America/Los_Angeles');
+      const tz = Timezone.fromJS('America/Los_Angeles');
 
       expect(parseISODate('2001-02-03T04:05', tz), '2001-02-03T04:05').toEqual(new Date(Date.UTC(2001, 1, 3, 4 + 8, 5, 0, 0)));
       expect(parseISODate('2001-02-03T04:05:06', tz), '2001-02-03T04:05:06').toEqual(new Date(Date.UTC(2001, 1, 3, 4 + 8, 5, 6, 0)));
@@ -114,7 +115,7 @@ describe('date parser', () => {
     });
 
     it('date-time (tz = null / local)', () => {
-      let tz: any = null;
+      const tz: any = null;
 
       expect(parseISODate('2001-02-03T04:05', tz), '2001-02-03T04:05').toEqual(new Date(2001, 1, 3, 4, 5, 0, 0));
       expect(parseISODate('2001-02-03T04:05:06', tz), '2001-02-03T04:05:06').toEqual(new Date(2001, 1, 3, 4, 5, 6, 0));
@@ -134,25 +135,25 @@ describe('date parser', () => {
     it('errors on bad start', () => {
       expect(() => {
         parseInterval('2001-02-03T03:05:06.wdf007Z/2001-02-03T04:05:06.007Z');
-      }).toThrow("can not parse '2001-02-03T03:05:06.wdf007Z' as ISO date")
+      }).toThrow("can not parse '2001-02-03T03:05:06.wdf007Z' as ISO date");
     });
 
     it('errors on bad end', () => {
       expect(() => {
         parseInterval('2001-02-03T03:05:06.007Z/2001-02-03T04:0ada5:06.007Z');
-      }).toThrow("can not parse '2001-02-03T04:0ada5:06.007Z' as ISO date")
+      }).toThrow("can not parse '2001-02-03T04:0ada5:06.007Z' as ISO date");
     });
 
     it('errors on bad duration', () => {
       expect(() => {
         parseInterval('P1poop');
-      }).toThrow("Can not parse duration 'P1poop'")
+      }).toThrow("Can not parse duration 'P1poop'");
     });
 
     it('errors on flipped start end', () => {
       expect(() => {
         parseInterval('2001-02-03T07:05:06.007Z/2001-02-03T04:05:06.007Z');
-      }).toThrow("start must be <= end in '2001-02-03T07:05:06.007Z/2001-02-03T04:05:06.007Z'")
+      }).toThrow("start must be <= end in '2001-02-03T07:05:06.007Z/2001-02-03T04:05:06.007Z'");
     });
 
     /*
@@ -164,30 +165,30 @@ describe('date parser', () => {
      */
 
     it('works with [start]/[end]', () => {
-      let tz = Timezone.UTC;
-      let interval = parseInterval('2001-02-03T03:05:06.007Z/2001-02-03T04:05:06.007Z', tz);
+      const tz = Timezone.UTC;
+      const interval = parseInterval('2001-02-03T03:05:06.007Z/2001-02-03T04:05:06.007Z', tz);
       expect(interval.computedStart).toEqual(new Date('2001-02-03T03:05:06.007Z'));
       expect(interval.computedEnd).toEqual(new Date('2001-02-03T04:05:06.007Z'));
     });
 
     it('works with [start]/[duration]', () => {
-      let tz = Timezone.UTC;
-      let interval = parseInterval('2001-02-03T03:05:06.007Z/PT1H', tz);
+      const tz = Timezone.UTC;
+      const interval = parseInterval('2001-02-03T03:05:06.007Z/PT1H', tz);
       expect(interval.computedStart).toEqual(new Date('2001-02-03T03:05:06.007Z'));
       expect(interval.computedEnd).toEqual(new Date('2001-02-03T04:05:06.007Z'));
     });
 
     it('works with [duration]/[end]', () => {
-      let tz = Timezone.UTC;
-      let interval = parseInterval('PT1H/2001-02-03T04:05:06.007Z', tz);
+      const tz = Timezone.UTC;
+      const interval = parseInterval('PT1H/2001-02-03T04:05:06.007Z', tz);
       expect(interval.computedStart).toEqual(new Date('2001-02-03T03:05:06.007Z'));
       expect(interval.computedEnd).toEqual(new Date('2001-02-03T04:05:06.007Z'));
     });
 
     it('works with [duration]', () => {
-      let now = new Date('2001-02-03T04:05:06.007Z');
-      let tz = Timezone.UTC;
-      let interval = parseInterval('PT1H', tz, now);
+      const now = new Date('2001-02-03T04:05:06.007Z');
+      const tz = Timezone.UTC;
+      const interval = parseInterval('PT1H', tz, now);
       expect(interval.computedStart).toEqual(new Date('2001-02-03T03:05:06.007Z'));
       expect(interval.computedEnd).toEqual(new Date('2001-02-03T04:05:06.007Z'));
     });

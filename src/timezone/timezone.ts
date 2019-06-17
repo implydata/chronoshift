@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,5 +84,4 @@ export class Timezone implements Instance<string, string> {
   }
 }
 check = Timezone;
-
 

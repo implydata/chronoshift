@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,12 +40,12 @@ describe("Timezone", () => {
 
   describe("#toString", () => {
     it("gives back the correct string for LA", () => {
-      let timezoneStr = "America/Los_Angeles";
+      const timezoneStr = "America/Los_Angeles";
       expect(new Timezone(timezoneStr).toString()).toEqual(timezoneStr);
     });
 
     it("gives back the correct string for UTC", () => {
-      let timezoneStr = "Etc/UTC";
+      const timezoneStr = "Etc/UTC";
       expect(new Timezone(timezoneStr).toString()).toEqual(timezoneStr);
     });
 
@@ -56,7 +56,7 @@ describe("Timezone", () => {
 
   describe(".isTimezone", () => {
     it("gives back the correct string for LA", () => {
-      let timezoneStr = "America/Los_Angeles";
+      const timezoneStr = "America/Los_Angeles";
       expect(Timezone.isTimezone(new Timezone(timezoneStr))).toEqual(true);
     });
   });

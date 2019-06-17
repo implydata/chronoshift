@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  */
 
 import { Timezone } from '../timezone/timezone';
+
 import { shifters } from './floor-shift-ceil';
 
 function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
@@ -25,10 +26,10 @@ function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
 }
 
 describe("floor/shift/ceil", () => {
-  let tz = new Timezone("America/Los_Angeles");
+  const tz = new Timezone("America/Los_Angeles");
 
   it("shifts seconds", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00-07:00"),
       new Date("2012-11-04T00:00:03-07:00"),
       new Date("2012-11-04T00:00:06-07:00"),
@@ -39,7 +40,7 @@ describe("floor/shift/ceil", () => {
   });
 
   it("shifts minutes", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00-07:00"),
       new Date("2012-11-04T00:03:00-07:00"),
       new Date("2012-11-04T00:06:00-07:00"),
@@ -67,17 +68,17 @@ describe("floor/shift/ceil", () => {
   });
 
   it("shifting 24 hours over DST is not the same as shifting a day", () => {
-    let start = new Date("2012-11-04T07:00:00Z");
+    const start = new Date("2012-11-04T07:00:00Z");
 
-    let shift1Day = shifters.day.shift(start, tz, 1);
-    let shift24Hours = shifters.hour.shift(start, tz, 24);
+    const shift1Day = shifters.day.shift(start, tz, 1);
+    const shift24Hours = shifters.hour.shift(start, tz, 24);
 
     expect(shift1Day, 'day').toEqual(new Date("2012-11-05T08:00:00Z"));
     expect(shift24Hours, '24 hours').toEqual(new Date("2012-11-05T07:00:00Z"));
   });
 
   it("shifts hour over DST 1", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00-07:00"),
       new Date("2012-11-04T08:00:00Z"),
       new Date("2012-11-04T09:00:00Z"),
@@ -96,7 +97,7 @@ describe("floor/shift/ceil", () => {
 
   it("shifts hour over DST 2", () => {
     // "2018-03-11T09:00:00Z"
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2018-03-11T01:00:00-07:00"),
       new Date("2018-03-11T09:00:00Z"),
       new Date("2018-03-11T10:00:00Z"),
@@ -107,7 +108,7 @@ describe("floor/shift/ceil", () => {
   });
 
   it("shifts day over DST", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-03T00:00:00-07:00"),
       new Date("2012-11-04T00:00:00-07:00"),
       new Date("2012-11-05T00:00:00-08:00"),
@@ -117,7 +118,7 @@ describe("floor/shift/ceil", () => {
   });
 
   it("shifts week over DST", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-10-29T00:00:00-07:00"),
       new Date("2012-11-05T00:00:00-08:00"),
       new Date("2012-11-12T00:00:00-08:00"),
@@ -147,7 +148,7 @@ describe("floor/shift/ceil", () => {
   });
 
   it("shifts month over DST", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-01T00:00:00-07:00"),
       new Date("2012-12-01T00:00:00-08:00"),
       new Date("2013-01-01T00:00:00-08:00"),
@@ -157,7 +158,7 @@ describe("floor/shift/ceil", () => {
   });
 
   it("shifts year", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2010-01-01T00:00:00-08:00"),
       new Date("2011-01-01T00:00:00-08:00"),
       new Date("2012-01-01T00:00:00-08:00"),
