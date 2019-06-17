@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as momentTz from 'moment-timezone';
+import momentTz from 'moment-timezone';
 
 export * from './date-parser/date-parser';
 export * from './floor-shift-ceil/floor-shift-ceil';

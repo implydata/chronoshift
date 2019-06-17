@@ -23,41 +23,56 @@
   "main": "build/chronoshift.js",
   "typings": "build/index.d.ts",
   "files": [
-    "build/",
-    "typings/"
+    "build/"
   ],
-  "scripts": {
-    "prepare": "tdi -q",
-    "test": "./travis-test",
-    "compile": "./compile"
-  },
-  "config": {
-    "blanket": {
-      "pattern": "chronoshift/build/"
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run tslint-changed-only"
     }
   },
+  "scripts": {
+    "test": "jest",
+    "compile": "webpack -p",
+    "watch": "webpack -w",
+    "tslint": "./node_modules/.bin/tslint -c tslint.json --project tsconfig.json --formatters-dir ./node_modules/awesome-code-style/formatter 'src/**/*.ts?(x)'",
+    "tslint-fix": "npm run tslint -- --fix",
+    "tslint-changed-only": "git diff --diff-filter=ACMR --name-only | grep -E \\.tsx\\?$ | xargs ./node_modules/.bin/tslint -c tslint.json --project tsconfig.json --formatters-dir ./node_modules/awesome-code-style/formatter",
+    "tslint-fix-changed-only": "npm run tslint-changed-only -- --fix"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "\\.s?css$": "identity-obj-proxy"
+    },
+    "testMatch": [
+      "**/?(*.)+(spec).ts?(x)"
+    ],
+    "setupFilesAfterEnv": [
+      "jest-expect-message"
+    ]
+  },
   "dependencies": {
-    "immutable-class": "~0.7.0",
-    "moment-timezone": "~0.5.21",
-    "tslib": "~1.9.3"
+    "immutable-class": "~0.7.7",
+    "moment-timezone": "~0.5.25",
+    "tslib": "~1.10.0"
   },
   "devDependencies": {
-    "@types/mocha": "5.2.5",
-    "babel-core": "6.26.3",
-    "babel-preset-es2015": "6.24.1",
-    "blanket": "1.2.3",
-    "browserify": "16.2.2",
-    "chai": "4.1.2",
-    "gulp": "3.9.1",
-    "gulp-mocha": "6.0.0",
-    "gulp-typescript": "5.0.0-alpha.3",
+    "@types/jest": "^24.0.15",
+    "@types/jest-expect-message": "^1.0.0",
+    "@types/moment-timezone": "^0.5.12",
+    "@types/node": "^12.0.8",
+    "awesome-code-style": "^1.3.4",
+    "husky": "^2.4.1",
     "immutable-class-tester": "0.6.0",
-    "mocha": "5.2.0",
-    "rollup": "0.66.0",
-    "run-sequence": "2.2.1",
-    "tdi": "0.6.4",
-    "ts-node": "7.0.1",
-    "tslint": "5.11.0",
-    "typescript": "3.0.3"
+    "jest": "^24.8.0",
+    "jest-expect-message": "^1.0.2",
+    "ts-jest": "^24.0.2",
+    "ts-loader": "^6.0.2",
+    "ts-node": "8.3.0",
+    "tslint": "^5.17.0",
+    "typescript": "3.5.2",
+    "webpack": "^4.34.0",
+    "webpack-cli": "^3.3.4"
   }
 }

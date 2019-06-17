@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import * as moment from 'moment-timezone';
+/* tslint:disable:no-conditional-assignment */
+
+import moment from 'moment-timezone';
+
 import { Duration } from '../duration/duration';
 import { Timezone } from '../timezone/timezone';
 
 function parseYear(v: string): number {
   if (v.length === 2) {
-    let vn = parseInt(v, 10);
+    const vn = parseInt(v, 10);
     return (vn < 70 ? 2000 : 1900) + vn;
   } else if (v.length === 4) {
     return parseInt(v, 10);
@@ -30,31 +33,31 @@ function parseYear(v: string): number {
 }
 
 function parseMonth(v: string): number {
-  let vn = parseInt(v, 10);
+  const vn = parseInt(v, 10);
   if (vn <= 0 || 12 < vn) throw new Error('Invalid month in date');
   return vn - 1;
 }
 
 function parseDay(v: string): number {
-  let vn = parseInt(v, 10);
+  const vn = parseInt(v, 10);
   if (vn <= 0 || 31 < vn) throw new Error('Invalid day in date');
   return vn;
 }
 
 function parseHour(v: string): number {
-  let vn = parseInt(v, 10);
+  const vn = parseInt(v, 10);
   if (vn < 0 || 24 < vn) throw new Error('Invalid hour in date');
   return vn;
 }
 
 function parseMinute(v: string): number {
-  let vn = parseInt(v, 10);
+  const vn = parseInt(v, 10);
   if (vn < 0 || 60 < vn) throw new Error('Invalid minute in date');
   return vn;
 }
 
 function parseSecond(v: string): number {
-  let vn = parseInt(v, 10);
+  const vn = parseInt(v, 10);
   if (vn < 0 || 60 < vn) throw new Error('Invalid second in date');
   return vn;
 }
@@ -177,8 +180,7 @@ export function parseISODate(date: string, timezone = Timezone.UTC): Date | null
 
       return new Date(Date.UTC(struct[1], struct[2], struct[3], struct[4], struct[5] + minutesOffset, struct[6], struct[7]));
     }
-  }
-  else {
+  } else {
     return null;
   }
 
@@ -193,18 +195,18 @@ export interface IntervalParse {
 }
 
 export function parseInterval(str: string, timezone = Timezone.UTC, now = new Date()): IntervalParse {
-  let parts = str.split('/');
+  const parts = str.split('/');
   if (parts.length > 2) throw new Error(`Can not parse string ${str}`);
 
   let start: Date | null = null;
   let end: Date | null = null;
   let duration: Duration | null = null;
 
-  let p0: string = parts[0];
+  const p0: string = parts[0];
   if (parts.length === 1) {
     duration = Duration.fromJS(p0);
   } else {
-    let p1 = parts[1];
+    const p1 = parts[1];
     if (p0[0] === 'P') {
       duration = Duration.fromJS(p0);
       end = parseISODate(p1, timezone);

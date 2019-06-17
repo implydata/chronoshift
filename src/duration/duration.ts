@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
  * limitations under the License.
  */
 
+/* tslint:disable:no-conditional-assignment */
+
 import { Class, Instance } from 'immutable-class';
+
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';
 
@@ -41,20 +44,20 @@ function capitalizeFirst(str: string): string {
   return str[0].toUpperCase() + str.substr(1);
 }
 
-let periodWeekRegExp = /^P(\d+)W$/;
-let periodRegExp = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/;
+const periodWeekRegExp = /^P(\d+)W$/;
+const periodRegExp = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/;
 //                   P   (year ) (month   ) (day     )    T(hour    ) (minute  ) (second  )
 function getSpansFromString(durationStr: string): DurationValue {
-  let spans: DurationValue = {};
+  const spans: DurationValue = {};
   let matches: RegExpExecArray | null;
   if (matches = periodWeekRegExp.exec(durationStr)) {
     spans.week = Number(matches[1]);
     if (!spans.week) throw new Error("Duration can not have empty weeks");
   } else if (matches = periodRegExp.exec(durationStr)) {
-    let nums = matches.map(Number);
+    const nums = matches.map(Number);
     for (let i = 0; i < SPANS_WITHOUT_WEEK.length; i++) {
-      let span = SPANS_WITHOUT_WEEK[i];
-      let value = nums[i + 1];
+      const span = SPANS_WITHOUT_WEEK[i];
+      const value = nums[i + 1];
       if (value) spans[span] = value;
     }
   } else {
@@ -68,17 +71,17 @@ function getSpansFromStartEnd(start: Date, end: Date, timezone: Timezone): Durat
   end = second.floor(end, timezone);
   if (end <= start) throw new Error("start must come before end");
 
-  let spans: DurationValue = {};
+  const spans: DurationValue = {};
   let iterator: Date = start;
   for (let i = 0; i < SPANS_WITHOUT_WEEK.length; i++) {
-    let span = SPANS_WITHOUT_WEEK[i];
+    const span = SPANS_WITHOUT_WEEK[i];
     let spanCount = 0;
 
     // Shortcut
-    let length = end.valueOf() - iterator.valueOf();
-    let canonicalLength: number = shifters[span].canonicalLength;
+    const length = end.valueOf() - iterator.valueOf();
+    const canonicalLength: number = shifters[span].canonicalLength;
     if (length < canonicalLength / 4) continue;
-    let numberToFit = Math.min(0, Math.floor(length / canonicalLength) - 1);
+    const numberToFit = Math.min(0, Math.floor(length / canonicalLength) - 1);
     let iteratorMove: Date;
     if (numberToFit > 0) {
       // try to skip by numberToFit
@@ -107,9 +110,9 @@ function getSpansFromStartEnd(start: Date, end: Date, timezone: Timezone): Durat
 }
 
 function removeZeros(spans: DurationValue): DurationValue {
-  let newSpans: DurationValue = {};
+  const newSpans: DurationValue = {};
   for (let i = 0; i < SPANS_WITH_WEEK.length; i++) {
-    let span = SPANS_WITH_WEEK[i];
+    const span = SPANS_WITH_WEEK[i];
     if (spans[span] > 0) {
       newSpans[span] = spans[span];
     }
@@ -138,9 +141,9 @@ export class Duration implements Instance<DurationValue, string> {
 
     let lengthLeft = length;
     for (let i = 0; i < spansToCheck.length; i++) {
-      let span = spansToCheck[i];
-      let spanLength = shifters[span].canonicalLength;
-      let count = Math.floor(lengthLeft / spanLength);
+      const span = spansToCheck[i];
+      const spanLength = shifters[span].canonicalLength;
+      const count = Math.floor(lengthLeft / spanLength);
 
       if (count) {
         lengthLeft -= spanLength * count;
@@ -180,7 +183,7 @@ export class Duration implements Instance<DurationValue, string> {
       throw new Error("new Duration called with bad argument");
     }
 
-    let usedSpans = Object.keys(spans);
+    const usedSpans = Object.keys(spans);
     if (!usedSpans.length) throw new Error("Duration can not be empty");
     if (usedSpans.length === 1) {
       this.singleSpan = usedSpans[0];
@@ -191,15 +194,15 @@ export class Duration implements Instance<DurationValue, string> {
   }
 
   public toString() {
-    let strArr: string[] = ["P"];
-    let spans = this.spans;
+    const strArr: string[] = ["P"];
+    const spans = this.spans;
     if (spans.week) {
       strArr.push(String(spans.week), 'W');
     } else {
       let addedT = false;
       for (let i = 0; i < SPANS_WITHOUT_WEEK.length; i++) {
-        let span = SPANS_WITHOUT_WEEK[i];
-        let value = spans[span];
+        const span = SPANS_WITHOUT_WEEK[i];
+        const value = spans[span];
         if (!value) continue;
         if (!addedT && i >= 3) {
           strArr.push("T");
@@ -218,7 +221,7 @@ export class Duration implements Instance<DurationValue, string> {
   }
 
   public subtract(duration: Duration): Duration {
-    let newCanonicalDuration = this.getCanonicalLength() - duration.getCanonicalLength();
+    const newCanonicalDuration = this.getCanonicalLength() - duration.getCanonicalLength();
     if (newCanonicalDuration < 0) throw new Error("A duration can not be negative.");
     return Duration.fromCanonicalLength(newCanonicalDuration);
   }
@@ -226,7 +229,7 @@ export class Duration implements Instance<DurationValue, string> {
   public multiply(multiplier: number): Duration {
     if (multiplier <= 0) throw new Error("Multiplier must be positive non-zero");
     if (multiplier === 1) return this;
-    let newCanonicalDuration = this.getCanonicalLength() * multiplier;
+    const newCanonicalDuration = this.getCanonicalLength() * multiplier;
     return Duration.fromCanonicalLength(newCanonicalDuration);
   }
 
@@ -248,17 +251,17 @@ export class Duration implements Instance<DurationValue, string> {
   }
 
   public isSimple(): boolean {
-    let { singleSpan } = this;
+    const { singleSpan } = this;
     if (!singleSpan) return false;
     return this.spans[singleSpan] === 1;
   }
 
   public isFloorable(): boolean {
-    let { singleSpan } = this;
+    const { singleSpan } = this;
     if (!singleSpan) return false;
-    let span = this.spans[singleSpan];
+    const span = this.spans[singleSpan];
     if (span === 1) return true;
-    let { siblings } = shifters[singleSpan];
+    const { siblings } = shifters[singleSpan];
     if (!siblings) return false;
     return siblings % span === 0;
   }
@@ -269,10 +272,10 @@ export class Duration implements Instance<DurationValue, string> {
    * @param timezone The timezone within which to floor
    */
   public floor(date: Date, timezone: Timezone): Date {
-    let { singleSpan } = this;
+    const { singleSpan } = this;
     if (!singleSpan) throw new Error("Can not floor on a complex duration");
-    let span = this.spans[singleSpan]!;
-    let mover = shifters[singleSpan]!;
+    const span = this.spans[singleSpan]!;
+    const mover = shifters[singleSpan]!;
     let dt = mover.floor(date, timezone);
     if (span !== 1) {
       if (!mover.siblings) throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
@@ -290,9 +293,9 @@ export class Duration implements Instance<DurationValue, string> {
    * @param step The number of times to step by the duration
    */
   public shift(date: Date, timezone: Timezone, step: number = 1): Date {
-    let spans = this.spans;
-    for (let span of SPANS_WITH_WEEK) {
-      let value = spans[span];
+    const spans = this.spans;
+    for (const span of SPANS_WITH_WEEK) {
+      const value = spans[span];
       if (value) date = shifters[span].shift(date, timezone, step * value);
     }
     return date;
@@ -306,7 +309,7 @@ export class Duration implements Instance<DurationValue, string> {
    * @param step The number of times to step by the duration
    */
   public materialize(start: Date, end: Date, timezone: Timezone, step: number = 1): Date[] {
-    let values: Date[] = [];
+    const values: Date[] = [];
     let iter = this.floor(start, timezone);
     while (iter <= end) {
       values.push(iter);
@@ -329,27 +332,27 @@ export class Duration implements Instance<DurationValue, string> {
    * @param smaller The smaller duration to divide by
    */
   public dividesBy(smaller: Duration): boolean {
-    let myCanonicalLength = this.getCanonicalLength();
-    let smallerCanonicalLength = smaller.getCanonicalLength();
+    const myCanonicalLength = this.getCanonicalLength();
+    const smallerCanonicalLength = smaller.getCanonicalLength();
     return myCanonicalLength % smallerCanonicalLength === 0 && this.isFloorable() && smaller.isFloorable();
   }
 
   public getCanonicalLength(): number {
-    let spans = this.spans;
+    const spans = this.spans;
     let length = 0;
-    for (let span of SPANS_WITH_WEEK) {
-      let value = spans[span];
+    for (const span of SPANS_WITH_WEEK) {
+      const value = spans[span];
       if (value) length += value * shifters[span].canonicalLength;
     }
     return length;
   }
 
   public getDescription(capitalize?: boolean): string {
-    let spans = this.spans;
-    let description: string[] = [];
-    for (let span of SPANS_WITH_WEEK) {
-      let value = spans[span];
-      let spanTitle = capitalize ? capitalizeFirst(span) : span;
+    const spans = this.spans;
+    const description: string[] = [];
+    for (const span of SPANS_WITH_WEEK) {
+      const value = spans[span];
+      const spanTitle = capitalize ? capitalizeFirst(span) : span;
       if (value) {
         if (value === 1) {
           description.push(spanTitle);

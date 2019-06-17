@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,144 +15,143 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
-
 import { Timezone } from '../timezone/timezone';
+
 import { shifters } from './floor-shift-ceil';
 
-function pairwise<T>(array: T[], callback:(t1:T, t2:T) => void) {
+function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
   for (let i = 0; i < array.length - 1; i++) {
-    callback(array[i], array[i + 1])
+    callback(array[i], array[i + 1]);
   }
 }
 
 describe("floor, move, ceil (UTC)", () => {
-  let tz = Timezone.UTC;
+  const tz = Timezone.UTC;
 
   it("moves seconds", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00Z"),
       new Date("2012-11-04T00:00:03Z"),
       new Date("2012-11-04T00:00:06Z"),
       new Date("2012-11-04T00:00:09Z"),
       new Date("2012-11-04T00:00:12Z")
     ];
-    pairwise(dates, (d1, d2) => expect(shifters.second.move(d1, tz, 3)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.second.move(d1, tz, 3)).toEqual(d2));
   });
 
   it("rounds minutes", () => {
     expect(shifters.minute.round(new Date("2012-11-04T00:29:00Z"), 15, tz))
-      .to.deep.equal(new Date("2012-11-04T00:15:00Z"));
+      .toEqual(new Date("2012-11-04T00:15:00Z"));
 
     expect(shifters.minute.round(new Date("2012-11-04T00:29:00Z"), 4, tz))
-      .to.deep.equal(new Date("2012-11-04T00:28:00Z"));
+      .toEqual(new Date("2012-11-04T00:28:00Z"));
   });
 
   it("moves minutes", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00Z"),
       new Date("2012-11-04T00:03:00Z"),
       new Date("2012-11-04T00:06:00Z"),
       new Date("2012-11-04T00:09:00Z"),
       new Date("2012-11-04T00:12:00Z")
     ];
-    pairwise(dates, (d1, d2) => expect(shifters.minute.move(d1, tz, 3)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.minute.move(d1, tz, 3)).toEqual(d2));
   });
 
   it("floors hour correctly", () => {
     expect(shifters.hour.floor(new Date("2012-11-04T00:30:00Z"), tz))
-      .to.deep.equal(new Date("2012-11-04T00:00:00Z"));
+      .toEqual(new Date("2012-11-04T00:00:00Z"));
 
     expect(shifters.hour.floor(new Date("2012-11-04T01:30:00Z"), tz))
-      .to.deep.equal(new Date("2012-11-04T01:00:00Z"));
+      .toEqual(new Date("2012-11-04T01:00:00Z"));
 
     expect(shifters.hour.floor(new Date("2012-11-04T01:30:00Z"), tz))
-      .to.deep.equal(new Date("2012-11-04T01:00:00Z"));
+      .toEqual(new Date("2012-11-04T01:00:00Z"));
 
     expect(shifters.hour.floor(new Date("2012-11-04T02:30:00Z"), tz))
-      .to.deep.equal(new Date("2012-11-04T02:00:00Z"));
+      .toEqual(new Date("2012-11-04T02:00:00Z"));
 
     expect(shifters.hour.floor(new Date("2012-11-04T03:30:00Z"), tz))
-      .to.deep.equal(new Date("2012-11-04T03:00:00Z"));
+      .toEqual(new Date("2012-11-04T03:00:00Z"));
   });
 
   it("moves hour", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-04T00:00:00Z"),
       new Date("2012-11-04T01:00:00Z"),
       new Date("2012-11-04T02:00:00Z"),
       new Date("2012-11-04T03:00:00Z")
     ];
-    pairwise(dates, (d1, d2) => expect(shifters.hour.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.hour.move(d1, tz, 1)).toEqual(d2));
   });
 
   it("moves day", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-03T00:00:00Z"),
       new Date("2012-11-04T00:00:00Z"),
       new Date("2012-11-05T00:00:00Z"),
       new Date("2012-11-06T00:00:00Z")
     ];
-    pairwise(dates, (d1, d2) => expect(shifters.day.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.day.move(d1, tz, 1)).toEqual(d2));
   });
 
   it("ceils day", () => {
     let d1 = new Date("2014-12-11T22:11:57.469Z");
     let d2 = new Date("2014-12-12T00:00:00.000Z");
-    expect(shifters.day.ceil(d1, tz)).to.eql(d2);
+    expect(shifters.day.ceil(d1, tz)).toEqual(d2);
 
     d1 = new Date("2014-12-08T00:00:00.000Z");
     d2 = new Date("2014-12-08T00:00:00.000Z");
-    expect(shifters.day.ceil(d1, tz)).to.eql(d2);
+    expect(shifters.day.ceil(d1, tz)).toEqual(d2);
   });
 
   it("moves week", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-10-29T00:00:00Z"),
       new Date("2012-11-05T00:00:00Z"),
       new Date("2012-11-12T00:00:00Z"),
       new Date("2012-11-19T00:00:00Z")
     ];
-    pairwise(dates, (d1, d2) => expect(shifters.week.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.week.move(d1, tz, 1)).toEqual(d2));
   });
 
   it("floors week correctly", () => {
     let d1 = new Date("2014-12-11T22:11:57.469Z");
     let d2 = new Date("2014-12-08T00:00:00.000Z");
-    expect(shifters.week.floor(d1, tz)).to.eql(d2);
+    expect(shifters.week.floor(d1, tz)).toEqual(d2);
 
     d1 = new Date("2014-12-07T12:11:57.469Z");
     d2 = new Date("2014-12-01T00:00:00.000Z");
-    expect(shifters.week.floor(d1, tz)).to.eql(d2);
+    expect(shifters.week.floor(d1, tz)).toEqual(d2);
   });
 
   it("ceils week correctly", () => {
     let d1 = new Date("2014-12-11T22:11:57.469Z");
     let d2 = new Date("2014-12-15T00:00:00.000Z");
-    expect(shifters.week.ceil(d1, tz)).to.eql(d2);
+    expect(shifters.week.ceil(d1, tz)).toEqual(d2);
 
     d1 = new Date("2014-12-07T12:11:57.469Z");
     d2 = new Date("2014-12-08T00:00:00.000Z");
-    expect(shifters.week.ceil(d1, tz)).to.eql(d2);
+    expect(shifters.week.ceil(d1, tz)).toEqual(d2);
   });
 
   it("moves month", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2012-11-01T00:00:00Z"),
       new Date("2012-12-01T00:00:00Z"),
       new Date("2013-01-01T00:00:00Z"),
       new Date("2013-02-01T00:00:00Z")
     ];
-    pairwise(dates, (d1, d2) => expect(shifters.month.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.month.move(d1, tz, 1)).toEqual(d2));
   });
 
   it("moves year", () => {
-    let dates: Date[] = [
+    const dates: Date[] = [
       new Date("2010-01-01T00:00:00Z"),
       new Date("2011-01-01T00:00:00Z"),
       new Date("2012-01-01T00:00:00Z"),
       new Date("2013-01-01T00:00:00Z")
     ];
-    pairwise(dates, (d1, d2) => expect(shifters.year.move(d1, tz, 1)).to.deep.equal(d2));
+    pairwise(dates, (d1, d2) => expect(shifters.year.move(d1, tz, 1)).toEqual(d2));
   });
 });

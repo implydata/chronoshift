@@ -1,6 +1,6 @@
 /*
  * Copyright 2014-2015 Metamarkets Group Inc.
- * Copyright 2015-2016 Imply Data, Inc.
+ * Copyright 2015-2019 Imply Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,14 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
-
 import { isDate } from './utils';
 
 describe("util", () => {
   describe("isDate", () => {
     it("works", () => {
-      expect(isDate(new Date)).to.equal(true);
-      expect(isDate([])).to.equal(false);
-      expect(isDate(null)).to.equal(false);
+      expect(isDate(new Date())).toBe(true);
+      expect(isDate([])).toBe(false);
+      expect(isDate(null)).toBe(false);
     });
   });
 
