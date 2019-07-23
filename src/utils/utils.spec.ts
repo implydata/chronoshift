@@ -17,13 +17,12 @@
 
 import { isDate } from './utils';
 
-describe("util", () => {
-  describe("isDate", () => {
-    it("works", () => {
+describe('util', () => {
+  describe('isDate', () => {
+    it('works', () => {
       expect(isDate(new Date())).toBe(true);
       expect(isDate([])).toBe(false);
       expect(isDate(null)).toBe(false);
     });
   });
-
 });

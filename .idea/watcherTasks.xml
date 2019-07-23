@@ -2,53 +2,23 @@
 <project version="4">
   <component name="ProjectTasksOptions" suppressed-tasks="TypeScript;CoffeeScript;Babel">
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="" />
+      <option name="arguments" value="--write $FilePathRelativeToProjectRoot$" />
       <option name="checkSyntaxErrors" value="true" />
-      <option name="description" value="Compiles .ts files into .js files" />
+      <option name="description" />
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="ts" />
-      <option name="immediateSync" value="true" />
-      <option name="name" value="TypeScript Compile Sources" />
-      <option name="output" value="$FileNameWithoutExtension$.js:$FileNameWithoutExtension$.js.map" />
+      <option name="immediateSync" value="false" />
+      <option name="name" value="Prettier" />
+      <option name="output" value="$FilePathRelativeToProjectRoot$" />
       <option name="outputFilters">
-        <array>
-          <FilterInfo>
-            <option name="description" value="tsc error format" />
-            <option name="name" value="tsc" />
-            <option name="regExp" value="$FILE_PATH$\($LINE$,$COLUMN$\): $MESSAGE$$" />
-          </FilterInfo>
-        </array>
+        <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$ProjectFileDir$/compile-tsc" />
-      <option name="scopeName" value="Source Files" />
+      <option name="program" value="$ProjectFileDir$/node_modules/.bin/prettier" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="Project Files" />
       <option name="trackOnlyRoot" value="false" />
       <option name="workingDir" value="$ProjectFileDir$" />
-      <envs />
-    </TaskOptions>
-    <TaskOptions isEnabled="true">
-      <option name="arguments" value="-m commonjs $FileName$" />
-      <option name="checkSyntaxErrors" value="true" />
-      <option name="description" value="Compiles .ts files into .js files" />
-      <option name="exitCodeBehavior" value="ERROR" />
-      <option name="fileExtension" value="ts" />
-      <option name="immediateSync" value="true" />
-      <option name="name" value="TypeScript Compile Tests" />
-      <option name="output" value="$FileNameWithoutExtension$.js:$FileNameWithoutExtension$.js.map" />
-      <option name="outputFilters">
-        <array>
-          <FilterInfo>
-            <option name="description" value="tsc error format" />
-            <option name="name" value="tsc" />
-            <option name="regExp" value="$FILE_PATH$\($LINE$,$COLUMN$\): $MESSAGE$$" />
-          </FilterInfo>
-        </array>
-      </option>
-      <option name="outputFromStdout" value="false" />
-      <option name="program" value="$ProjectFileDir$/node_modules/.bin/tsc" />
-      <option name="scopeName" value="Test Files" />
-      <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="$FileDir$" />
       <envs />
     </TaskOptions>
   </component>

@@ -25,16 +25,16 @@ export type ShiftFn = (dt: Date, tz: Timezone, step: number) => Date;
 
 export type RoundFn = (dt: Date, roundTo: number, tz: Timezone) => Date;
 
-export interface TimeShifter {
+export interface TimeShifterNoCeil {
   canonicalLength: number;
   siblings?: number;
   floor: AlignFn;
-  round?: RoundFn;
+  round: RoundFn;
   shift: ShiftFn;
-  ceil?: AlignFn;
+}
 
-  // legacy
-  move?: ShiftFn;
+export interface TimeShifter extends TimeShifterNoCeil {
+  ceil: AlignFn;
 }
 
 function adjustDay(day: number): number {
@@ -45,15 +45,16 @@ function floorTo(n: number, roundTo: number): number {
   return Math.floor(n / roundTo) * roundTo;
 }
 
-function timeShifterFiller(tm: TimeShifter): TimeShifter {
+function timeShifterFiller(tm: TimeShifterNoCeil): TimeShifter {
   const { floor, shift } = tm;
-  tm.ceil = (dt: Date, tz: Timezone) => {
-    const floored = floor(dt, tz);
-    if (floored.valueOf() === dt.valueOf()) return dt; // Just like ceil(3) is 3 and not 4
-    return shift(floored, tz, 1);
+  return {
+    ...tm,
+    ceil: (dt: Date, tz: Timezone) => {
+      const floored = floor(dt, tz);
+      if (floored.valueOf() === dt.valueOf()) return dt; // Just like ceil(3) is 3 and not 4
+      return shift(floored, tz, 1);
+    },
   };
-  tm.move = tm.shift; // back compat.
-  return tm;
 }
 
 export const second = timeShifterFiller({
@@ -75,7 +76,7 @@ export const second = timeShifterFiller({
     dt = new Date(dt.valueOf());
     dt.setUTCSeconds(dt.getUTCSeconds() + step);
     return dt;
-  }
+  },
 });
 
 export const minute = timeShifterFiller({
@@ -97,7 +98,7 @@ export const minute = timeShifterFiller({
     dt = new Date(dt.valueOf());
     dt.setUTCMinutes(dt.getUTCMinutes() + step);
     return dt;
-  }
+  },
 });
 
 // Movement by hour is tz independent because in every timezone an hour is 60 min
@@ -116,7 +117,13 @@ export const hour = timeShifterFiller({
       dt.setUTCMinutes(0, 0, 0);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.second(0).minute(0).millisecond(0).valueOf());
+      dt = new Date(
+        wt
+          .second(0)
+          .minute(0)
+          .millisecond(0)
+          .valueOf(),
+      );
     }
     return dt;
   },
@@ -133,7 +140,7 @@ export const hour = timeShifterFiller({
     }
     return dt;
   },
-  shift: hourMove
+  shift: hourMove,
 });
 
 export const day = timeShifterFiller({
@@ -144,7 +151,14 @@ export const day = timeShifterFiller({
       dt.setUTCHours(0, 0, 0, 0);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.hour(0).second(0).minute(0).millisecond(0).valueOf());
+      dt = new Date(
+        wt
+          .hour(0)
+          .second(0)
+          .minute(0)
+          .millisecond(0)
+          .valueOf(),
+      );
     }
     return dt;
   },
@@ -157,7 +171,10 @@ export const day = timeShifterFiller({
       dt = new Date(wt.add(step, 'days').valueOf());
     }
     return dt;
-  }
+  },
+  round: () => {
+    throw new Error('missing day round');
+  },
 });
 
 export const week = timeShifterFiller({
@@ -169,7 +186,15 @@ export const week = timeShifterFiller({
       dt.setUTCDate(dt.getUTCDate() - adjustDay(dt.getUTCDay()));
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.date(wt.date() - adjustDay(wt.day())).hour(0).second(0).minute(0).millisecond(0).valueOf());
+      dt = new Date(
+        wt
+          .date(wt.date() - adjustDay(wt.day()))
+          .hour(0)
+          .second(0)
+          .minute(0)
+          .millisecond(0)
+          .valueOf(),
+      );
     }
     return dt;
   },
@@ -182,7 +207,10 @@ export const week = timeShifterFiller({
       dt = new Date(wt.add(step * 7, 'days').valueOf());
     }
     return dt;
-  }
+  },
+  round: () => {
+    throw new Error('missing week round');
+  },
 });
 
 function monthShift(dt: Date, tz: Timezone, step: number) {
@@ -206,7 +234,15 @@ export const month = timeShifterFiller({
       dt.setUTCDate(1);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.date(1).hour(0).second(0).minute(0).millisecond(0).valueOf());
+      dt = new Date(
+        wt
+          .date(1)
+          .hour(0)
+          .second(0)
+          .minute(0)
+          .millisecond(0)
+          .valueOf(),
+      );
     }
     return dt;
   },
@@ -223,7 +259,7 @@ export const month = timeShifterFiller({
     }
     return dt;
   },
-  shift: monthShift
+  shift: monthShift,
 });
 
 function yearShift(dt: Date, tz: Timezone, step: number) {
@@ -247,7 +283,16 @@ export const year = timeShifterFiller({
       dt.setUTCMonth(0, 1);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.month(0).date(1).hour(0).second(0).minute(0).millisecond(0).valueOf());
+      dt = new Date(
+        wt
+          .month(0)
+          .date(1)
+          .hour(0)
+          .second(0)
+          .minute(0)
+          .millisecond(0)
+          .valueOf(),
+      );
     }
     return dt;
   },
@@ -264,7 +309,7 @@ export const year = timeShifterFiller({
     }
     return dt;
   },
-  shift: yearShift
+  shift: yearShift,
 });
 
 export interface Shifters {
@@ -286,5 +331,5 @@ export const shifters: Shifters = {
   day: day,
   week: week,
   month: month,
-  year: year
+  year: year,
 };

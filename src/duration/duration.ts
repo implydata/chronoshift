@@ -22,9 +22,9 @@ import { Class, Instance } from 'immutable-class';
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';
 
-const SPANS_WITH_WEEK = ["year", "month", "week", "day", "hour", "minute", "second"];
-const SPANS_WITHOUT_WEEK = ["year", "month", "day", "hour", "minute", "second"];
-const SPANS_WITHOUT_WEEK_OR_MONTH = ["year", "day", "hour", "minute", "second"];
+const SPANS_WITH_WEEK = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second'];
+const SPANS_WITHOUT_WEEK = ['year', 'month', 'day', 'hour', 'minute', 'second'];
+const SPANS_WITHOUT_WEEK_OR_MONTH = ['year', 'day', 'hour', 'minute', 'second'];
 
 export interface DurationValue {
   year?: number;
@@ -50,10 +50,10 @@ const periodRegExp = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)
 function getSpansFromString(durationStr: string): DurationValue {
   const spans: DurationValue = {};
   let matches: RegExpExecArray | null;
-  if (matches = periodWeekRegExp.exec(durationStr)) {
+  if ((matches = periodWeekRegExp.exec(durationStr))) {
     spans.week = Number(matches[1]);
-    if (!spans.week) throw new Error("Duration can not have empty weeks");
-  } else if (matches = periodRegExp.exec(durationStr)) {
+    if (!spans.week) throw new Error('Duration can not have empty weeks');
+  } else if ((matches = periodRegExp.exec(durationStr))) {
     const nums = matches.map(Number);
     for (let i = 0; i < SPANS_WITHOUT_WEEK.length; i++) {
       const span = SPANS_WITHOUT_WEEK[i];
@@ -69,7 +69,7 @@ function getSpansFromString(durationStr: string): DurationValue {
 function getSpansFromStartEnd(start: Date, end: Date, timezone: Timezone): DurationValue {
   start = second.floor(start, timezone);
   end = second.floor(end, timezone);
-  if (end <= start) throw new Error("start must come before end");
+  if (end <= start) throw new Error('start must come before end');
 
   const spans: DurationValue = {};
   let iterator: Date = start;
@@ -113,7 +113,7 @@ function removeZeros(spans: DurationValue): DurationValue {
   const newSpans: DurationValue = {};
   for (let i = 0; i < SPANS_WITH_WEEK.length; i++) {
     const span = SPANS_WITH_WEEK[i];
-    if (spans[span] > 0) {
+    if (Number(spans[span]) > 0) {
       newSpans[span] = spans[span];
     }
   }
@@ -125,11 +125,11 @@ function removeZeros(spans: DurationValue): DurationValue {
  */
 let check: Class<DurationValue, string>;
 export class Duration implements Instance<DurationValue, string> {
-  public singleSpan: string;
+  public singleSpan?: string;
   public spans: DurationValue;
 
   static fromJS(durationStr: string): Duration {
-    if (typeof durationStr !== 'string') throw new TypeError("Duration JS must be a string");
+    if (typeof durationStr !== 'string') throw new TypeError('Duration JS must be a string');
     return new Duration(getSpansFromString(durationStr));
   }
 
@@ -154,10 +154,8 @@ export class Duration implements Instance<DurationValue, string> {
 
     if (
       length % shifters['week'].canonicalLength === 0 && // Weeks fits
-      (
-        spansUsed > 1 || // We already have a more complex span
-        spans['day'] // or... we only have days and it might be simpler to express as weeks
-      )
+      (spansUsed > 1 || // We already have a more complex span
+        spans['day']) // or... we only have days and it might be simpler to express as weeks
     ) {
       spans = { week: length / shifters['week'].canonicalLength };
     }
@@ -180,11 +178,11 @@ export class Duration implements Instance<DurationValue, string> {
     } else if (typeof spans === 'object') {
       spans = removeZeros(spans);
     } else {
-      throw new Error("new Duration called with bad argument");
+      throw new Error('new Duration called with bad argument');
     }
 
     const usedSpans = Object.keys(spans);
-    if (!usedSpans.length) throw new Error("Duration can not be empty");
+    if (!usedSpans.length) throw new Error('Duration can not be empty');
     if (usedSpans.length === 1) {
       this.singleSpan = usedSpans[0];
     } else if (spans.week) {
@@ -194,7 +192,7 @@ export class Duration implements Instance<DurationValue, string> {
   }
 
   public toString() {
-    const strArr: string[] = ["P"];
+    const strArr: string[] = ['P'];
     const spans = this.spans;
     if (spans.week) {
       strArr.push(String(spans.week), 'W');
@@ -205,29 +203,27 @@ export class Duration implements Instance<DurationValue, string> {
         const value = spans[span];
         if (!value) continue;
         if (!addedT && i >= 3) {
-          strArr.push("T");
+          strArr.push('T');
           addedT = true;
         }
         strArr.push(String(value), span[0].toUpperCase());
       }
     }
-    return strArr.join("");
+    return strArr.join('');
   }
 
   public add(duration: Duration): Duration {
-    return Duration.fromCanonicalLength(
-      this.getCanonicalLength() + duration.getCanonicalLength()
-    );
+    return Duration.fromCanonicalLength(this.getCanonicalLength() + duration.getCanonicalLength());
   }
 
   public subtract(duration: Duration): Duration {
     const newCanonicalDuration = this.getCanonicalLength() - duration.getCanonicalLength();
-    if (newCanonicalDuration < 0) throw new Error("A duration can not be negative.");
+    if (newCanonicalDuration < 0) throw new Error('A duration can not be negative.');
     return Duration.fromCanonicalLength(newCanonicalDuration);
   }
 
   public multiply(multiplier: number): Duration {
-    if (multiplier <= 0) throw new Error("Multiplier must be positive non-zero");
+    if (multiplier <= 0) throw new Error('Multiplier must be positive non-zero');
     if (multiplier === 1) return this;
     const newCanonicalDuration = this.getCanonicalLength() * multiplier;
     return Duration.fromCanonicalLength(newCanonicalDuration);
@@ -246,8 +242,7 @@ export class Duration implements Instance<DurationValue, string> {
   }
 
   public equals(other: Duration): boolean {
-    return Boolean(other) &&
-      this.toString() === other.toString();
+    return Boolean(other) && this.toString() === other.toString();
   }
 
   public isSimple(): boolean {
@@ -259,7 +254,7 @@ export class Duration implements Instance<DurationValue, string> {
   public isFloorable(): boolean {
     const { singleSpan } = this;
     if (!singleSpan) return false;
-    const span = this.spans[singleSpan];
+    const span = Number(this.spans[singleSpan]);
     if (span === 1) return true;
     const { siblings } = shifters[singleSpan];
     if (!siblings) return false;
@@ -273,13 +268,17 @@ export class Duration implements Instance<DurationValue, string> {
    */
   public floor(date: Date, timezone: Timezone): Date {
     const { singleSpan } = this;
-    if (!singleSpan) throw new Error("Can not floor on a complex duration");
+    if (!singleSpan) throw new Error('Can not floor on a complex duration');
     const span = this.spans[singleSpan]!;
     const mover = shifters[singleSpan]!;
     let dt = mover.floor(date, timezone);
     if (span !== 1) {
-      if (!mover.siblings) throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
-      if (mover.siblings % span !== 0) throw new Error(`Can not floor on a ${singleSpan} duration that does not divide into ${mover.siblings}`);
+      if (!mover.siblings)
+        throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
+      if (mover.siblings % span !== 0)
+        throw new Error(
+          `Can not floor on a ${singleSpan} duration that does not divide into ${mover.siblings}`,
+        );
       dt = (mover as any).round(dt, span, timezone); // the 'as any' is a TS2.0 bug, it should not be needed
     }
     return dt;
@@ -334,7 +333,11 @@ export class Duration implements Instance<DurationValue, string> {
   public dividesBy(smaller: Duration): boolean {
     const myCanonicalLength = this.getCanonicalLength();
     const smallerCanonicalLength = smaller.getCanonicalLength();
-    return myCanonicalLength % smallerCanonicalLength === 0 && this.isFloorable() && smaller.isFloorable();
+    return (
+      myCanonicalLength % smallerCanonicalLength === 0 &&
+      this.isFloorable() &&
+      smaller.isFloorable()
+    );
   }
 
   public getCanonicalLength(): number {
@@ -372,7 +375,5 @@ export class Duration implements Instance<DurationValue, string> {
     if (!this.singleSpan) return null;
     return this.spans[this.singleSpan] || null;
   }
-
 }
 check = Duration;
-

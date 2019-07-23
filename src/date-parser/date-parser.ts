@@ -72,17 +72,40 @@ export function parseSQLDate(type: string, v: string): Date {
   let m: RegExpMatchArray | null;
   let d: number;
   if (type === 'ts') {
-    if (m = v.match(/^(\d{2}(?:\d{2})?)(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/)) {
-      d = Date.UTC(parseYear(m[1]), parseMonth(m[2]), parseDay(m[3]), parseHour(m[4]), parseMinute(m[5]), parseSecond(m[6]));
-    } else if (m = v.match(/^(\d{2}(?:\d{2})?)[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})[T ](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})(?:\.(\d{1,6}))?$/)) {
-      d = Date.UTC(parseYear(m[1]), parseMonth(m[2]), parseDay(m[3]), parseHour(m[4]), parseMinute(m[5]), parseSecond(m[6]), parseMillisecond(m[7]));
+    if ((m = v.match(/^(\d{2}(?:\d{2})?)(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/))) {
+      d = Date.UTC(
+        parseYear(m[1]),
+        parseMonth(m[2]),
+        parseDay(m[3]),
+        parseHour(m[4]),
+        parseMinute(m[5]),
+        parseSecond(m[6]),
+      );
+    } else if (
+      (m = v.match(
+        /^(\d{2}(?:\d{2})?)[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})[T ](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})(?:\.(\d{1,6}))?$/,
+      ))
+    ) {
+      d = Date.UTC(
+        parseYear(m[1]),
+        parseMonth(m[2]),
+        parseDay(m[3]),
+        parseHour(m[4]),
+        parseMinute(m[5]),
+        parseSecond(m[6]),
+        parseMillisecond(m[7]),
+      );
     } else {
       throw new Error('Invalid timestamp');
     }
   } else {
-    if (m = v.match(/^(\d{2}(?:\d{2})?)(\d{2})(\d{2})$/)) {
+    if ((m = v.match(/^(\d{2}(?:\d{2})?)(\d{2})(\d{2})$/))) {
       d = Date.UTC(parseYear(m[1]), parseMonth(m[2]), parseDay(m[3]));
-    } else if (m = v.match(/^(\d{2}(?:\d{2})?)[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})$/)) {
+    } else if (
+      (m = v.match(
+        /^(\d{2}(?:\d{2})?)[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})$/,
+      ))
+    ) {
       d = Date.UTC(parseYear(m[1]), parseMonth(m[2]), parseDay(m[3]));
     } else {
       throw new Error('Invalid date');
@@ -141,7 +164,11 @@ export function parseISODate(date: string, timezone = Timezone.UTC): Date | null
   */
 
   //              1 YYYY                 2 MM        3 DD               4 HH        5 mm        6 ss           7 msec             8 Z 9 ±    10 tzHH    11 tzmm
-  if ((struct = /^(\d{4}|[+\-]\d{6})(?:-?(\d{2})(?:-?(\d{2}))?)?(?:[ T]?(\d{2})(?::?(\d{2})(?::?(\d{2})(?:[,\.](\d{1,}))?)?)?)?(?:(Z)|([+\-])(\d{2})(?::?(\d{2}))?)?$/.exec(date))) {
+  if (
+    (struct = /^(\d{4}|[+\-]\d{6})(?:-?(\d{2})(?:-?(\d{2}))?)?(?:[ T]?(\d{2})(?::?(\d{2})(?::?(\d{2})(?:[,\.](\d{1,}))?)?)?)?(?:(Z)|([+\-])(\d{2})(?::?(\d{2}))?)?$/.exec(
+      date,
+    ))
+  ) {
     // avoid NaN timestamps caused by “undefined” values being passed to Date.UTC
     for (let i = 0, k: number; (k = numericKeys[i]); ++i) {
       struct[k] = +struct[k] || 0;
@@ -152,22 +179,41 @@ export function parseISODate(date: string, timezone = Timezone.UTC): Date | null
     struct[3] = +struct[3] || 1;
 
     // allow arbitrary sub-second precision beyond milliseconds
-    struct[7] = struct[7] ? + (struct[7] + "00").substr(0, 3) : 0;
+    struct[7] = struct[7] ? +(struct[7] + '00').substr(0, 3) : 0;
 
-    if ((struct[8] === undefined || struct[8] === '') && (struct[9] === undefined || struct[9] === '') && !Timezone.UTC.equals(timezone)) {
+    if (
+      (struct[8] === undefined || struct[8] === '') &&
+      (struct[9] === undefined || struct[9] === '') &&
+      !Timezone.UTC.equals(timezone)
+    ) {
       if (timezone === null) {
         // timezone explicitly set to null = use local timezone
-        return new Date(struct[1], struct[2], struct[3], struct[4], struct[5], struct[6], struct[7]);
+        return new Date(
+          struct[1],
+          struct[2],
+          struct[3],
+          struct[4],
+          struct[5],
+          struct[6],
+          struct[7],
+        );
       } else {
-        return new Date(moment.tz({
-          year: struct[1],
-          month: struct[2],
-          day: struct[3],
-          hour: struct[4],
-          minute: struct[5],
-          second: struct[6],
-          millisecond: struct[7]
-        }, timezone.toString()).valueOf());
+        return new Date(
+          moment
+            .tz(
+              {
+                year: struct[1],
+                month: struct[2],
+                day: struct[3],
+                hour: struct[4],
+                minute: struct[5],
+                second: struct[6],
+                millisecond: struct[7],
+              },
+              timezone.toString(),
+            )
+            .valueOf(),
+        );
       }
     } else {
       if (struct[8] !== 'Z' && struct[9] !== undefined) {
@@ -178,12 +224,21 @@ export function parseISODate(date: string, timezone = Timezone.UTC): Date | null
         }
       }
 
-      return new Date(Date.UTC(struct[1], struct[2], struct[3], struct[4], struct[5] + minutesOffset, struct[6], struct[7]));
+      return new Date(
+        Date.UTC(
+          struct[1],
+          struct[2],
+          struct[3],
+          struct[4],
+          struct[5] + minutesOffset,
+          struct[6],
+          struct[7],
+        ),
+      );
     }
   } else {
     return null;
   }
-
 }
 
 export interface IntervalParse {
@@ -194,7 +249,11 @@ export interface IntervalParse {
   duration?: Duration | null;
 }
 
-export function parseInterval(str: string, timezone = Timezone.UTC, now = new Date()): IntervalParse {
+export function parseInterval(
+  str: string,
+  timezone = Timezone.UTC,
+  now = new Date(),
+): IntervalParse {
   const parts = str.split('/');
   if (parts.length > 2) throw new Error(`Can not parse string ${str}`);
 
@@ -254,6 +313,6 @@ export function parseInterval(str: string, timezone = Timezone.UTC, now = new Da
     computedEnd,
     start,
     end,
-    duration
+    duration,
   };
 }

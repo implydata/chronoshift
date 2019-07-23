@@ -50,7 +50,7 @@ export class Timezone implements Instance<string, string> {
    */
   constructor(timezone: string) {
     if (typeof timezone !== 'string') {
-      throw new TypeError("timezone description must be a string");
+      throw new TypeError('timezone description must be a string');
     }
     if (timezone !== 'Etc/UTC' && !moment.tz.zone(timezone)) {
       throw new Error(`timezone '${timezone}' does not exist`);
@@ -75,8 +75,7 @@ export class Timezone implements Instance<string, string> {
   }
 
   public equals(other: Timezone): boolean {
-    return Timezone.isTimezone(other) &&
-      this.timezone === other.timezone;
+    return Timezone.isTimezone(other) && this.timezone === other.timezone;
   }
 
   public isUTC(): boolean {
@@ -92,4 +91,3 @@ export class Timezone implements Instance<string, string> {
   }
 }
 check = Timezone;
-
