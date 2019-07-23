@@ -281,7 +281,7 @@ export class Duration implements Instance<DurationValue, string> {
           `Can not floor on a ${singleSpan} duration that does not divide into ${mover.siblings}`,
         );
       }
-      dt = (mover as any).round(dt, span, timezone); // the 'as any' is a TS2.0 bug, it should not be needed
+      dt = mover.round(dt, span, timezone);
     }
     return dt;
   }
