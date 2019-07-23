@@ -273,12 +273,14 @@ export class Duration implements Instance<DurationValue, string> {
     const mover = shifters[singleSpan]!;
     let dt = mover.floor(date, timezone);
     if (span !== 1) {
-      if (!mover.siblings)
+      if (!mover.siblings) {
         throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
-      if (mover.siblings % span !== 0)
+      }
+      if (mover.siblings % span !== 0) {
         throw new Error(
           `Can not floor on a ${singleSpan} duration that does not divide into ${mover.siblings}`,
         );
+      }
       dt = (mover as any).round(dt, span, timezone); // the 'as any' is a TS2.0 bug, it should not be needed
     }
     return dt;

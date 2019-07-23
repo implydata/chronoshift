@@ -1,5 +1,5 @@
 {
-  "extends": "awesome-code-style/tslint.json",
+  "extends": "awesome-code-style",
   "rules": {
     "quotemark": false,
     "no-shadowed-variable": false,

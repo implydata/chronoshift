@@ -31,7 +31,8 @@
     }
   },
   "scripts": {
-    "test": "jest",
+    "pretest": "npm run compile",
+    "test": "npm run tslint && jest",
     "compile": "webpack -p",
     "watch": "webpack -w",
     "tslint": "./node_modules/.bin/tslint -c tslint.json --project tsconfig.json --formatters-dir ./node_modules/awesome-code-style/formatter 'src/**/*.ts?(x)'",
@@ -42,9 +43,6 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "jsdom",
-    "moduleNameMapper": {
-      "\\.s?css$": "identity-obj-proxy"
-    },
     "testMatch": [
       "**/?(*.)+(spec).ts?(x)"
     ],
@@ -77,7 +75,6 @@
     "jest-expect-message": "^1.0.2",
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
-    "ts-node": "8.3.0",
     "tslint": "^5.18.0",
     "typescript": "3.5.3",
     "webpack": "^4.36.1",
