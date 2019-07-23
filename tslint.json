@@ -1,6 +1,7 @@
 {
   "extends": "awesome-code-style",
   "rules": {
+    "file-header": [true, "Licensed under the Apache License, Version 2\\.0.+"],
     "quotemark": false,
     "no-shadowed-variable": false,
     "variable-name": false,

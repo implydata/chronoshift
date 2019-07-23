@@ -163,10 +163,6 @@ export class Duration implements Instance<DurationValue, string> {
     return new Duration(spans);
   }
 
-  static isDuration(candidate: any): boolean {
-    return candidate instanceof Duration;
-  }
-
   /**
    * Constructs an ISO duration like P1DT3H from a string
    */
@@ -241,8 +237,8 @@ export class Duration implements Instance<DurationValue, string> {
     return this.toString();
   }
 
-  public equals(other: Duration): boolean {
-    return Boolean(other) && this.toString() === other.toString();
+  public equals(other: Duration | undefined): boolean {
+    return other instanceof Duration && this.toString() === other.toString();
   }
 
   public isSimple(): boolean {

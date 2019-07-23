@@ -27,10 +27,6 @@ export class Timezone implements Instance<string, string> {
 
   private timezone: string;
 
-  static isTimezone(candidate: any): boolean {
-    return candidate instanceof Timezone;
-  }
-
   static formatDateWithTimezone(d: Date, timezone?: Timezone) {
     let str: string;
     if (timezone && !timezone.isUTC()) {
@@ -74,8 +70,8 @@ export class Timezone implements Instance<string, string> {
     return this.timezone;
   }
 
-  public equals(other: Timezone): boolean {
-    return Timezone.isTimezone(other) && this.timezone === other.timezone;
+  public equals(other: Timezone | undefined): boolean {
+    return other instanceof Timezone && this.timezone === other.timezone;
   }
 
   public isUTC(): boolean {
