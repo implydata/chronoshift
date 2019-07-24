@@ -17,7 +17,7 @@
 
 /* tslint:disable:no-conditional-assignment */
 
-import { Class, Instance } from 'immutable-class';
+import { Class, Instance, typeCheck } from 'immutable-class';
 
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';
@@ -123,7 +123,6 @@ function removeZeros(spans: DurationValue): DurationValue {
 /**
  * Represents an ISO duration like P1DT3H
  */
-let check: Class<DurationValue, string>;
 export class Duration implements Instance<DurationValue, string> {
   public singleSpan?: string;
   public spans: DurationValue;
@@ -374,4 +373,4 @@ export class Duration implements Instance<DurationValue, string> {
     return this.spans[this.singleSpan] || null;
   }
 }
-check = Duration;
+typeCheck<Class<DurationValue, string>>(Duration);

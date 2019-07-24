@@ -60,19 +60,19 @@ function timeShifterFiller(tm: TimeShifterNoCeil): TimeShifter {
 export const second = timeShifterFiller({
   canonicalLength: 1000,
   siblings: 60,
-  floor: (dt, tz) => {
+  floor: (dt, _tz) => {
     // Seconds do not actually need a timezone because all timezones align on seconds... for now...
     dt = new Date(dt.valueOf());
     dt.setUTCMilliseconds(0);
     return dt;
   },
-  round: (dt, roundTo, tz) => {
+  round: (dt, roundTo, _tz) => {
     const cur = dt.getUTCSeconds();
     const adj = floorTo(cur, roundTo);
     if (cur !== adj) dt.setUTCSeconds(adj);
     return dt;
   },
-  shift: (dt, tz, step) => {
+  shift: (dt, _tz, step) => {
     dt = new Date(dt.valueOf());
     dt.setUTCSeconds(dt.getUTCSeconds() + step);
     return dt;
@@ -82,19 +82,19 @@ export const second = timeShifterFiller({
 export const minute = timeShifterFiller({
   canonicalLength: 60000,
   siblings: 60,
-  floor: (dt, tz) => {
+  floor: (dt, _tz) => {
     // Minutes do not actually need a timezone because all timezones align on minutes... for now...
     dt = new Date(dt.valueOf());
     dt.setUTCSeconds(0, 0);
     return dt;
   },
-  round: (dt, roundTo, tz) => {
+  round: (dt, roundTo, _tz) => {
     const cur = dt.getUTCMinutes();
     const adj = floorTo(cur, roundTo);
     if (cur !== adj) dt.setUTCMinutes(adj);
     return dt;
   },
-  shift: (dt, tz, step) => {
+  shift: (dt, _tz, step) => {
     dt = new Date(dt.valueOf());
     dt.setUTCMinutes(dt.getUTCMinutes() + step);
     return dt;
@@ -102,7 +102,7 @@ export const minute = timeShifterFiller({
 });
 
 // Movement by hour is tz independent because in every timezone an hour is 60 min
-function hourMove(dt: Date, tz: Timezone, step: number) {
+function hourMove(dt: Date, _tz: Timezone, step: number) {
   dt = new Date(dt.valueOf());
   dt.setUTCHours(dt.getUTCHours() + step);
   return dt;

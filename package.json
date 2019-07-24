@@ -59,7 +59,7 @@
     "endOfLine": "lf"
   },
   "dependencies": {
-    "immutable-class": "^0.9.2",
+    "immutable-class": "^0.9.4",
     "moment-timezone": "^0.5.26",
     "tslib": "^1.10.0"
   },
