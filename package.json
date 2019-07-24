@@ -20,7 +20,7 @@
     "type": "git",
     "url": "http://github.com/implydata/chronoshift.git"
   },
-  "main": "build/chronoshift.js",
+  "main": "build/index.js",
   "typings": "build/index.d.ts",
   "files": [
     "build/"
@@ -33,8 +33,8 @@
   "scripts": {
     "pretest": "npm run compile",
     "test": "npm run tslint && jest",
-    "compile": "webpack -p",
-    "watch": "webpack -w",
+    "compile": "rm -rf build/* && tsc",
+    "watch": "tsc --watch",
     "tslint": "./node_modules/.bin/tslint -c tslint.json --project tsconfig.json --formatters-dir ./node_modules/awesome-code-style/formatter 'src/**/*.ts?(x)'",
     "tslint-fix": "npm run tslint -- --fix",
     "tslint-changed-only": "git diff --diff-filter=ACMR --name-only | grep -E \\.tsx\\?$ | xargs ./node_modules/.bin/tslint -c tslint.json --project tsconfig.json --formatters-dir ./node_modules/awesome-code-style/formatter",
@@ -76,8 +76,6 @@
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
     "tslint": "^5.18.0",
-    "typescript": "3.5.3",
-    "webpack": "^4.36.1",
-    "webpack-cli": "^3.3.6"
+    "typescript": "3.5.3"
   }
 }
