@@ -52,13 +52,6 @@ describe('Timezone', () => {
     });
   });
 
-  describe('.isTimezone', () => {
-    it('gives back the correct string for LA', () => {
-      const timezoneStr = 'America/Los_Angeles';
-      expect(Timezone.isTimezone(new Timezone(timezoneStr))).toEqual(true);
-    });
-  });
-
   describe('.formatDateWithTimezone', () => {
     it('works with no timezone', () => {
       expect(Timezone.formatDateWithTimezone(new Date('2016-12-08T19:46:13.915Z'))).toEqual(
