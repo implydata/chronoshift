@@ -116,7 +116,7 @@ export function parseSQLDate(type: string, v: string): Date {
 
 // Taken from: https://github.com/csnover/js-iso8601/blob/lax/iso8601.js
 const numericKeys = [1, 4, 5, 6, 10, 11];
-export function parseISODate(date: string, timezone = Timezone.UTC): Date | null {
+export function parseISODate(date: string, timezone = Timezone.UTC): Date | undefined {
   let struct: any;
   let minutesOffset = 0;
 
@@ -237,16 +237,16 @@ export function parseISODate(date: string, timezone = Timezone.UTC): Date | null
       );
     }
   } else {
-    return null;
+    return;
   }
 }
 
 export interface IntervalParse {
   computedStart: Date;
   computedEnd: Date;
-  start?: Date | null;
-  end?: Date | null;
-  duration?: Duration | null;
+  start?: Date;
+  end?: Date;
+  duration?: Duration;
 }
 
 export function parseInterval(
@@ -257,9 +257,9 @@ export function parseInterval(
   const parts = str.split('/');
   if (parts.length > 2) throw new Error(`Can not parse string ${str}`);
 
-  let start: Date | null = null;
-  let end: Date | null = null;
-  let duration: Duration | null = null;
+  let start: Date | undefined;
+  let end: Date | undefined;
+  let duration: Duration | undefined;
 
   const p0: string = parts[0];
   if (parts.length === 1) {

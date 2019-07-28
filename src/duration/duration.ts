@@ -364,13 +364,13 @@ export class Duration implements Instance<DurationValue, string> {
     return description.join(', ');
   }
 
-  public getSingleSpan(): string | null {
-    return this.singleSpan || null;
+  public getSingleSpan(): string | undefined {
+    return this.singleSpan;
   }
 
-  public getSingleSpanValue(): number | null {
-    if (!this.singleSpan) return null;
-    return this.spans[this.singleSpan] || null;
+  public getSingleSpanValue(): number | undefined {
+    if (!this.singleSpan) return;
+    return this.spans[this.singleSpan];
   }
 }
 typeCheck<Class<DurationValue, string>>(Duration);
