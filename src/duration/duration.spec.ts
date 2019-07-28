@@ -466,10 +466,10 @@ describe('Duration', () => {
       expect(Duration.fromJS(durationStr).getSingleSpan()).toEqual('hour');
 
       durationStr = 'P3DT15H';
-      expect(Duration.fromJS(durationStr).getSingleSpan()).toBeNull();
+      expect(Duration.fromJS(durationStr).getSingleSpan()).toBeUndefined();
 
       durationStr = 'P3DT15H';
-      expect(Duration.fromJS(durationStr).getSingleSpan()).toBeNull();
+      expect(Duration.fromJS(durationStr).getSingleSpan()).toBeUndefined();
     });
   });
 
@@ -490,10 +490,10 @@ describe('Duration', () => {
       expect(Duration.fromJS(durationStr).getSingleSpanValue()).toEqual(5);
 
       durationStr = 'P3DT15H';
-      expect(Duration.fromJS(durationStr).getSingleSpanValue()).toBeNull();
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).toBeUndefined();
 
       durationStr = 'P3DT15H';
-      expect(Duration.fromJS(durationStr).getSingleSpanValue()).toBeNull();
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).toBeUndefined();
     });
   });
 });

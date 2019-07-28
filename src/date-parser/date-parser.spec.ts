@@ -71,9 +71,9 @@ describe('date parser', () => {
         new Date(Date.UTC(1970, 0, 1, 0, 0, 0, 0)),
       );
 
-      expect(parseISODate('asdf'), 'invalid YYYY (non-digits)').toBeNull();
-      expect(parseISODate('1970-as-df'), 'invalid YYYY-MM-DD (non-digits)').toBeNull();
-      expect(parseISODate('1970-01-'), 'invalid YYYY-MM- (extra hyphen)').toBeNull();
+      expect(parseISODate('asdf'), 'invalid YYYY (non-digits)').toBeUndefined();
+      expect(parseISODate('1970-as-df'), 'invalid YYYY-MM-DD (non-digits)').toBeUndefined();
+      expect(parseISODate('1970-01-'), 'invalid YYYY-MM- (extra hyphen)').toBeUndefined();
       expect(parseISODate('197001'), 'non-hyphenated year-month').toEqual(
         new Date(Date.UTC(1970, 0, 1, 0, 0, 0, 0)),
       );
@@ -203,7 +203,7 @@ describe('date parser', () => {
       expect(
         parseISODate('1970-01-01T00:00.000'),
         'invalid date-time (msec with missing seconds)',
-      ).toBeNull();
+      ).toBeUndefined();
     });
 
     it('date-time (tz = America/Los_Angeles)', () => {

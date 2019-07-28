@@ -42,9 +42,8 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "jsdom",
     "testMatch": [
-      "**/?(*.)+(spec).ts?(x)"
+      "**/*.spec.ts"
     ],
     "setupFilesAfterEnv": [
       "jest-expect-message"
