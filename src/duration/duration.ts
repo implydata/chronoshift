@@ -122,7 +122,7 @@ function removeZeros(spans: DurationValue): DurationValue {
 }
 
 function fitIntoSpans(length: number, spansToCheck: string[]): Record<string, number> {
-  let spans: Record<string, number> = {};
+  const spans: Record<string, number> = {};
 
   let lengthLeft = length;
   for (let i = 0; i < spansToCheck.length; i++) {
@@ -168,8 +168,7 @@ export class Duration implements Instance<DurationValue, string> {
 
   static fromCanonicalLengthUpToDays(length: number): Duration {
     if (length <= 0) throw new Error('length must be positive');
-    let spans = fitIntoSpans(length, SPANS_UP_TO_DAY);
-    return new Duration(spans);
+    return new Duration(fitIntoSpans(length, SPANS_UP_TO_DAY));
   }
 
   /**
