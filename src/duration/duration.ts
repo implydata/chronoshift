@@ -25,6 +25,7 @@ import { Timezone } from '../timezone/timezone';
 const SPANS_WITH_WEEK = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second'];
 const SPANS_WITHOUT_WEEK = ['year', 'month', 'day', 'hour', 'minute', 'second'];
 const SPANS_WITHOUT_WEEK_OR_MONTH = ['year', 'day', 'hour', 'minute', 'second'];
+const SPANS_UP_TO_DAY = ['day', 'hour', 'minute', 'second'];
 
 export interface DurationValue {
   year?: number;
@@ -120,6 +121,24 @@ function removeZeros(spans: DurationValue): DurationValue {
   return newSpans;
 }
 
+function fitIntoSpans(length: number, spansToCheck: string[]): Record<string, number> {
+  let spans: Record<string, number> = {};
+
+  let lengthLeft = length;
+  for (let i = 0; i < spansToCheck.length; i++) {
+    const span = spansToCheck[i];
+    const spanLength = shifters[span].canonicalLength;
+    const count = Math.floor(lengthLeft / spanLength);
+
+    if (count) {
+      lengthLeft -= spanLength * count;
+      spans[span] = count;
+    }
+  }
+
+  return spans;
+}
+
 /**
  * Represents an ISO duration like P1DT3H
  */
@@ -134,31 +153,22 @@ export class Duration implements Instance<DurationValue, string> {
 
   static fromCanonicalLength(length: number, skipMonths = false): Duration {
     if (length <= 0) throw new Error('length must be positive');
-    const spansToCheck = skipMonths ? SPANS_WITHOUT_WEEK_OR_MONTH : SPANS_WITHOUT_WEEK;
-    let spans: any = {};
-    let spansUsed = 0;
-
-    let lengthLeft = length;
-    for (let i = 0; i < spansToCheck.length; i++) {
-      const span = spansToCheck[i];
-      const spanLength = shifters[span].canonicalLength;
-      const count = Math.floor(lengthLeft / spanLength);
-
-      if (count) {
-        lengthLeft -= spanLength * count;
-        spans[span] = count;
-        spansUsed++;
-      }
-    }
+    let spans = fitIntoSpans(length, skipMonths ? SPANS_WITHOUT_WEEK_OR_MONTH : SPANS_WITHOUT_WEEK);
 
     if (
       length % shifters['week'].canonicalLength === 0 && // Weeks fits
-      (spansUsed > 1 || // We already have a more complex span
+      (Object.keys(spans).length > 1 || // We already have a more complex span
         spans['day']) // or... we only have days and it might be simpler to express as weeks
     ) {
       spans = { week: length / shifters['week'].canonicalLength };
     }
 
+    return new Duration(spans);
+  }
+
+  static fromCanonicalLengthUpToDays(length: number): Duration {
+    if (length <= 0) throw new Error('length must be positive');
+    let spans = fitIntoSpans(length, SPANS_UP_TO_DAY);
     return new Duration(spans);
   }
 
@@ -371,6 +381,10 @@ export class Duration implements Instance<DurationValue, string> {
   public getSingleSpanValue(): number | undefined {
     if (!this.singleSpan) return;
     return this.spans[this.singleSpan];
+  }
+
+  public limitToDays(): Duration {
+    return Duration.fromCanonicalLengthUpToDays(this.getCanonicalLength());
   }
 }
 typeCheck<Class<DurationValue, string>>(Duration);

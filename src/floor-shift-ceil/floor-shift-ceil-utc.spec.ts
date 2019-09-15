@@ -152,6 +152,12 @@ describe('floor, shift, ceil (UTC)', () => {
     pairwise(dates, (d1, d2) => expect(shifters.month.shift(d1, tz, 1)).toEqual(d2));
   });
 
+  it('shifts month on the 31st', () => {
+    const d1 = new Date('2016-03-31T00:00:00.000Z');
+    const d2 = new Date('2016-05-01T00:00:00.000Z');
+    expect(shifters.month.shift(d1, tz, 1)).toEqual(d2);
+  });
+
   it('moves year', () => {
     const dates: Date[] = [
       new Date('2010-01-01T00:00:00Z'),

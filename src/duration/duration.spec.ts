@@ -496,4 +496,32 @@ describe('Duration', () => {
       expect(Duration.fromJS(durationStr).getSingleSpanValue()).toBeUndefined();
     });
   });
+
+  describe('#limitToDays', () => {
+    it('works', () => {
+      expect(
+        Duration.fromJS('P6D')
+          .limitToDays()
+          .toString(),
+      ).toEqual('P6D');
+
+      expect(
+        Duration.fromJS('P1M')
+          .limitToDays()
+          .toString(),
+      ).toEqual('P30D');
+
+      expect(
+        Duration.fromJS('P1Y')
+          .limitToDays()
+          .toString(),
+      ).toEqual('P365D');
+
+      expect(
+        Duration.fromJS('P1Y2M')
+          .limitToDays()
+          .toString(),
+      ).toEqual('P425D');
+    });
+  });
 });
