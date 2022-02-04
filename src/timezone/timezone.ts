@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { Class, Instance, typeCheck } from 'immutable-class';
+import { Instance } from 'immutable-class';
 import moment from 'moment-timezone';
 
 /**
@@ -85,4 +85,3 @@ export class Timezone implements Instance<string, string> {
     return `UTC ${utcOffset >= 0 ? '+' : '-'}${hours}:${minutes}`;
   }
 }
-typeCheck<Class<string, string>>(Timezone);

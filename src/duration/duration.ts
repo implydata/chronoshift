@@ -17,7 +17,7 @@
 
 /* tslint:disable:no-conditional-assignment */
 
-import { Class, Instance, typeCheck } from 'immutable-class';
+import { Instance } from 'immutable-class';
 
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';
@@ -386,4 +386,3 @@ export class Duration implements Instance<DurationValue, string> {
     return Duration.fromCanonicalLengthUpToDays(this.getCanonicalLength());
   }
 }
-typeCheck<Class<DurationValue, string>>(Duration);

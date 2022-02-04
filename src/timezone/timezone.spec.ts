@@ -15,9 +15,12 @@
  * limitations under the License.
  */
 
+import { Class, typeCheck } from 'immutable-class';
 import { testImmutableClass } from 'immutable-class-tester';
 
 import { Timezone } from './timezone';
+
+typeCheck<Class<string, string>>(Timezone);
 
 describe('Timezone', () => {
   it('is an immutable class', () => {

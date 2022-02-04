@@ -15,10 +15,13 @@
  * limitations under the License.
  */
 
+import { Class, typeCheck } from 'immutable-class';
 import { testImmutableClass } from 'immutable-class-tester';
 
-import { Duration } from '../duration/duration';
+import { Duration, DurationValue } from '../duration/duration';
 import { Timezone } from '../timezone/timezone';
+
+typeCheck<Class<DurationValue, string>>(Duration);
 
 describe('Duration', () => {
   const TZ_LA = Timezone.fromJS('America/Los_Angeles');
