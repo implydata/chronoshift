@@ -40,6 +40,10 @@
     "tslint-changed-only": "git diff --diff-filter=ACMR --name-only | grep -E \\.tsx\\?$ | xargs ./node_modules/.bin/tslint -c tslint.json --project tsconfig.json --formatters-dir ./node_modules/awesome-code-style/formatter",
     "tslint-fix-changed-only": "npm run tslint-changed-only -- --fix"
   },
+  "volta": {
+    "node": "10.24.1",
+    "npm": "6.14.12"
+  },
   "jest": {
     "preset": "ts-jest",
     "testMatch": [
@@ -58,7 +62,7 @@
     "endOfLine": "lf"
   },
   "dependencies": {
-    "immutable-class": "^0.9.4",
+    "immutable-class": "^0.11.0",
     "moment-timezone": "^0.5.26",
     "tslib": "^1.10.0"
   },
