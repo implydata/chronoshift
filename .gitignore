@@ -4,5 +4,7 @@
 .npm-debug.log
 node_modules/
 build/
+lib/
 package/
+types/
 checksc

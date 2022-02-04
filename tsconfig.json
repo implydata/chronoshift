@@ -4,6 +4,7 @@
     "noImplicitAny": true,
     "noEmitOnError": true,
     "declaration": true,
+    "declarationMap": true,
     "removeComments": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
@@ -15,9 +16,8 @@
     "module": "commonjs",
     "rootDir": "src",
     "outDir": "build",
+    "declarationDir": "types",
     "moduleResolution": "node"
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src"]
 }

@@ -21,10 +21,8 @@
     "url": "http://github.com/implydata/chronoshift.git"
   },
   "main": "build/index.js",
-  "typings": "build/index.d.ts",
-  "files": [
-    "build/"
-  ],
+  "module": "lib/index.js",
+  "typings": "types/index.d.ts",
   "husky": {
     "hooks": {
       "pre-commit": "npm run tslint-changed-only"
@@ -34,6 +32,8 @@
     "pretest": "npm run compile",
     "test": "npm run tslint && jest",
     "compile": "rm -rf build/* && tsc",
+    "compile-lib": "rm -rf lib/* types/* && tsc --module esnext --outDir lib/",
+    "prepublishOnly": "npm run compile && npm run compile-lib",
     "watch": "tsc --watch",
     "tslint": "./node_modules/.bin/tslint -c tslint.json --project tsconfig.json --formatters-dir ./node_modules/awesome-code-style/formatter 'src/**/*.ts?(x)'",
     "tslint-fix": "npm run tslint -- --fix",
