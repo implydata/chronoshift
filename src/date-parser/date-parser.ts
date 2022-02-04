@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-/* tslint:disable:no-conditional-assignment */
+/* eslint-disable @typescript-eslint/prefer-string-starts-ends-with */
+/* eslint-disable no-useless-escape */
 
 import moment from 'moment-timezone';
 
@@ -165,9 +166,10 @@ export function parseISODate(date: string, timezone = Timezone.UTC): Date | unde
 
   //              1 YYYY                 2 MM        3 DD               4 HH        5 mm        6 ss           7 msec             8 Z 9 ±    10 tzHH    11 tzmm
   if (
-    (struct = /^(\d{4}|[+\-]\d{6})(?:-?(\d{2})(?:-?(\d{2}))?)?(?:[ T]?(\d{2})(?::?(\d{2})(?::?(\d{2})(?:[,\.](\d{1,}))?)?)?)?(?:(Z)|([+\-])(\d{2})(?::?(\d{2}))?)?$/.exec(
-      date,
-    ))
+    (struct =
+      /^(\d{4}|[+\-]\d{6})(?:-?(\d{2})(?:-?(\d{2}))?)?(?:[ T]?(\d{2})(?::?(\d{2})(?::?(\d{2})(?:[,\.](\d{1,}))?)?)?)?(?:(Z)|([+\-])(\d{2})(?::?(\d{2}))?)?$/.exec(
+        date,
+      ))
   ) {
     // avoid NaN timestamps caused by “undefined” values being passed to Date.UTC
     for (let i = 0, k: number; (k = numericKeys[i]); ++i) {

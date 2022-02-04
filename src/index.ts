@@ -17,9 +17,9 @@
 import momentTz from 'moment-timezone';
 
 export * from './date-parser/date-parser';
+export * from './duration/duration';
 export * from './floor-shift-ceil/floor-shift-ceil';
 export * from './timezone/timezone';
-export * from './duration/duration';
 export * from './utils/utils';
 
-export let moment: any = momentTz;
+export const moment: any = momentTz;

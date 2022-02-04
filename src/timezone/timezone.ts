@@ -24,7 +24,7 @@ import moment from 'moment-timezone';
 export class Timezone implements Instance<string, string> {
   static UTC: Timezone = new Timezone('Etc/UTC');
 
-  private timezone: string;
+  private readonly timezone: string;
 
   static formatDateWithTimezone(d: Date, timezone?: Timezone) {
     let str: string;

@@ -241,10 +241,7 @@ describe('Duration', () => {
 
   describe('#shift', () => {
     it('works for weeks', () => {
-      let p1w: Duration;
-      let p2w: Duration;
-
-      p1w = Duration.fromJS('P1W');
+      let p1w = Duration.fromJS('P1W');
       expect(p1w.shift(new Date('2012-10-29T00:00:00-07:00'), TZ_LA)).toEqual(
         new Date('2012-11-05T00:00:00-08:00'),
       );
@@ -254,7 +251,7 @@ describe('Duration', () => {
         new Date('2012-11-12T00:00:00-08:00'),
       );
 
-      p2w = Duration.fromJS('P2W');
+      const p2w = Duration.fromJS('P2W');
       expect(p2w.shift(new Date('2012-10-29T05:16:17-07:00'), TZ_LA)).toEqual(
         new Date('2012-11-12T05:16:17-08:00'),
       );
@@ -502,29 +499,13 @@ describe('Duration', () => {
 
   describe('#limitToDays', () => {
     it('works', () => {
-      expect(
-        Duration.fromJS('P6D')
-          .limitToDays()
-          .toString(),
-      ).toEqual('P6D');
+      expect(Duration.fromJS('P6D').limitToDays().toString()).toEqual('P6D');
 
-      expect(
-        Duration.fromJS('P1M')
-          .limitToDays()
-          .toString(),
-      ).toEqual('P30D');
+      expect(Duration.fromJS('P1M').limitToDays().toString()).toEqual('P30D');
 
-      expect(
-        Duration.fromJS('P1Y')
-          .limitToDays()
-          .toString(),
-      ).toEqual('P365D');
+      expect(Duration.fromJS('P1Y').limitToDays().toString()).toEqual('P365D');
 
-      expect(
-        Duration.fromJS('P1Y2M')
-          .limitToDays()
-          .toString(),
-      ).toEqual('P425D');
+      expect(Duration.fromJS('P1Y2M').limitToDays().toString()).toEqual('P425D');
     });
   });
 });
