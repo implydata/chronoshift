@@ -17,7 +17,7 @@
 
 /* tslint:disable:no-conditional-assignment */
 
-import { Instance } from 'immutable-class';
+import type { Instance } from 'immutable-class';
 
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';

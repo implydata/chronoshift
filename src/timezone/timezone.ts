@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { Instance } from 'immutable-class';
+import type { Instance } from 'immutable-class';
 import moment from 'moment-timezone';
 
 /**
