@@ -1,4 +1,5 @@
 .idea/
+.*
 *.yml
 *.json
 *.spec.*
