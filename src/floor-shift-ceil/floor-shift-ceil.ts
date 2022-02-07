@@ -117,13 +117,7 @@ export const hour = timeShifterFiller({
       dt.setUTCMinutes(0, 0, 0);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(
-        wt
-          .second(0)
-          .minute(0)
-          .millisecond(0)
-          .valueOf(),
-      );
+      dt = new Date(wt.second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },
@@ -134,7 +128,7 @@ export const hour = timeShifterFiller({
       if (cur !== adj) dt.setUTCHours(adj);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      const cur = wt.hour() as number;
+      const cur = wt.hour();
       const adj = floorTo(cur, roundTo);
       if (cur !== adj) return hourMove(dt, tz, adj - cur);
     }
@@ -151,14 +145,7 @@ export const day = timeShifterFiller({
       dt.setUTCHours(0, 0, 0, 0);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(
-        wt
-          .hour(0)
-          .second(0)
-          .minute(0)
-          .millisecond(0)
-          .valueOf(),
-      );
+      dt = new Date(wt.hour(0).second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },
@@ -234,15 +221,7 @@ export const month = timeShifterFiller({
       dt.setUTCDate(1);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(
-        wt
-          .date(1)
-          .hour(0)
-          .second(0)
-          .minute(0)
-          .millisecond(0)
-          .valueOf(),
-      );
+      dt = new Date(wt.date(1).hour(0).second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },
@@ -283,16 +262,7 @@ export const year = timeShifterFiller({
       dt.setUTCMonth(0, 1);
     } else {
       const wt = moment.tz(dt, tz.toString());
-      dt = new Date(
-        wt
-          .month(0)
-          .date(1)
-          .hour(0)
-          .second(0)
-          .minute(0)
-          .millisecond(0)
-          .valueOf(),
-      );
+      dt = new Date(wt.month(0).date(1).hour(0).second(0).minute(0).millisecond(0).valueOf());
     }
     return dt;
   },

@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-/* tslint:disable:no-conditional-assignment */
-
-import { Class, Instance, typeCheck } from 'immutable-class';
+import type { Instance } from 'immutable-class';
 
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';
@@ -93,6 +91,7 @@ function getSpansFromStartEnd(start: Date, end: Date, timezone: Timezone): Durat
       }
     }
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       iteratorMove = shifters[span].shift(iterator, timezone, 1);
       if (iteratorMove <= end) {
@@ -297,7 +296,7 @@ export class Duration implements Instance<DurationValue, string> {
    * @param timezone The timezone within which to make the move
    * @param step The number of times to step by the duration
    */
-  public shift(date: Date, timezone: Timezone, step: number = 1): Date {
+  public shift(date: Date, timezone: Timezone, step = 1): Date {
     const spans = this.spans;
     for (const span of SPANS_WITH_WEEK) {
       const value = spans[span];
@@ -313,7 +312,7 @@ export class Duration implements Instance<DurationValue, string> {
    * @param timezone The timezone within which to materialize
    * @param step The number of times to step by the duration
    */
-  public materialize(start: Date, end: Date, timezone: Timezone, step: number = 1): Date[] {
+  public materialize(start: Date, end: Date, timezone: Timezone, step = 1): Date[] {
     const values: Date[] = [];
     let iter = this.floor(start, timezone);
     while (iter <= end) {
@@ -386,4 +385,3 @@ export class Duration implements Instance<DurationValue, string> {
     return Duration.fromCanonicalLengthUpToDays(this.getCanonicalLength());
   }
 }
-typeCheck<Class<DurationValue, string>>(Duration);
