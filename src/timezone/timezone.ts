@@ -77,11 +77,14 @@ export class Timezone implements Instance<string, string> {
     return this.timezone === 'Etc/UTC';
   }
 
-  public toUtcOffsetString() {
+  public toUtcOffset() {
     const utcOffset = moment.tz(this.toString()).utcOffset();
     const hours = String(Math.abs(Math.floor(utcOffset / 60))).padStart(2, '0');
     const minutes = String(Math.abs(utcOffset % 60)).padStart(2, '0');
 
-    return `UTC ${utcOffset >= 0 ? '+' : '-'}${hours}:${minutes}`;
+    return `${utcOffset >= 0 ? '+' : '-'}${hours}:${minutes}`;
+  }
+  public toUtcOffsetString() {
+    return `UTC ${this.toUtcOffset()}`;
   }
 }
