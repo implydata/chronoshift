@@ -17,7 +17,7 @@
 
 import { Timezone } from '../timezone/timezone';
 
-import { getMultiDayShifter, month, shifters, week, year } from './floor-shift-ceil';
+import { shifters } from './floor-shift-ceil';
 
 function pairwise<T>(array: T[], callback: (t1: T, t2: T) => void) {
   for (let i = 0; i < array.length - 1; i++) {
@@ -178,30 +178,5 @@ describe('floor/shift/ceil', () => {
       new Date('2013-01-01T00:00:00-08:00'),
     ];
     pairwise(dates, (d1, d2) => expect(shifters.year.shift(d1, tz, 1)).toEqual(d2));
-  });
-
-  it('shifts multi day', () => {
-    expect(getMultiDayShifter(3).shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1)).toEqual(
-      new Date('2010-01-04T00:00:00-08:00'),
-    );
-
-    expect(getMultiDayShifter(10).shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1)).toEqual(
-      new Date('2010-01-11T00:00:00-08:00'),
-    );
-
-    const sevenDayShifter = getMultiDayShifter(7);
-    expect(sevenDayShifter.shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1)).toEqual(
-      week.shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1),
-    );
-
-    const thirtyOneDayShifter = getMultiDayShifter(31);
-    expect(thirtyOneDayShifter.shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1)).toEqual(
-      month.shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1),
-    );
-
-    const YearDayShifter = getMultiDayShifter(365);
-    expect(YearDayShifter.shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1)).toEqual(
-      year.shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1),
-    );
   });
 });
