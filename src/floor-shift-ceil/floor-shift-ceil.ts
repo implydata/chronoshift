@@ -282,6 +282,17 @@ export const year = timeShifterFiller({
   shift: yearShift,
 });
 
+export function getMultiDayShifter(numDays: number) {
+  return timeShifterFiller({
+    canonicalLength: 24 * 3600000 * numDays,
+    floor: day.floor,
+    shift: (dt, tz, step) => day.shift(dt, tz, step * numDays),
+    round: () => {
+      throw new Error('missing day round');
+    },
+  });
+}
+
 export interface Shifters {
   second: TimeShifter;
   minute: TimeShifter;
