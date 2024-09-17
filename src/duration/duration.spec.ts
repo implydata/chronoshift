@@ -239,6 +239,87 @@ describe('Duration', () => {
     });
   });
 
+  describe('#ceil', () => {
+    it('throws error if complex duration', () => {
+      expect(() => Duration.fromJS('P1Y2D').ceil(new Date(), TZ_LA)).toThrow(
+        'Can not floor on a complex duration',
+      );
+
+      expect(() => Duration.fromJS('P3DT15H').ceil(new Date(), TZ_LA)).toThrow(
+        'Can not floor on a complex duration',
+      );
+
+      expect(() => Duration.fromJS('PT5H').ceil(new Date(), TZ_LA)).toThrow(
+        'Can not floor on a hour duration that does not divide into 24',
+      );
+    });
+
+    it('works for year', () => {
+      const p1y = Duration.fromJS('P1Y');
+      expect(p1y.ceil(new Date('2013-09-29T01:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2014-01-01T00:00:00.000-08:00'),
+      );
+    });
+
+    it('works for PT2M', () => {
+      const pt2h = Duration.fromJS('PT2M');
+      expect(pt2h.ceil(new Date('2013-09-29T03:03:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-09-29T03:04:00.000-07:00'),
+      );
+    });
+
+    it('works for P2H', () => {
+      const pt2h = Duration.fromJS('PT2H');
+      expect(pt2h.ceil(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-09-29T04:00:00.000-07:00'),
+      );
+    });
+
+    it('works for PT12H', () => {
+      const pt12h = Duration.fromJS('PT12H');
+      expect(pt12h.ceil(new Date('2015-09-12T13:05:00-08:00'), TZ_JUNEAU)).toEqual(
+        new Date('2015-09-13T00:00:00-08:00'),
+      );
+    });
+
+    it('works for P1W', () => {
+      const p1w = Duration.fromJS('P1W');
+
+      expect(p1w.ceil(new Date('2013-09-29T01:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-09-30T07:00:00.000Z'),
+      );
+
+      expect(p1w.ceil(new Date('2013-10-03T01:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-10-07T00:00:00.000-07:00'),
+      );
+    });
+
+    it('works for P3M', () => {
+      const p3m = Duration.fromJS('P3M');
+      expect(p3m.ceil(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-10-01T00:00:00.000-07:00'),
+      );
+
+      expect(p3m.ceil(new Date('2013-02-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-04-01T00:00:00.000-07:00'),
+      );
+    });
+
+    it('works for P4Y', () => {
+      const p4y = Duration.fromJS('P4Y');
+      expect(p4y.ceil(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2016-01-01T00:00:00.000-08:00'),
+      );
+    });
+
+    it('returns input if already floored', () => {
+      const pt12h = Duration.fromJS('PT12H');
+      expect(pt12h.ceil(new Date('2015-09-13T00:00:00-08:00'), TZ_JUNEAU)).toEqual(
+        new Date('2015-09-13T00:00:00-08:00'),
+      );
+    });
+  });
+
   describe('#shift', () => {
     it('works for weeks', () => {
       let p1w = Duration.fromJS('P1W');
