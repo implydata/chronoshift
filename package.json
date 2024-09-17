@@ -43,7 +43,7 @@
     "prettify-check": "prettier --check 'src/**/*.{ts,tsx,scss}'"
   },
   "volta": {
-    "node": "12.22.10"
+    "node": "14.21.3"
   },
   "jest": {
     "preset": "ts-jest",
