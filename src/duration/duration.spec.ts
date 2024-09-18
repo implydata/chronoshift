@@ -48,6 +48,9 @@ describe('Duration', () => {
       expect(() => Duration.fromJS('P0Y0MT0H0M0S').shift(new Date(), TZ_LA)).toThrow(
         'Duration can not be empty',
       );
+
+      expect(() => Duration.fromJS('PT0.0.1S')).toThrow("Can not parse duration 'PT0.0.1S'");
+      expect(() => Duration.fromJS('PT0..1S')).toThrow("Can not parse duration 'PT0..1S'");
     });
 
     it('throws error if fromJS is not given a string', () => {
@@ -70,10 +73,14 @@ describe('Duration', () => {
 
       durationStr = 'P3DT15H';
       expect(Duration.fromJS(durationStr).toString()).toEqual(durationStr);
+
+      durationStr = 'PT0.001S';
+      expect(Duration.fromJS(durationStr).toString()).toEqual(durationStr);
     });
 
     it('eliminates 0', () => {
       expect(Duration.fromJS('P0DT15H').toString()).toEqual('PT15H');
+      expect(Duration.fromJS('PT00000.00001S').toString()).toEqual('PT0.00001S');
     });
   });
 
@@ -420,6 +427,18 @@ describe('Duration', () => {
 
       durationStr = 'P3DT15H';
       expect(Duration.fromJS(durationStr).getCanonicalLength()).toEqual(313200000);
+
+      durationStr = 'PT0.1S';
+      expect(Duration.fromJS(durationStr).getCanonicalLength()).toEqual(100);
+
+      durationStr = 'PT0.01S';
+      expect(Duration.fromJS(durationStr).getCanonicalLength()).toEqual(10);
+
+      durationStr = 'PT0.001S';
+      expect(Duration.fromJS(durationStr).getCanonicalLength()).toEqual(1);
+
+      durationStr = 'PT0.0001S';
+      expect(Duration.fromJS(durationStr).getCanonicalLength()).toEqual(0.1);
     });
   });
 
@@ -527,6 +546,12 @@ describe('Duration', () => {
 
       durationStr = 'P3DT15H';
       expect(Duration.fromJS(durationStr).getDescription(true)).toEqual('3 Days, 15 Hours');
+
+      durationStr = 'PT1S';
+      expect(Duration.fromJS(durationStr).getDescription()).toEqual('second');
+
+      durationStr = 'PT0.001S';
+      expect(Duration.fromJS(durationStr).getDescription()).toEqual('0.001 seconds');
     });
   });
 
@@ -545,6 +570,9 @@ describe('Duration', () => {
 
       durationStr = 'PT5H';
       expect(Duration.fromJS(durationStr).getSingleSpan()).toEqual('hour');
+
+      durationStr = 'PT0.001S';
+      expect(Duration.fromJS(durationStr).getSingleSpan()).toEqual('second');
 
       durationStr = 'P3DT15H';
       expect(Duration.fromJS(durationStr).getSingleSpan()).toBeUndefined();
@@ -569,6 +597,9 @@ describe('Duration', () => {
 
       durationStr = 'PT5H';
       expect(Duration.fromJS(durationStr).getSingleSpanValue()).toEqual(5);
+
+      durationStr = 'PT0.001S';
+      expect(Duration.fromJS(durationStr).getSingleSpanValue()).toEqual(0.001);
 
       durationStr = 'P3DT15H';
       expect(Duration.fromJS(durationStr).getSingleSpanValue()).toBeUndefined();
