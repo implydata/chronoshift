@@ -290,6 +290,17 @@ export class Duration implements Instance<DurationValue, string> {
   }
 
   /**
+   * Ceilings the date according to this duration
+   * @param date The date to ceiling
+   * @param timezone The timezone within which to ceiling
+   */
+  public ceil(date: Date, timezone: Timezone): Date {
+    const floored = this.floor(date, timezone);
+    if (floored.valueOf() === date.valueOf()) return date; // Just like ceil(3) is 3 and not 4
+    return this.shift(floored, timezone, 1);
+  }
+
+  /**
    * Moves the given date by 'step' times of the duration
    * Negative step value will move back in time.
    * @param date The date to move
