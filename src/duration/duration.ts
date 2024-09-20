@@ -44,8 +44,10 @@ function capitalizeFirst(str: string): string {
 }
 
 const periodWeekRegExp = /^P(\d+)W$/;
-const periodRegExp = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/;
-//                   P   (year ) (month   ) (day     )    T(hour    ) (minute  ) (second  )
+const periodRegExp =
+  /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:((\d+\.)?\d+)S)?)?$/;
+//  P   (year ) (month   ) (day     )    T(hour    ) (minute  ) (second            )
+
 function getSpansFromString(durationStr: string): DurationValue {
   const spans: DurationValue = {};
   let matches: RegExpExecArray | null;
