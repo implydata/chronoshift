@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import moment from 'moment-timezone';
+import { fromDate, startOfWeek } from '@internationalized/date';
 
 import { Timezone } from '../timezone/timezone';
 
@@ -115,11 +115,10 @@ export const hour = timeShifterFiller({
     if (tz.isUTC()) {
       dt = new Date(dt.valueOf());
       dt.setUTCMinutes(0, 0, 0);
+      return dt;
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.second(0).minute(0).millisecond(0).valueOf());
+      return fromDate(dt, tz.toString()).set({ second: 0, minute: 0, millisecond: 0 }).toDate();
     }
-    return dt;
   },
   round: (dt, roundTo, tz) => {
     if (tz.isUTC()) {
@@ -127,8 +126,7 @@ export const hour = timeShifterFiller({
       const adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCHours(adj);
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      const cur = wt.hour();
+      const cur = fromDate(dt, tz.toString()).hour;
       const adj = floorTo(cur, roundTo);
       if (cur !== adj) return hourMove(dt, tz, adj - cur);
     }
@@ -143,21 +141,21 @@ export const day = timeShifterFiller({
     if (tz.isUTC()) {
       dt = new Date(dt.valueOf());
       dt.setUTCHours(0, 0, 0, 0);
+      return dt;
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.hour(0).second(0).minute(0).millisecond(0).valueOf());
+      return fromDate(dt, tz.toString())
+        .set({ hour: 0, second: 0, minute: 0, millisecond: 0 })
+        .toDate();
     }
-    return dt;
   },
   shift: (dt, tz, step) => {
     if (tz.isUTC()) {
       dt = new Date(dt.valueOf());
       dt.setUTCDate(dt.getUTCDate() + step);
+      return dt;
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.add(step, 'days').valueOf());
+      return fromDate(dt, tz.toString()).add({ days: step }).toDate();
     }
-    return dt;
   },
   round: () => {
     throw new Error('missing day round');
@@ -172,16 +170,11 @@ export const week = timeShifterFiller({
       dt.setUTCHours(0, 0, 0, 0);
       dt.setUTCDate(dt.getUTCDate() - adjustDay(dt.getUTCDay()));
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      dt = new Date(
-        wt
-          .date(wt.date() - adjustDay(wt.day()))
-          .hour(0)
-          .second(0)
-          .minute(0)
-          .millisecond(0)
-          .valueOf(),
-      );
+      const zd = fromDate(dt, tz.toString());
+      return startOfWeek(
+        zd.set({ hour: 0, second: 0, minute: 0, millisecond: 0 }),
+        'fr-FR', // We want the week to start on Monday
+      ).toDate();
     }
     return dt;
   },
@@ -189,11 +182,10 @@ export const week = timeShifterFiller({
     if (tz.isUTC()) {
       dt = new Date(dt.valueOf());
       dt.setUTCDate(dt.getUTCDate() + step * 7);
+      return dt;
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.add(step * 7, 'days').valueOf());
+      return fromDate(dt, tz.toString()).add({ weeks: step }).toDate();
     }
-    return dt;
   },
   round: () => {
     throw new Error('missing week round');
@@ -204,11 +196,10 @@ function monthShift(dt: Date, tz: Timezone, step: number) {
   if (tz.isUTC()) {
     dt = new Date(dt.valueOf());
     dt.setUTCMonth(dt.getUTCMonth() + step);
+    return dt;
   } else {
-    const wt = moment.tz(dt, tz.toString());
-    dt = new Date(wt.add(step, 'month').valueOf());
+    return fromDate(dt, tz.toString()).add({ months: step }).toDate();
   }
-  return dt;
 }
 
 export const month = timeShifterFiller({
@@ -219,11 +210,12 @@ export const month = timeShifterFiller({
       dt = new Date(dt.valueOf());
       dt.setUTCHours(0, 0, 0, 0);
       dt.setUTCDate(1);
+      return dt;
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.date(1).hour(0).second(0).minute(0).millisecond(0).valueOf());
+      return fromDate(dt, tz.toString())
+        .set({ day: 1, hour: 0, second: 0, minute: 0, millisecond: 0 })
+        .toDate();
     }
-    return dt;
   },
   round: (dt, roundTo, tz) => {
     if (tz.isUTC()) {
@@ -231,8 +223,7 @@ export const month = timeShifterFiller({
       const adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCMonth(adj);
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      const cur = wt.month();
+      const cur = fromDate(dt, tz.toString()).month - 1; // Needs to be zero indexed
       const adj = floorTo(cur, roundTo);
       if (cur !== adj) return monthShift(dt, tz, adj - cur);
     }
@@ -245,11 +236,10 @@ function yearShift(dt: Date, tz: Timezone, step: number) {
   if (tz.isUTC()) {
     dt = new Date(dt.valueOf());
     dt.setUTCFullYear(dt.getUTCFullYear() + step);
+    return dt;
   } else {
-    const wt = moment.tz(dt, tz.toString());
-    dt = new Date(wt.add(step, 'years') as any);
+    return fromDate(dt, tz.toString()).add({ years: step }).toDate();
   }
-  return dt;
 }
 
 export const year = timeShifterFiller({
@@ -260,11 +250,12 @@ export const year = timeShifterFiller({
       dt = new Date(dt.valueOf());
       dt.setUTCHours(0, 0, 0, 0);
       dt.setUTCMonth(0, 1);
+      return dt;
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      dt = new Date(wt.month(0).date(1).hour(0).second(0).minute(0).millisecond(0).valueOf());
+      return fromDate(dt, tz.toString())
+        .set({ month: 1, day: 1, hour: 0, second: 0, minute: 0, millisecond: 0 })
+        .toDate();
     }
-    return dt;
   },
   round: (dt, roundTo, tz) => {
     if (tz.isUTC()) {
@@ -272,8 +263,7 @@ export const year = timeShifterFiller({
       const adj = floorTo(cur, roundTo);
       if (cur !== adj) dt.setUTCFullYear(adj);
     } else {
-      const wt = moment.tz(dt, tz.toString());
-      const cur = wt.year();
+      const cur = fromDate(dt, tz.toString()).year;
       const adj = floorTo(cur, roundTo);
       if (cur !== adj) return yearShift(dt, tz, adj - cur);
     }
@@ -306,11 +296,11 @@ export interface Shifters {
 }
 
 export const shifters: Shifters = {
-  second: second,
-  minute: minute,
-  hour: hour,
-  day: day,
-  week: week,
-  month: month,
-  year: year,
+  second,
+  minute,
+  hour,
+  day,
+  week,
+  month,
+  year,
 };
