@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-import { Class, typeCheck } from 'immutable-class';
+import type { Class } from 'immutable-class';
+import { typeCheck } from 'immutable-class';
 import { testImmutableClass } from 'immutable-class-tester';
 
-import { Duration, DurationValue } from '../duration/duration';
+import type { DurationValue } from '../duration/duration';
+import { Duration } from '../duration/duration';
 import { Timezone } from '../timezone/timezone';
 
 typeCheck<Class<DurationValue, string>>(Duration);

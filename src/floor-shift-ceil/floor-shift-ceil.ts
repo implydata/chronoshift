@@ -17,7 +17,7 @@
 
 import { fromDate, startOfWeek } from '@internationalized/date';
 
-import { Timezone } from '../timezone/timezone';
+import type { Timezone } from '../timezone/timezone';
 
 export type AlignFn = (dt: Date, tz: Timezone) => Date;
 

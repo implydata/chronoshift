@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-import { Class, typeCheck } from 'immutable-class';
+import type { Class } from 'immutable-class';
+import { typeCheck } from 'immutable-class';
 import { testImmutableClass } from 'immutable-class-tester';
 
 import { Timezone } from './timezone';

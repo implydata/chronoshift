@@ -18,7 +18,7 @@
 import type { Instance } from 'immutable-class';
 
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
-import { Timezone } from '../timezone/timezone';
+import type { Timezone } from '../timezone/timezone';
 
 const SPANS_WITH_WEEK = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second'];
 const SPANS_WITHOUT_WEEK = ['year', 'month', 'day', 'hour', 'minute', 'second'];
@@ -93,7 +93,6 @@ function getSpansFromStartEnd(start: Date, end: Date, timezone: Timezone): Durat
       }
     }
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       iteratorMove = shifters[span].shift(iterator, timezone, 1);
       if (iteratorMove <= end) {
@@ -275,7 +274,7 @@ export class Duration implements Instance<DurationValue, string> {
     const { singleSpan } = this;
     if (!singleSpan) throw new Error('Can not floor on a complex duration');
     const span = this.spans[singleSpan]!;
-    const mover = shifters[singleSpan]!;
+    const mover = shifters[singleSpan];
     let dt = mover.floor(date, timezone);
     if (span !== 1) {
       if (!mover.siblings) {
