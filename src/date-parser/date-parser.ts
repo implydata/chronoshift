@@ -73,7 +73,7 @@ export function parseSQLDate(type: string, v: string): Date {
   let m: RegExpMatchArray | null;
   let d: number;
   if (type === 'ts') {
-    if ((m = v.match(/^(\d{2}(?:\d{2})?)(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/))) {
+    if ((m = /^(\d{2}(?:\d{2})?)(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/.exec(v))) {
       d = Date.UTC(
         parseYear(m[1]),
         parseMonth(m[2]),
@@ -83,9 +83,10 @@ export function parseSQLDate(type: string, v: string): Date {
         parseSecond(m[6]),
       );
     } else if (
-      (m = v.match(
-        /^(\d{2}(?:\d{2})?)[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})[T ](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})(?:\.(\d{1,6}))?$/,
-      ))
+      (m =
+        /^(\d{2}(?:\d{2})?)[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})[T ](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})(?:\.(\d{1,6}))?$/.exec(
+          v,
+        ))
     ) {
       d = Date.UTC(
         parseYear(m[1]),
@@ -100,11 +101,11 @@ export function parseSQLDate(type: string, v: string): Date {
       throw new Error('Invalid timestamp');
     }
   } else {
-    if ((m = v.match(/^(\d{2}(?:\d{2})?)(\d{2})(\d{2})$/))) {
+    if ((m = /^(\d{2}(?:\d{2})?)(\d{2})(\d{2})$/.exec(v))) {
       d = Date.UTC(parseYear(m[1]), parseMonth(m[2]), parseDay(m[3]));
     } else if (
-      (m = v.match(
-        /^(\d{2}(?:\d{2})?)[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})$/,
+      (m = /^(\d{2}(?:\d{2})?)[~!@#$%^&*()_+=:.\-\/](\d{1,2})[~!@#$%^&*()_+=:.\-\/](\d{1,2})$/.exec(
+        v,
       ))
     ) {
       d = Date.UTC(parseYear(m[1]), parseMonth(m[2]), parseDay(m[3]));

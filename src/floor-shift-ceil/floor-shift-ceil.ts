@@ -17,7 +17,7 @@
 
 import moment from 'moment-timezone';
 
-import { Timezone } from '../timezone/timezone';
+import type { Timezone } from '../timezone/timezone';
 
 export type AlignFn = (dt: Date, tz: Timezone) => Date;
 
