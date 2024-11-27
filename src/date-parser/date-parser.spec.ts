@@ -206,17 +206,17 @@ describe('date parser', () => {
       ).toBeUndefined();
     });
 
-    it('date-time (tz = America/Los_Angeles)', () => {
-      const tz = Timezone.fromJS('America/Los_Angeles');
+    it('date-time (tz = America/New_York)', () => {
+      const tz = Timezone.fromJS('America/New_York');
 
       expect(parseISODate('2001-02-03T04:05', tz), '2001-02-03T04:05').toEqual(
-        new Date(Date.UTC(2001, 1, 3, 4 + 8, 5, 0, 0)),
+        new Date(Date.UTC(2001, 1, 3, 4 + 5, 5, 0, 0)),
       );
       expect(parseISODate('2001-02-03T04:05:06', tz), '2001-02-03T04:05:06').toEqual(
-        new Date(Date.UTC(2001, 1, 3, 4 + 8, 5, 6, 0)),
+        new Date(Date.UTC(2001, 1, 3, 4 + 5, 5, 6, 0)),
       );
       expect(parseISODate('2001-02-03T04:05:06.007', tz), '2001-02-03T04:05:06.007').toEqual(
-        new Date(Date.UTC(2001, 1, 3, 4 + 8, 5, 6, 7)),
+        new Date(Date.UTC(2001, 1, 3, 4 + 5, 5, 6, 7)),
       );
 
       expect(parseISODate('2001-02-03T04:05Z', tz), '2001-02-03T04:05Z').toEqual(
@@ -231,25 +231,23 @@ describe('date parser', () => {
     });
 
     it('date-time (tz = null / local)', () => {
-      const tz: any = null;
-
-      expect(parseISODate('2001-02-03T04:05', tz), '2001-02-03T04:05').toEqual(
+      expect(parseISODate('2001-02-03T04:05', null), '2001-02-03T04:05').toEqual(
         new Date(2001, 1, 3, 4, 5, 0, 0),
       );
-      expect(parseISODate('2001-02-03T04:05:06', tz), '2001-02-03T04:05:06').toEqual(
+      expect(parseISODate('2001-02-03T04:05:06', null), '2001-02-03T04:05:06').toEqual(
         new Date(2001, 1, 3, 4, 5, 6, 0),
       );
-      expect(parseISODate('2001-02-03T04:05:06.007', tz), '2001-02-03T04:05:06.007').toEqual(
+      expect(parseISODate('2001-02-03T04:05:06.007', null), '2001-02-03T04:05:06.007').toEqual(
         new Date(2001, 1, 3, 4, 5, 6, 7),
       );
 
-      expect(parseISODate('2001-02-03T04:05Z', tz), '2001-02-03T04:05Z').toEqual(
+      expect(parseISODate('2001-02-03T04:05Z', null), '2001-02-03T04:05Z').toEqual(
         new Date(Date.UTC(2001, 1, 3, 4, 5, 0, 0)),
       );
-      expect(parseISODate('2001-02-03T04:05:06Z', tz), '2001-02-03T04:05:06Z').toEqual(
+      expect(parseISODate('2001-02-03T04:05:06Z', null), '2001-02-03T04:05:06Z').toEqual(
         new Date(Date.UTC(2001, 1, 3, 4, 5, 6, 0)),
       );
-      expect(parseISODate('2001-02-03T04:05:06.007Z', tz), '2001-02-03T04:05:06.007Z').toEqual(
+      expect(parseISODate('2001-02-03T04:05:06.007Z', null), '2001-02-03T04:05:06.007Z').toEqual(
         new Date(Date.UTC(2001, 1, 3, 4, 5, 6, 7)),
       );
     });

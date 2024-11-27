@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
+import { fromDate } from '@internationalized/date';
 import type { Instance } from 'immutable-class';
-import moment from 'moment-timezone';
 
 /**
  * Represents timezones
@@ -29,7 +29,7 @@ export class Timezone implements Instance<string, string> {
   static formatDateWithTimezone(d: Date, timezone?: Timezone) {
     let str: string;
     if (timezone && !timezone.isUTC()) {
-      str = moment.tz(d, timezone.toString()).format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+      str = fromDate(d, timezone.toString()).toString().replace(/\[.+$/, '');
     } else {
       str = d.toISOString();
     }
@@ -47,8 +47,12 @@ export class Timezone implements Instance<string, string> {
     if (typeof timezone !== 'string') {
       throw new TypeError('timezone description must be a string');
     }
-    if (timezone !== 'Etc/UTC' && !moment.tz.zone(timezone)) {
-      throw new Error(`timezone '${timezone}' does not exist`);
+    if (timezone !== 'Etc/UTC') {
+      try {
+        fromDate(new Date(), timezone);
+      } catch {
+        throw new Error(`timezone '${timezone}' does not exist`);
+      }
     }
     this.timezone = timezone;
   }
@@ -78,7 +82,7 @@ export class Timezone implements Instance<string, string> {
   }
 
   public toUtcOffsetString() {
-    const utcOffset = moment.tz(this.toString()).utcOffset();
+    const utcOffset = fromDate(new Date(), this.toString()).offset;
     const hours = String(Math.abs(Math.floor(utcOffset / 60))).padStart(2, '0');
     const minutes = String(Math.abs(utcOffset % 60)).padStart(2, '0');
 

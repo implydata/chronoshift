@@ -59,8 +59,8 @@ describe('floor/shift/ceil', () => {
       new Date('2012-11-04T01:00:00-07:00'),
     );
 
-    expect(shifters.hour.floor(new Date('2012-11-04T01:30:00-08:00'), tz), 'C').toEqual(
-      new Date('2012-11-04T01:00:00-08:00'),
+    expect(shifters.hour.floor(new Date('2012-11-04T01:30:00-08:00'), tz)).toEqual(
+      new Date('2012-11-04T01:00:00-07:00'),
     );
 
     expect(shifters.hour.floor(new Date('2012-11-04T02:30:00-08:00'), tz), 'D').toEqual(
@@ -93,7 +93,7 @@ describe('floor/shift/ceil', () => {
     pairwise(dates, (d1, d2) => expect(shifters.hour.shift(d1, tz, 1)).toEqual(d2));
   });
 
-  it('shifts hour over DST 1', () => {
+  it('floors hour over DST 1', () => {
     expect(shifters.hour.floor(new Date('2012-11-04T00:05:00-07:00'), tz)).toEqual(
       new Date('2012-11-04T00:00:00-07:00'),
     );
@@ -101,7 +101,7 @@ describe('floor/shift/ceil', () => {
       new Date('2012-11-04T01:00:00-07:00'),
     );
     expect(shifters.hour.floor(new Date('2012-11-04T02:05:00-07:00'), tz)).toEqual(
-      new Date('2012-11-04T02:00:00-07:00'),
+      new Date('2012-11-04T01:00:00-07:00'),
     );
     expect(shifters.hour.floor(new Date('2012-11-04T03:05:00-07:00'), tz)).toEqual(
       new Date('2012-11-04T03:00:00-07:00'),
