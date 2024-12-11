@@ -16,12 +16,13 @@
  */
 
 import { fromDate } from '@internationalized/date';
-import type { Instance } from 'immutable-class';
+
+import type { ImmutableClassInstance } from '../utils/utils';
 
 /**
  * Represents timezones
  */
-export class Timezone implements Instance<string, string> {
+export class Timezone implements ImmutableClassInstance<string, string> {
   static UTC: Timezone = new Timezone('Etc/UTC');
 
   private readonly timezone: string;
