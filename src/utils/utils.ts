@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
+/**
+ * Duck-type comptible interface for `Instance` from `immutable-class` to avoid
+ * adding it as a regular dependency.
+ */
+export interface ImmutableClassInstance<ValueType, JSType> {
+  valueOf(): ValueType;
+  toJS(): JSType;
+  toJSON(): JSType;
+  equals(other: ImmutableClassInstance<ValueType, JSType> | undefined): boolean;
+}
+
 export function isDate(d: any) {
   return !!(d && d.toISOString);
 }

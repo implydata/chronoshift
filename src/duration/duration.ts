@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 
-import type { Instance } from 'immutable-class';
-
 import { second, shifters } from '../floor-shift-ceil/floor-shift-ceil';
 import type { Timezone } from '../timezone/timezone';
+import type { ImmutableClassInstance } from '../utils/utils';
 
 const SPANS_WITH_WEEK = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second'];
 const SPANS_WITHOUT_WEEK = ['year', 'month', 'day', 'hour', 'minute', 'second'];
@@ -142,7 +141,7 @@ function fitIntoSpans(length: number, spansToCheck: string[]): Record<string, nu
 /**
  * Represents an ISO duration like P1DT3H
  */
-export class Duration implements Instance<DurationValue, string> {
+export class Duration implements ImmutableClassInstance<DurationValue, string> {
   public singleSpan?: string;
   public spans: DurationValue;
 
