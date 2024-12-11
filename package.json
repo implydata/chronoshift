@@ -67,7 +67,6 @@
     "@changesets/cli": "^2.27.10",
     "@types/jest": "^29.5.14",
     "@types/jest-expect-message": "^1.0.3",
-    "@types/moment-timezone": "^0.5.12",
     "@types/node": "^20.0.0",
     "eslint": "^9.15.0",
     "eslint-plugin-notice": "^1.0.0",
