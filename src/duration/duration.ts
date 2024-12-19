@@ -39,7 +39,7 @@ export interface DurationValue {
 
 function capitalizeFirst(str: string): string {
   if (!str.length) return str;
-  return str[0].toUpperCase() + str.substr(1);
+  return str[0].toUpperCase() + str.slice(1);
 }
 
 const periodWeekRegExp = /^P(\d+)W$/;
@@ -142,8 +142,8 @@ function fitIntoSpans(length: number, spansToCheck: string[]): Record<string, nu
  * Represents an ISO duration like P1DT3H
  */
 export class Duration implements ImmutableClassInstance<DurationValue, string> {
-  public singleSpan?: string;
-  public spans: DurationValue;
+  public readonly singleSpan?: string;
+  public readonly spans: DurationValue;
 
   static fromJS(durationStr: string): Duration {
     if (typeof durationStr !== 'string') throw new TypeError('Duration JS must be a string');
@@ -170,16 +170,26 @@ export class Duration implements ImmutableClassInstance<DurationValue, string> {
     return new Duration(fitIntoSpans(length, SPANS_UP_TO_DAY));
   }
 
+  static fromRange(start: Date, end: Date, timezone: Timezone): Duration {
+    return new Duration(getSpansFromStartEnd(start, end, timezone));
+  }
+
   /**
-   * Constructs an ISO duration like P1DT3H from a string
+   * Constructs a Duration from a string (like 'P1DT3H') or a DurationValue
    */
-  constructor(spans: DurationValue);
+  // Type overloads
+  constructor(spans: DurationValue | string);
+  /** @deprecated Use Duration.fromRange instead */
   constructor(start: Date, end: Date, timezone: Timezone);
+
+  // Implementation
   constructor(spans: any, end?: Date, timezone?: Timezone) {
     if (spans && end && timezone) {
       spans = getSpansFromStartEnd(spans, end, timezone);
     } else if (typeof spans === 'object') {
       spans = removeZeros(spans);
+    } else if (typeof spans === 'string') {
+      spans = getSpansFromString(spans);
     } else {
       throw new Error('new Duration called with bad argument');
     }
@@ -194,20 +204,20 @@ export class Duration implements ImmutableClassInstance<DurationValue, string> {
     this.spans = spans;
   }
 
-  public toString() {
-    const strArr: string[] = ['P'];
+  public toString(short?: boolean) {
+    const strArr: string[] = short ? [] : ['P'];
     const spans = this.spans;
     if (spans.week) {
       strArr.push(String(spans.week), 'W');
     } else {
-      let addedT = false;
+      let needsT = !(short && this.singleSpan);
       for (let i = 0; i < SPANS_WITHOUT_WEEK.length; i++) {
         const span = SPANS_WITHOUT_WEEK[i];
         const value = spans[span];
         if (!value) continue;
-        if (!addedT && i >= 3) {
+        if (needsT && i >= 3) {
           strArr.push('T');
-          addedT = true;
+          needsT = false;
         }
         strArr.push(String(value), span[0].toUpperCase());
       }
@@ -271,17 +281,17 @@ export class Duration implements ImmutableClassInstance<DurationValue, string> {
    */
   public floor(date: Date, timezone: Timezone): Date {
     const { singleSpan } = this;
-    if (!singleSpan) throw new Error('Can not floor on a complex duration');
+    if (!singleSpan) throw new Error('Can not operate on a complex duration');
     const span = this.spans[singleSpan]!;
     const mover = shifters[singleSpan];
     let dt = mover.floor(date, timezone);
     if (span !== 1) {
       if (!mover.siblings) {
-        throw new Error(`Can not floor on a ${singleSpan} duration that is not 1`);
+        throw new Error(`Can not operate on a ${singleSpan} duration that is not 1`);
       }
       if (mover.siblings % span !== 0) {
         throw new Error(
-          `Can not floor on a ${singleSpan} duration that does not divide into ${mover.siblings}`,
+          `Can not operate on a ${singleSpan} duration that does not divide into ${mover.siblings}`,
         );
       }
       dt = mover.round(dt, span, timezone);
@@ -292,7 +302,7 @@ export class Duration implements ImmutableClassInstance<DurationValue, string> {
   /**
    * Ceilings the date according to this duration
    * @param date The date to ceiling
-   * @param timezone The timezone within which to ceiling
+   * @param timezone The timezone within which to operate
    */
   public ceil(date: Date, timezone: Timezone): Date {
     const floored = this.floor(date, timezone);
@@ -314,6 +324,29 @@ export class Duration implements ImmutableClassInstance<DurationValue, string> {
       if (value) date = shifters[span].shift(date, timezone, step * value);
     }
     return date;
+  }
+
+  /**
+   * Rounds the date according to this duration (goes to the closest of floor(date) and ceil(date)
+   * @param date The date to round
+   * @param timezone The timezone within which to operate
+   */
+  public round(date: Date, timezone: Timezone): Date {
+    const floorDate = this.floor(date, timezone);
+    const ceilDate = this.ceil(date, timezone);
+    const distanceToFloor = Math.abs(date.valueOf() - floorDate.valueOf());
+    const distanceToCeil = Math.abs(date.valueOf() - ceilDate.valueOf());
+    return distanceToFloor <= distanceToCeil ? floorDate : ceilDate;
+  }
+
+  /**
+   * Gives the [start, end] of the duration sized bucket in which this date belongs
+   * @param date The date to bucket
+   * @param timezone The timezone within which to operate
+   */
+  public range(date: Date, timezone: Timezone): [Date, Date] {
+    const start = this.floor(date, timezone);
+    return [start, this.shift(start, timezone, 1)];
   }
 
   /**
