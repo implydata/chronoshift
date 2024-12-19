@@ -1,5 +1,5 @@
 ---
-'chronoshift': patch
+'chronoshift': minor
 ---
 
 Add round and range to duration
