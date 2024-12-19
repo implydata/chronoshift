@@ -1,5 +1,11 @@
 # chronoshift
 
+## 1.1.0
+
+### Minor Changes
+
+- 88ae3cb: Add round and range to duration
+
 ## 1.0.1
 
 ### Patch Changes
