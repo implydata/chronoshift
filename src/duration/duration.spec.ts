@@ -19,9 +19,10 @@ import type { Class } from 'immutable-class';
 import { typeCheck } from 'immutable-class';
 import { testImmutableClass } from 'immutable-class-tester';
 
-import type { DurationValue } from '../duration/duration';
-import { Duration } from '../duration/duration';
 import { Timezone } from '../timezone/timezone';
+
+import type { DurationValue } from './duration';
+import { Duration } from './duration';
 
 typeCheck<Class<DurationValue, string>>(Duration);
 
@@ -35,24 +36,24 @@ describe('Duration', () => {
 
   describe('errors', () => {
     it('throws error if invalid duration', () => {
-      expect(() => Duration.fromJS('')).toThrow("Can not parse duration ''");
+      expect(() => new Duration('')).toThrow("Can not parse duration ''");
 
-      expect(() => Duration.fromJS('P00')).toThrow("Can not parse duration 'P00'");
+      expect(() => new Duration('P00')).toThrow("Can not parse duration 'P00'");
 
-      expect(() => Duration.fromJS('P')).toThrow('Duration can not be empty');
+      expect(() => new Duration('P')).toThrow('Duration can not be empty');
 
-      expect(() => Duration.fromJS('P0YT0H')).toThrow('Duration can not be empty');
+      expect(() => new Duration('P0YT0H')).toThrow('Duration can not be empty');
 
-      expect(() => Duration.fromJS('P0W').shift(new Date(), TZ_LA)).toThrow(
+      expect(() => new Duration('P0W').shift(new Date(), TZ_LA)).toThrow(
         'Duration can not have empty weeks',
       );
 
-      expect(() => Duration.fromJS('P0Y0MT0H0M0S').shift(new Date(), TZ_LA)).toThrow(
+      expect(() => new Duration('P0Y0MT0H0M0S').shift(new Date(), TZ_LA)).toThrow(
         'Duration can not be empty',
       );
 
-      expect(() => Duration.fromJS('PT0.0.1S')).toThrow("Can not parse duration 'PT0.0.1S'");
-      expect(() => Duration.fromJS('PT0..1S')).toThrow("Can not parse duration 'PT0..1S'");
+      expect(() => new Duration('PT0.0.1S')).toThrow("Can not parse duration 'PT0.0.1S'");
+      expect(() => new Duration('PT0..1S')).toThrow("Can not parse duration 'PT0..1S'");
     });
 
     it('throws error if fromJS is not given a string', () => {
@@ -65,28 +66,47 @@ describe('Duration', () => {
       let durationStr: string;
 
       durationStr = 'P3Y';
-      expect(Duration.fromJS(durationStr).toString()).toEqual(durationStr);
+      expect(new Duration(durationStr).toString()).toEqual(durationStr);
 
       durationStr = 'P2W';
-      expect(Duration.fromJS(durationStr).toString()).toEqual(durationStr);
+      expect(new Duration(durationStr).toString()).toEqual(durationStr);
 
       durationStr = 'PT5H';
-      expect(Duration.fromJS(durationStr).toString()).toEqual(durationStr);
+      expect(new Duration(durationStr).toString()).toEqual(durationStr);
 
       durationStr = 'P3DT15H';
-      expect(Duration.fromJS(durationStr).toString()).toEqual(durationStr);
+      expect(new Duration(durationStr).toString()).toEqual(durationStr);
 
       durationStr = 'PT0.001S';
-      expect(Duration.fromJS(durationStr).toString()).toEqual(durationStr);
+      expect(new Duration(durationStr).toString()).toEqual(durationStr);
+    });
+
+    it('gives back the correct short string', () => {
+      let durationStr: string;
+
+      durationStr = 'P3Y';
+      expect(new Duration(durationStr).toString(true)).toEqual('3Y');
+
+      durationStr = 'P2W';
+      expect(new Duration(durationStr).toString(true)).toEqual('2W');
+
+      durationStr = 'PT5H';
+      expect(new Duration(durationStr).toString(true)).toEqual('5H');
+
+      durationStr = 'P3DT15H';
+      expect(new Duration(durationStr).toString(true)).toEqual('3DT15H');
+
+      durationStr = 'PT0.001S';
+      expect(new Duration(durationStr).toString(true)).toEqual('0.001S');
     });
 
     it('eliminates 0', () => {
-      expect(Duration.fromJS('P0DT15H').toString()).toEqual('PT15H');
-      expect(Duration.fromJS('PT00000.00001S').toString()).toEqual('PT0.00001S');
+      expect(new Duration('P0DT15H').toString()).toEqual('PT15H');
+      expect(new Duration('PT00000.00001S').toString()).toEqual('PT0.00001S');
     });
   });
 
-  describe('fromCanonicalLength', () => {
+  describe('.fromCanonicalLength', () => {
     it('handles zero', () => {
       expect(() => {
         Duration.fromCanonicalLength(0);
@@ -120,7 +140,7 @@ describe('Duration', () => {
     });
   });
 
-  describe('construct from span', () => {
+  describe('deprecated constructor', () => {
     it('parses days over DST', () => {
       expect(
         new Duration(
@@ -138,10 +158,30 @@ describe('Duration', () => {
         ).toString(),
       ).toEqual('P14D');
     });
+  });
+
+  describe('.fromRange', () => {
+    it('parses days over DST', () => {
+      expect(
+        Duration.fromRange(
+          new Date('2012-10-29T00:00:00-07:00'),
+          new Date('2012-11-05T00:00:00-08:00'),
+          TZ_LA,
+        ).toString(),
+      ).toEqual('P7D');
+
+      expect(
+        Duration.fromRange(
+          new Date('2012-10-29T00:00:00-07:00'),
+          new Date('2012-11-12T00:00:00-08:00'),
+          TZ_LA,
+        ).toString(),
+      ).toEqual('P14D');
+    });
 
     it('parses complex case', () => {
       expect(
-        new Duration(
+        Duration.fromRange(
           new Date('2012-10-29T00:00:00-07:00'),
           new Date(new Date('2012-11-05T00:00:00-08:00').valueOf() - 1000),
           TZ_LA,
@@ -149,7 +189,7 @@ describe('Duration', () => {
       ).toEqual('P6DT24H59M59S');
 
       expect(
-        new Duration(
+        Duration.fromRange(
           new Date('2012-01-01T00:00:00-08:00'),
           new Date('2013-03-04T04:05:06-08:00'),
           TZ_LA,
@@ -176,49 +216,49 @@ describe('Duration', () => {
 
   describe('#floor', () => {
     it('throws error if complex duration', () => {
-      expect(() => Duration.fromJS('P1Y2D').floor(new Date(), TZ_LA)).toThrow(
-        'Can not floor on a complex duration',
+      expect(() => new Duration('P1Y2D').floor(new Date(), TZ_LA)).toThrow(
+        'Can not operate on a complex duration',
       );
 
-      expect(() => Duration.fromJS('P3DT15H').floor(new Date(), TZ_LA)).toThrow(
-        'Can not floor on a complex duration',
+      expect(() => new Duration('P3DT15H').floor(new Date(), TZ_LA)).toThrow(
+        'Can not operate on a complex duration',
       );
 
-      expect(() => Duration.fromJS('PT5H').floor(new Date(), TZ_LA)).toThrow(
-        'Can not floor on a hour duration that does not divide into 24',
+      expect(() => new Duration('PT5H').floor(new Date(), TZ_LA)).toThrow(
+        'Can not operate on a hour duration that does not divide into 24',
       );
     });
 
     it('works for year', () => {
-      const p1y = Duration.fromJS('P1Y');
+      const p1y = new Duration('P1Y');
       expect(p1y.floor(new Date('2013-09-29T01:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-01-01T00:00:00.000-08:00'),
       );
     });
 
     it('works for PT2M', () => {
-      const pt2h = Duration.fromJS('PT2M');
-      expect(pt2h.floor(new Date('2013-09-29T03:03:03.456-07:00'), TZ_LA)).toEqual(
+      const pt2m = new Duration('PT2M');
+      expect(pt2m.floor(new Date('2013-09-29T03:03:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-09-29T03:02:00.000-07:00'),
       );
     });
 
     it('works for P2H', () => {
-      const pt2h = Duration.fromJS('PT2H');
+      const pt2h = new Duration('PT2H');
       expect(pt2h.floor(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-09-29T02:00:00.000-07:00'),
       );
     });
 
     it('works for PT12H', () => {
-      const pt12h = Duration.fromJS('PT12H');
+      const pt12h = new Duration('PT12H');
       expect(pt12h.floor(new Date('2015-09-12T13:05:00-08:00'), TZ_JUNEAU)).toEqual(
         new Date('2015-09-12T12:00:00-08:00'),
       );
     });
 
     it('works for P1W', () => {
-      const p1w = Duration.fromJS('P1W');
+      const p1w = new Duration('P1W');
 
       expect(p1w.floor(new Date('2013-09-29T01:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-09-23T07:00:00.000Z'),
@@ -230,7 +270,7 @@ describe('Duration', () => {
     });
 
     it('works for P3M', () => {
-      const p3m = Duration.fromJS('P3M');
+      const p3m = new Duration('P3M');
       expect(p3m.floor(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-07-01T00:00:00.000-07:00'),
       );
@@ -241,7 +281,7 @@ describe('Duration', () => {
     });
 
     it('works for P4Y', () => {
-      const p4y = Duration.fromJS('P4Y');
+      const p4y = new Duration('P4Y');
       expect(p4y.floor(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2012-01-01T00:00:00.000-08:00'),
       );
@@ -250,49 +290,49 @@ describe('Duration', () => {
 
   describe('#ceil', () => {
     it('throws error if complex duration', () => {
-      expect(() => Duration.fromJS('P1Y2D').ceil(new Date(), TZ_LA)).toThrow(
-        'Can not floor on a complex duration',
+      expect(() => new Duration('P1Y2D').ceil(new Date(), TZ_LA)).toThrow(
+        'Can not operate on a complex duration',
       );
 
-      expect(() => Duration.fromJS('P3DT15H').ceil(new Date(), TZ_LA)).toThrow(
-        'Can not floor on a complex duration',
+      expect(() => new Duration('P3DT15H').ceil(new Date(), TZ_LA)).toThrow(
+        'Can not operate on a complex duration',
       );
 
-      expect(() => Duration.fromJS('PT5H').ceil(new Date(), TZ_LA)).toThrow(
-        'Can not floor on a hour duration that does not divide into 24',
+      expect(() => new Duration('PT5H').ceil(new Date(), TZ_LA)).toThrow(
+        'Can not operate on a hour duration that does not divide into 24',
       );
     });
 
     it('works for year', () => {
-      const p1y = Duration.fromJS('P1Y');
+      const p1y = new Duration('P1Y');
       expect(p1y.ceil(new Date('2013-09-29T01:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2014-01-01T00:00:00.000-08:00'),
       );
     });
 
     it('works for PT2M', () => {
-      const pt2h = Duration.fromJS('PT2M');
-      expect(pt2h.ceil(new Date('2013-09-29T03:03:03.456-07:00'), TZ_LA)).toEqual(
+      const pt2m = new Duration('PT2M');
+      expect(pt2m.ceil(new Date('2013-09-29T03:03:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-09-29T03:04:00.000-07:00'),
       );
     });
 
     it('works for P2H', () => {
-      const pt2h = Duration.fromJS('PT2H');
+      const pt2h = new Duration('PT2H');
       expect(pt2h.ceil(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-09-29T04:00:00.000-07:00'),
       );
     });
 
     it('works for PT12H', () => {
-      const pt12h = Duration.fromJS('PT12H');
+      const pt12h = new Duration('PT12H');
       expect(pt12h.ceil(new Date('2015-09-12T13:05:00-08:00'), TZ_JUNEAU)).toEqual(
         new Date('2015-09-13T00:00:00-08:00'),
       );
     });
 
     it('works for P1W', () => {
-      const p1w = Duration.fromJS('P1W');
+      const p1w = new Duration('P1W');
 
       expect(p1w.ceil(new Date('2013-09-29T01:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-09-30T07:00:00.000Z'),
@@ -304,7 +344,7 @@ describe('Duration', () => {
     });
 
     it('works for P3M', () => {
-      const p3m = Duration.fromJS('P3M');
+      const p3m = new Duration('P3M');
       expect(p3m.ceil(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2013-10-01T00:00:00.000-07:00'),
       );
@@ -315,14 +355,14 @@ describe('Duration', () => {
     });
 
     it('works for P4Y', () => {
-      const p4y = Duration.fromJS('P4Y');
+      const p4y = new Duration('P4Y');
       expect(p4y.ceil(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
         new Date('2016-01-01T00:00:00.000-08:00'),
       );
     });
 
     it('returns input if already floored', () => {
-      const pt12h = Duration.fromJS('PT12H');
+      const pt12h = new Duration('PT12H');
       expect(pt12h.ceil(new Date('2015-09-13T00:00:00-08:00'), TZ_JUNEAU)).toEqual(
         new Date('2015-09-13T00:00:00-08:00'),
       );
@@ -331,33 +371,95 @@ describe('Duration', () => {
 
   describe('#shift', () => {
     it('works for weeks', () => {
-      let p1w = Duration.fromJS('P1W');
+      let p1w = new Duration('P1W');
       expect(p1w.shift(new Date('2012-10-29T00:00:00-07:00'), TZ_LA)).toEqual(
         new Date('2012-11-05T00:00:00-08:00'),
       );
 
-      p1w = Duration.fromJS('P1W');
+      p1w = new Duration('P1W');
       expect(p1w.shift(new Date('2012-10-29T00:00:00-07:00'), TZ_LA, 2)).toEqual(
         new Date('2012-11-12T00:00:00-08:00'),
       );
 
-      const p2w = Duration.fromJS('P2W');
+      const p2w = new Duration('P2W');
       expect(p2w.shift(new Date('2012-10-29T05:16:17-07:00'), TZ_LA)).toEqual(
         new Date('2012-11-12T05:16:17-08:00'),
       );
     });
 
     it('works for general complex case', () => {
-      const pComplex = Duration.fromJS('P1Y2M3DT4H5M6S');
+      const pComplex = new Duration('P1Y2M3DT4H5M6S');
       expect(pComplex.shift(new Date('2012-01-01T00:00:00-08:00'), TZ_LA)).toEqual(
         new Date('2013-03-04T04:05:06-08:00'),
       );
     });
   });
 
+  describe('#round', () => {
+    it('works for year', () => {
+      const p1y = new Duration('P1Y');
+      expect(p1y.round(new Date('2013-02-29T01:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-01-01T00:00:00.000-08:00'),
+      );
+      expect(p1y.round(new Date('2013-09-29T01:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2014-01-01T00:00:00.000-08:00'),
+      );
+    });
+
+    it('works for PT2M', () => {
+      const pt2m = new Duration('PT2M');
+      expect(pt2m.round(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-09-29T03:02:00.000-07:00'),
+      );
+      expect(pt2m.round(new Date('2013-09-29T03:03:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-09-29T03:04:00.000-07:00'),
+      );
+    });
+
+    it('works for P2H', () => {
+      const pt2h = new Duration('PT2H');
+      expect(pt2h.round(new Date('2013-09-29T02:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-09-29T02:00:00.000-07:00'),
+      );
+      expect(pt2h.round(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(
+        new Date('2013-09-29T04:00:00.000-07:00'),
+      );
+    });
+  });
+
+  describe('#range', () => {
+    it('works for year', () => {
+      const p1y = new Duration('P1Y');
+      expect(p1y.range(new Date('2013-02-29T01:02:03.456-07:00'), TZ_LA)).toEqual([
+        new Date('2013-01-01T00:00:00.000-08:00'),
+        new Date('2014-01-01T00:00:00.000-08:00'),
+      ]);
+      expect(p1y.range(new Date('2013-01-01T00:00:00.000-08:00'), TZ_LA)).toEqual([
+        new Date('2013-01-01T00:00:00.000-08:00'),
+        new Date('2014-01-01T00:00:00.000-08:00'),
+      ]);
+    });
+
+    it('works for PT2M', () => {
+      const pt2m = new Duration('PT2M');
+      expect(pt2m.range(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual([
+        new Date('2013-09-29T03:02:00.000-07:00'),
+        new Date('2013-09-29T03:04:00.000-07:00'),
+      ]);
+    });
+
+    it('works for P2H', () => {
+      const pt2h = new Duration('PT2H');
+      expect(pt2h.range(new Date('2013-09-29T02:02:03.456-07:00'), TZ_LA)).toEqual([
+        new Date('2013-09-29T02:00:00.000-07:00'),
+        new Date('2013-09-29T04:00:00.000-07:00'),
+      ]);
+    });
+  });
+
   describe('#materialize', () => {
     it('works for weeks', () => {
-      const p1w = Duration.fromJS('P1W');
+      const p1w = new Duration('P1W');
 
       expect(
         p1w.materialize(
@@ -390,7 +492,7 @@ describe('Duration', () => {
 
   describe('#isAligned', () => {
     it('works for weeks', () => {
-      const p1w = Duration.fromJS('P1W');
+      const p1w = new Duration('P1W');
       expect(p1w.isAligned(new Date('2012-10-29T00:00:00-07:00'), TZ_LA)).toEqual(true);
       expect(p1w.isAligned(new Date('2012-10-29T00:00:00-07:00'), Timezone.UTC)).toEqual(false);
     });
@@ -446,55 +548,55 @@ describe('Duration', () => {
 
   describe('#add()', () => {
     it('works with a simple duration', () => {
-      const d1 = Duration.fromJS('P1D');
-      const d2 = Duration.fromJS('P1D');
+      const d1 = new Duration('P1D');
+      const d2 = new Duration('P1D');
 
       expect(d1.add(d2).toJS()).toEqual('P2D');
     });
 
     it('works with heterogeneous spans', () => {
-      const d1 = Duration.fromJS('P1D');
-      const d2 = Duration.fromJS('P1Y');
+      const d1 = new Duration('P1D');
+      const d2 = new Duration('P1Y');
 
       expect(d1.add(d2).toJS()).toEqual('P1Y1D');
     });
 
     it('works with weeks', () => {
-      let d1 = Duration.fromJS('P1W');
-      let d2 = Duration.fromJS('P2W');
+      let d1 = new Duration('P1W');
+      let d2 = new Duration('P2W');
       expect(d1.add(d2).toJS()).toEqual('P3W');
 
-      d1 = Duration.fromJS('P6D');
-      d2 = Duration.fromJS('P1D');
+      d1 = new Duration('P6D');
+      d2 = new Duration('P1D');
       expect(d1.add(d2).toJS()).toEqual('P1W');
     });
   });
 
   describe('#subtract()', () => {
     it('works with a simple duration', () => {
-      const d1 = Duration.fromJS('P1DT2H');
-      const d2 = Duration.fromJS('PT1H');
+      const d1 = new Duration('P1DT2H');
+      const d2 = new Duration('PT1H');
 
       expect(d1.subtract(d2).toJS()).toEqual('P1DT1H');
     });
 
     it('works with a less simple duration', () => {
-      const d1 = Duration.fromJS('P1D');
-      const d2 = Duration.fromJS('PT1H');
+      const d1 = new Duration('P1D');
+      const d2 = new Duration('PT1H');
 
       expect(d1.subtract(d2).toJS()).toEqual('PT23H');
     });
 
     it('works with weeks', () => {
-      const d1 = Duration.fromJS('P1W');
-      const d2 = Duration.fromJS('P1D');
+      const d1 = new Duration('P1W');
+      const d2 = new Duration('P1D');
 
       expect(d1.subtract(d2).toJS()).toEqual('P6D');
     });
 
     it('throws an error if result is going to be negative', () => {
-      const d1 = Duration.fromJS('P1D');
-      const d2 = Duration.fromJS('P2D');
+      const d1 = new Duration('P1D');
+      const d2 = new Duration('P2D');
 
       expect(() => d1.subtract(d2)).toThrow();
     });
@@ -502,27 +604,27 @@ describe('Duration', () => {
 
   describe('#multiply()', () => {
     it('works with a simple duration', () => {
-      const d = Duration.fromJS('P1D');
+      const d = new Duration('P1D');
       expect(d.multiply(5).toJS()).toEqual('P5D');
     });
 
     it('works with a less simple duration', () => {
-      const d = Duration.fromJS('P1DT2H');
+      const d = new Duration('P1DT2H');
       expect(d.multiply(2).toJS()).toEqual('P2DT4H');
     });
 
     it('works with weeks', () => {
-      const d = Duration.fromJS('P1W');
+      const d = new Duration('P1W');
       expect(d.multiply(5).toJS()).toEqual('P5W');
     });
 
     it('throws an error if result is going to be negative', () => {
-      const d = Duration.fromJS('P1D');
+      const d = new Duration('P1D');
       expect(() => d.multiply(-1)).toThrow('Multiplier must be positive non-zero');
     });
 
     it('gets description properly', () => {
-      const d = Duration.fromJS('P2D');
+      const d = new Duration('P2D');
       expect(d.multiply(2).getDescription(true)).toEqual('4 Days');
     });
   });
@@ -613,13 +715,13 @@ describe('Duration', () => {
 
   describe('#limitToDays', () => {
     it('works', () => {
-      expect(Duration.fromJS('P6D').limitToDays().toString()).toEqual('P6D');
+      expect(new Duration('P6D').limitToDays().toString()).toEqual('P6D');
 
-      expect(Duration.fromJS('P1M').limitToDays().toString()).toEqual('P30D');
+      expect(new Duration('P1M').limitToDays().toString()).toEqual('P30D');
 
-      expect(Duration.fromJS('P1Y').limitToDays().toString()).toEqual('P365D');
+      expect(new Duration('P1Y').limitToDays().toString()).toEqual('P365D');
 
-      expect(Duration.fromJS('P1Y2M').limitToDays().toString()).toEqual('P425D');
+      expect(new Duration('P1Y2M').limitToDays().toString()).toEqual('P425D');
     });
   });
 });
