@@ -198,18 +198,26 @@ describe('Duration', () => {
     });
   });
 
-  describe('#isFloorable', () => {
+  describe('#isFloorable / #makeFloorable', () => {
     it('works on floorable things', () => {
-      const vs = 'P1Y P5Y P10Y P100Y P1M P2M P3M P4M P1D'.split(' ');
+      const vs = 'P1Y P5Y P10Y P100Y P1M P2M P3M P4M P1D P2D P3D P5D'.split(' ');
       for (const v of vs) {
         expect(Duration.fromJS(v).isFloorable(), v).toEqual(true);
+        expect(Duration.fromJS(v).makeFloorable().toString(), v).toEqual(v);
       }
     });
 
     it('works on not floorable things', () => {
-      const vs = 'P1Y1M P5M P2D P3D'.split(' ');
+      const vs = [
+        { unfloorable: 'P1Y1M', floorable: 'P1Y' },
+        { unfloorable: 'P5M', floorable: 'P1M' },
+        { unfloorable: 'P4D', floorable: 'P1D' },
+      ];
       for (const v of vs) {
-        expect(Duration.fromJS(v).isFloorable(), v).toEqual(false);
+        expect(Duration.fromJS(v.unfloorable).isFloorable(), v.unfloorable).toEqual(false);
+        expect(Duration.fromJS(v.floorable).makeFloorable().toString(), v.unfloorable).toEqual(
+          v.floorable,
+        );
       }
     });
   });
@@ -458,6 +466,22 @@ describe('Duration', () => {
   });
 
   describe('#materialize', () => {
+    it('works for hours', () => {
+      const pt1h = new Duration('PT1H');
+
+      expect(
+        pt1h.materialize(
+          new Date('2012-10-29T00:05:00-07:00'),
+          new Date('2012-10-29T03:05:00-07:00'),
+          TZ_LA,
+        ),
+      ).toEqual([
+        new Date('2012-10-29T01:00:00-07:00'),
+        new Date('2012-10-29T02:00:00-07:00'),
+        new Date('2012-10-29T03:00:00-07:00'),
+      ]);
+    });
+
     it('works for weeks', () => {
       const p1w = new Duration('P1W');
 
