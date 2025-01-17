@@ -27,7 +27,7 @@ export type RoundFn = (dt: Date, roundTo: number, tz: Timezone) => Date;
 
 export interface TimeShifterNoCeil {
   canonicalLength: number;
-  siblings?: number;
+  siblings: number;
   floor: AlignFn;
   round: RoundFn;
   shift: ShiftFn;
@@ -137,6 +137,7 @@ export const hour = timeShifterFiller({
 
 export const day = timeShifterFiller({
   canonicalLength: 24 * 3600000,
+  siblings: 30,
   floor: (dt, tz) => {
     if (tz.isUTC()) {
       dt = new Date(dt.valueOf());
@@ -164,6 +165,7 @@ export const day = timeShifterFiller({
 
 export const week = timeShifterFiller({
   canonicalLength: 7 * 24 * 3600000,
+  siblings: 52,
   floor: (dt, tz) => {
     if (tz.isUTC()) {
       dt = new Date(dt.valueOf());
@@ -272,9 +274,13 @@ export const year = timeShifterFiller({
   shift: yearShift,
 });
 
+/**
+ * @deprecated use `new Duration('P${numDays}D')` instead
+ */
 export function getMultiDayShifter(numDays: number) {
   return timeShifterFiller({
     canonicalLength: 24 * 3600000 * numDays,
+    siblings: 1, // This is a no-op dummy
     floor: day.floor,
     shift: (dt, tz, step) => day.shift(dt, tz, step * numDays),
     round: () => {

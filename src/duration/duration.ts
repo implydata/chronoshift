@@ -274,6 +274,16 @@ export class Duration implements ImmutableClassInstance<DurationValue, string> {
     return siblings % span === 0;
   }
 
+  public makeFloorable(): Duration {
+    if (this.isFloorable()) return this;
+    const { singleSpan, spans } = this;
+    if (singleSpan) return new Duration({ [singleSpan]: 1 });
+    for (const span of SPANS_WITH_WEEK) {
+      if (spans[span]) return new Duration({ [span]: 1 });
+    }
+    return new Duration({ second: 1 });
+  }
+
   /**
    * Floors the date according to this duration.
    * @param date The date to floor
@@ -358,7 +368,7 @@ export class Duration implements ImmutableClassInstance<DurationValue, string> {
    */
   public materialize(start: Date, end: Date, timezone: Timezone, step = 1): Date[] {
     const values: Date[] = [];
-    let iter = this.floor(start, timezone);
+    let iter = this.makeFloorable().ceil(start, timezone);
     while (iter <= end) {
       values.push(iter);
       iter = this.shift(iter, timezone, step);
