@@ -1,5 +1,11 @@
 # chronoshift
 
+## 1.2.0
+
+### Minor Changes
+
+- cb6d9e3: Make more durations floorable and fix materialize
+
 ## 1.1.0
 
 ### Minor Changes
