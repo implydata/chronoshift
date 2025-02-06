@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
+import { utcDay } from 'd3-time';
 import type { Class } from 'immutable-class';
 import { typeCheck } from 'immutable-class';
 import { testImmutableClass } from 'immutable-class-tester';
 
+import { minute } from '../floor-shift-ceil/floor-shift-ceil';
 import { Timezone } from '../timezone/timezone';
 
 import type { DurationValue } from './duration';
@@ -223,6 +225,17 @@ describe('Duration', () => {
   });
 
   describe('#floor', () => {
+    it('matches floor to d3 in UTC', () => {
+      const duration = new Duration('P2D');
+      const d3TwoDay = utcDay.every(2)!;
+
+      const start = new Date('2013-01-01T01:02:03Z').valueOf();
+      for (let m = 0; m < 300; m++) {
+        const d = new Date(start + 13 * minute.canonicalLength * m);
+        expect(duration.floor(d, Timezone.UTC), d.toISOString()).toEqual(d3TwoDay.floor(d));
+      }
+    });
+
     it('throws error if complex duration', () => {
       expect(() => new Duration('P1Y2D').floor(new Date(), TZ_LA)).toThrow(
         'Can not operate on a complex duration',
@@ -492,9 +505,9 @@ describe('Duration', () => {
           TZ_LA,
         ),
       ).toEqual([
-        new Date('2012-10-28T07:00:00.000Z'),
-        new Date('2012-10-30T07:00:00.000Z'),
-        new Date('2012-11-02T07:00:00.000Z'),
+        new Date('2012-10-29T00:00:00-07:00'),
+        new Date('2012-10-31T00:00:00-07:00'),
+        new Date('2012-11-02T00:00:00-07:00'),
       ]);
     });
 

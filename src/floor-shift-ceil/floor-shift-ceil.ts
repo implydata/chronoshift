@@ -120,6 +120,7 @@ export const hour = timeShifterFiller({
       return fromDate(dt, tz.toString()).set({ second: 0, minute: 0, millisecond: 0 }).toDate();
     }
   },
+  shift: hourMove,
   round: (dt, roundTo, tz) => {
     if (tz.isUTC()) {
       const cur = dt.getUTCHours();
@@ -132,7 +133,6 @@ export const hour = timeShifterFiller({
     }
     return dt;
   },
-  shift: hourMove,
 });
 
 export const day = timeShifterFiller({
@@ -158,8 +158,21 @@ export const day = timeShifterFiller({
       return fromDate(dt, tz.toString()).add({ days: step }).toDate();
     }
   },
-  round: () => {
-    throw new Error('missing day round');
+  round: (dt, roundTo, tz) => {
+    // Note that we offset day by 1 to make it zero indexed just like d3 does: https://github.com/d3/d3-time/blob/main/src/day.js#L20
+    if (tz.isUTC()) {
+      const cur = dt.getUTCDate() - 1;
+      const adj = floorTo(cur, roundTo);
+      if (cur !== adj) dt.setUTCDate(adj + 1);
+    } else {
+      const cur = fromDate(dt, tz.toString()).day - 1;
+      const adj = floorTo(cur, roundTo);
+      if (cur !== adj)
+        return fromDate(dt, tz.toString())
+          .set({ day: adj + 1 })
+          .toDate();
+    }
+    return dt;
   },
 });
 
