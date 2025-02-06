@@ -482,6 +482,22 @@ describe('Duration', () => {
       ]);
     });
 
+    it('works for P2D', () => {
+      const p2d = new Duration('P2D');
+
+      expect(
+        p2d.materialize(
+          new Date('2012-10-29T00:00:00-07:00'),
+          new Date('2012-11-03T00:00:00-08:00'),
+          TZ_LA,
+        ),
+      ).toEqual([
+        new Date('2012-10-28T07:00:00.000Z'),
+        new Date('2012-10-30T07:00:00.000Z'),
+        new Date('2012-11-02T07:00:00.000Z'),
+      ]);
+    });
+
     it('works for weeks', () => {
       const p1w = new Duration('P1W');
 
