@@ -1,5 +1,11 @@
 # chronoshift
 
+## 1.2.1
+
+### Patch Changes
+
+- 9aa847f: Fix flooring of multi day durations, also fix bug in parseISODate
+
 ## 1.2.0
 
 ### Minor Changes
