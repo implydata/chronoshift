@@ -192,19 +192,27 @@ export function parseISODate(
       (struct[9] === undefined || struct[9] === '') &&
       !Timezone.UTC.equals(timezone || undefined)
     ) {
-      const dt = Date.UTC(
-        struct[1],
-        struct[2],
-        struct[3],
-        struct[4],
-        struct[5],
-        struct[6],
-        struct[7],
-      );
       if (timezone === null) {
         // timezone explicitly set to null = use local timezone
-        return new Date(dt);
+        return new Date(
+          struct[1],
+          struct[2],
+          struct[3],
+          struct[4],
+          struct[5],
+          struct[6],
+          struct[7],
+        );
       } else {
+        const dt = Date.UTC(
+          struct[1],
+          struct[2],
+          struct[3],
+          struct[4],
+          struct[5],
+          struct[6],
+          struct[7],
+        );
         const tzd = fromDate(new Date(dt), timezone.toString());
         return new Date(dt - tzd.offset);
       }
