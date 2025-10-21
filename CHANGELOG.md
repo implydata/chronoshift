@@ -1,5 +1,11 @@
 # chronoshift
 
+## 1.2.2
+
+### Patch Changes
+
+- 659ea66: Add npm trusted publishing support for automated releases via OIDC
+
 ## 1.2.1
 
 ### Patch Changes
