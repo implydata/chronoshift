@@ -204,4 +204,27 @@ describe('floor/shift/ceil', () => {
       year.shift(new Date('2010-01-01T00:00:00-08:00'), tz, 1),
     );
   });
+
+  it('rounds minutes with non-integer timezone offsets', () => {
+    const kolkata = Timezone.fromJS('Asia/Kolkata');
+    const kathmandu = Timezone.fromJS('Asia/Kathmandu');
+
+    // Asia/Kolkata (UTC+5:30) with 20 minute boundary
+    expect(shifters.minute.round(new Date('2025-11-27T12:00:00Z'), 20, kolkata)).toEqual(
+      new Date('2025-11-27T11:50:00.000Z'),
+    );
+    expect(shifters.minute.round(new Date('2025-11-27T12:25:00Z'), 20, kolkata)).toEqual(
+      new Date('2025-11-27T12:10:00.000Z'),
+    );
+
+    // Asia/Kolkata (UTC+5:30) with 5 minute boundary
+    expect(shifters.minute.round(new Date('2025-11-27T12:02:00Z'), 5, kolkata)).toEqual(
+      new Date('2025-11-27T12:00:00.000Z'),
+    );
+
+    // Asia/Kathmandu (UTC+5:45) with 20 minute boundary
+    expect(shifters.minute.round(new Date('2025-11-27T12:00:00Z'), 20, kathmandu)).toEqual(
+      new Date('2025-11-27T11:55:00.000Z'),
+    );
+  });
 });
