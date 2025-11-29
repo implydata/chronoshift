@@ -1,5 +1,11 @@
 # chronoshift
 
+## 1.2.3
+
+### Patch Changes
+
+- f23b870: Fix minute.round with non-integer TZ offsets
+
 ## 1.2.2
 
 ### Patch Changes
