@@ -1,6 +1,6 @@
 {
   "name": "chronoshift",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A tiny library for shifting time with timezones",
   "keywords": [
     "date",
