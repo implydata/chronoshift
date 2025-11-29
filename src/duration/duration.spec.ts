@@ -264,6 +264,31 @@ describe('Duration', () => {
       );
     });
 
+    it('works for PT20M with Asia/Kolkata (UTC+5:30)', () => {
+      const pt20m = new Duration('PT20M');
+      const kolkata = Timezone.fromJS('Asia/Kolkata');
+
+      // 12:00 UTC = 17:30 IST → floor to 17:20 IST = 11:50 UTC
+      expect(pt20m.floor(new Date('2025-11-27T12:00:00Z'), kolkata)).toEqual(
+        new Date('2025-11-27T11:50:00.000Z'),
+      );
+
+      // 12:25 UTC = 17:55 IST → floor to 17:40 IST = 12:10 UTC
+      expect(pt20m.floor(new Date('2025-11-27T12:25:00Z'), kolkata)).toEqual(
+        new Date('2025-11-27T12:10:00.000Z'),
+      );
+    });
+
+    it('works for PT5M with Asia/Kolkata (UTC+5:30)', () => {
+      const pt5m = new Duration('PT5M');
+      const kolkata = Timezone.fromJS('Asia/Kolkata');
+
+      // 12:02 UTC = 17:32 IST → floor to 17:30 IST = 12:00 UTC
+      expect(pt5m.floor(new Date('2025-11-27T12:02:00Z'), kolkata)).toEqual(
+        new Date('2025-11-27T12:00:00.000Z'),
+      );
+    });
+
     it('works for P2H', () => {
       const pt2h = new Duration('PT2H');
       expect(pt2h.floor(new Date('2013-09-29T03:02:03.456-07:00'), TZ_LA)).toEqual(

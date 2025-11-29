@@ -79,6 +79,13 @@ export const second = timeShifterFiller({
   },
 });
 
+// Movement by minute is tz independent because in every timezone a minute is 60 seconds
+function minuteMove(dt: Date, _tz: Timezone, step: number) {
+  dt = new Date(dt.valueOf());
+  dt.setUTCMinutes(dt.getUTCMinutes() + step);
+  return dt;
+}
+
 export const minute = timeShifterFiller({
   canonicalLength: 60000,
   siblings: 60,
@@ -88,10 +95,16 @@ export const minute = timeShifterFiller({
     dt.setUTCSeconds(0, 0);
     return dt;
   },
-  round: (dt, roundTo, _tz) => {
-    const cur = dt.getUTCMinutes();
-    const adj = floorTo(cur, roundTo);
-    if (cur !== adj) dt.setUTCMinutes(adj);
+  round: (dt, roundTo, tz) => {
+    if (tz.isUTC()) {
+      const cur = dt.getUTCMinutes();
+      const adj = floorTo(cur, roundTo);
+      if (cur !== adj) dt.setUTCMinutes(adj);
+    } else {
+      const cur = fromDate(dt, tz.toString()).minute;
+      const adj = floorTo(cur, roundTo);
+      if (cur !== adj) return minuteMove(dt, tz, adj - cur);
+    }
     return dt;
   },
   shift: (dt, _tz, step) => {
