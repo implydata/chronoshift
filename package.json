@@ -42,9 +42,6 @@
     "prettify": "prettier --write 'src/**/*.{ts,tsx,scss}'",
     "prettify-check": "prettier --check 'src/**/*.{ts,tsx,scss}'"
   },
-  "volta": {
-    "node": "20.18.1"
-  },
   "jest": {
     "preset": "ts-jest",
     "testMatch": [
